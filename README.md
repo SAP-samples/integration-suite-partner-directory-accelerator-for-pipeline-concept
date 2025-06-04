@@ -18,7 +18,8 @@ Before using this tool, please make yourself familiar with the Pipeline Concept.
 * [Download and Installation](#download-and-installation)
     + [On Windows](#on-windows)
     + [On Unix / macOS](#on-unix--macos)
-* [Usage of the tool](#usage-of-the-tool)
+    + [Get Notification for a new Release](#get-notification-for-a-new-release)
+* [Usage of the Tool](#usage-of-the-tool)
     + [Header Buttons](#header-buttons)
         - [Tenant dropdown menu](#tenant-dropdown-menu)
         - [Add new tenant](#add-new-tenant)
@@ -83,7 +84,13 @@ chmod +x start.sh
 ./start.sh
 ```
 
-## Usage of the tool
+### Get Notification for a new Release
+
+You can get notified by email for each [new release](../../releases/latest) which is published for this repository (if you have a GitHub account). To set up these notifications, on top of the [root page of this repository](../..), select "Watch" (or "Unwatch" if you are already watching). Under "Custom", you can select "Releases", and make sure to chick "Apply".
+
+Then, check the [notification settings of your GitHub account](https://github.com/settings/notifications). Under "Subscriptions" > "Watching", make sure that you have selected your desired notification channels, e.g., "Email". You can find information about notifications in the [GitHub Docs](https://docs.github.com/en/account-and-profile/managing-subscriptions-and-notifications-on-github/setting-up-notifications/about-notifications).
+
+## Usage of the Tool
 
 To ensure you always see the latest data, this tool sends HTTP requests each time a new page is displayed or another tab is selected. Therefore, depending on your network connection, you might need to be a bit patient...
 
@@ -272,7 +279,7 @@ This error can occur when you try to send the initial HTTP request but a certifi
 
 ### Error when configuring API: JSONObject["d"] not found / <br/> Error when configuring API: A JSONObject text must begin with '{' at 1 [character 2 line 1] / <br/> Error when configuring API: URI with undefined scheme
 
-This error can occur when the initial HTTP request fails. Please double-check that the credentials you provided meet the requirements described in the previous section [Add new tenant](#add-new-tenant) and check for typos in the credentials.
+This error can occur when the initial HTTP request fails. Please double-check that the credentials you provided meet the requirements as described in the previous section **[Add new tenant](#add-new-tenant)** (e.g., that the URL ends with "/api/v1"), and check for typos in the credentials.
 
 ### Error when generating XSLT from input data. If "Default" is selected as the behavior when no receiver is found, the Default Receiver System must be specified in the corresponding input field.
 
