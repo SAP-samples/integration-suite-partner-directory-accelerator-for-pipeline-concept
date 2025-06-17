@@ -19,13 +19,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.example.utils.SharedData.*;
 
-public class TemplateReceiverDetermination implements Clearable {
+public class TemplateReceiverDetermination implements TemplateObjects {
     private String type;
     private String defaultReceiver;
     private final Map<String, List<String>> hashMapConditionReceiver = new LinkedHashMap<>();
+    private Set<String> params = new HashSet<>();
 
     public String getType() {
         return type;
@@ -77,6 +80,24 @@ public class TemplateReceiverDetermination implements Clearable {
         return result.toArray(new String[0][]);
     }
 
+    public void setParams() {
+        params.clear();
+
+        Pattern pattern = Pattern.compile("\\$(\\w+)(?=\\s|=)");
+
+        for (String condition : hashMapConditionReceiver.keySet()) {
+            Matcher matcher = pattern.matcher(condition);
+            while (matcher.find()) {
+                params.add(matcher.group(1));
+            }
+
+        }
+    }
+
+    public Set<String> getParams() {
+        return params;
+    }
+
     public List<String> getCurrentReceiverNames() {
         Set<String> receiverNames = new HashSet<>();
         String[][] dataToInsert = this.getHashMapConditionReceiverForTable();
@@ -97,6 +118,7 @@ public class TemplateReceiverDetermination implements Clearable {
         this.type = null;
         this.defaultReceiver = null;
         this.hashMapConditionReceiver.clear();
+        this.params.clear();
     }
 
     public void xsltToObjectReceiverDetermination(String xslt) throws Exception {

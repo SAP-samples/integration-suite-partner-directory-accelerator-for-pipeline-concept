@@ -4,6 +4,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import org.example.templates.TemplateObjects;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -20,8 +21,9 @@ public class XsltHandler {
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
     }
 
-    public String handleXslt(String typeOfDetermination, Object object) throws IOException, TemplateException {
+    public String handleXslt(String typeOfDetermination, TemplateObjects object) throws IOException, TemplateException {
         Map<String, Object> content = new HashMap<>();
+        object.setParams();
         content.put("content", object);
 
         StringWriter stringWriter = new StringWriter();

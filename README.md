@@ -1,5 +1,6 @@
 # Partner Directory Accelerator for Pipeline Concept
 
+[![GitHub Release](https://img.shields.io/github/v/release/SAP-samples/integration-suite-partner-directory-accelerator-for-pipeline-concept)](../../releases/latest)
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/integration-suite-partner-directory-accelerator-for-pipeline-concept)](https://api.reuse.software/info/github.com/SAP-samples/integration-suite-partner-directory-accelerator-for-pipeline-concept)
 
 ## Description
@@ -279,7 +280,7 @@ This error can occur when you try to send the initial HTTP request but a certifi
 
 ### Error when configuring API: JSONObject["d"] not found / <br/> Error when configuring API: A JSONObject text must begin with '{' at 1 [character 2 line 1] / <br/> Error when configuring API: URI with undefined scheme
 
-This error can occur when the initial HTTP request fails. Please double-check that the credentials you provided meet the requirements as described in the previous section **[Add new tenant](#add-new-tenant)** (e.g., that the URL ends with "/api/v1"), and check for typos in the credentials.
+This error can occur when the initial HTTP request fails. Please double-check that the credentials you provided meet the requirements as described in the previous section **[Add new tenant](#add-new-tenant)** (e.g., that the URL ends with "/api/v1/"), and check for typos in the credentials.
 
 ### Error when generating XSLT from input data. If "Default" is selected as the behavior when no receiver is found, the Default Receiver System must be specified in the corresponding input field.
 
@@ -304,7 +305,6 @@ When generating an XSLT or trying to send it to the API, a syntax validation che
 Currently, there are some limits which the tool is not capable of:
 
 * **Deletion** of existing alternative partners and binary parameters is not possible. String parameters can be deleted. To delete existing entries, the [Partner Directory API](https://hub.sap.com/api/PartnerDirectory/overview) or the [Partner Directory UI](https://help.sap.com/docs/integration-suite/sap-integration-suite/managing-partner-directory-entries?version=CLOUD) can be used.
-* **Header parameter** such as <xsl:param name="dc_country"/> or <xsl:param name="SAP_SenderOperation"/> cannot be maintained in an XSLT.
 * [**Landscape stages**](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/landscape-stages) using the string parameter SAP_Integration_Suite_Landscape are not supported as it was introduced in version 1.0.9 of the Pipeline Concept.
 
 ## Development

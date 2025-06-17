@@ -12,13 +12,13 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class TemplateInterfaceDetermination implements Clearable {
+public class TemplateInterfaceDetermination implements TemplateObjects {
     private final Map<String, List<String>> hashMapConditionService = new LinkedHashMap<>();
+    private Set<String> params = new HashSet<>();
 
     public Map<String, List<String>> getHashMapConditionService() {
         return hashMapConditionService;
@@ -46,6 +46,24 @@ public class TemplateInterfaceDetermination implements Clearable {
         }
 
         return result.toArray(new String[0][]);
+    }
+
+    public void setParams() {
+        params.clear();
+
+        Pattern pattern = Pattern.compile("\\$(\\w+)(?=\\s|=)");
+
+        for (String condition : hashMapConditionService.keySet()) {
+            Matcher matcher = pattern.matcher(condition);
+            while (matcher.find()) {
+                params.add(matcher.group(1));
+            }
+
+        }
+    }
+
+    public Set<String> getParams() {
+        return params;
     }
 
     public void clear() {

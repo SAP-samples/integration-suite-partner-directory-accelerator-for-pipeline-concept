@@ -180,7 +180,7 @@ public class HttpRequestHandler {
     public void sendGetRequestBinaryParameters(String pid) throws IOException, InterruptedException {
         requestTokenIfExpired();
         HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_BINARY_PARAMETERS + "?$filter=" + JSON_KEY_CONTENT_TYPE + "%20eq%20'" + JSON_VALUE_XSL + "'%20and%20" + JSON_KEY_PID + "%20eq%20'" + pid + "'"))
+                .uri(URI.create(url + API_BINARY_PARAMETERS + "?$filter=startswith(" + JSON_KEY_CONTENT_TYPE + ",'" + JSON_VALUE_XSL + "')%20and%20" + JSON_KEY_PID + "%20eq%20'" + pid + "'"))
                 .GET()
                 .build();
         HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
@@ -536,7 +536,7 @@ public class HttpRequestHandler {
         }
 
         StringBuilder filterBuilder = new StringBuilder();
-        filterBuilder.append("?$filter=").append(JSON_KEY_CONTENT_TYPE).append("%20eq%20'").append(JSON_VALUE_XSL).append("'%20and%20(");
+        filterBuilder.append("?$filter=startswith(").append(JSON_KEY_CONTENT_TYPE).append(",'").append(JSON_VALUE_XSL).append("')%20and%20(");
         String prefix = "";
 
         for (String pid : pids) {
