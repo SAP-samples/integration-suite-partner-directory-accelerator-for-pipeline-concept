@@ -1,6 +1,7 @@
 # Partner Directory Accelerator for Pipeline Concept
 
 [![GitHub Release](https://img.shields.io/github/v/release/SAP-samples/integration-suite-partner-directory-accelerator-for-pipeline-concept)](../../releases/latest)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/integration-suite-partner-directory-accelerator-for-pipeline-concept)](https://api.reuse.software/info/github.com/SAP-samples/integration-suite-partner-directory-accelerator-for-pipeline-concept)
 
 ## Description
@@ -306,6 +307,8 @@ Currently, there are some limits which the tool is not capable of:
 
 * **Deletion** of existing alternative partners and binary parameters is not possible. String parameters can be deleted. To delete existing entries, the [Partner Directory API](https://hub.sap.com/api/PartnerDirectory/overview) or the [Partner Directory UI](https://help.sap.com/docs/integration-suite/sap-integration-suite/managing-partner-directory-entries?version=CLOUD) can be used.
 * [**Landscape stages**](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/landscape-stages) using the string parameter SAP_Integration_Suite_Landscape are not supported as it was introduced in version 1.0.9 of the Pipeline Concept.
+
+To find or to report an issue, please refer to section [How to obtain support](#how-to-obtain-support).
 
 ## Development
 

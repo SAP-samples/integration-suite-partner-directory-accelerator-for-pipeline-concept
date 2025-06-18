@@ -36,12 +36,14 @@ public final class SharedData {
     public static final String LABEL_CLIENT_SECRET = "Client Secret";
     public static final String LABEL_COMBINED_XSLT = "Combined XSLT";
     public static final String LABEL_CONFIRMATION = "Confirmation";
-    public static final String LABEL_EDIT_SELECTED_TENANT = "Edit selected tenant";
     public static final String LABEL_CONDITION = "XPath Condition";
     public static final String LABEL_CONTENT_TYPE = "ContentType";
     public static final String LABEL_CRITICAL = "Critical";
     public static final String LABEL_DEFAULT = "Default";
+    public static final String LABEL_DELETE = "Delete";
     public static final String LABEL_DELETE_ROW = "Delete row";
+    public static final String LABEL_DELETE_SELECTED_TENANT = "Delete selected tenant";
+    public static final String LABEL_EDIT_SELECTED_TENANT = "Edit selected tenant";
     public static final String LABEL_ERROR = "Error";
     public static final String LABEL_ERROR_EMPTY_INPUT = "Input field may not be empty.";
     public static final String LABEL_ERROR_READING_JSON_FILE = "Error when reading JSON file. Make sure the JSON file is in the right format.";
@@ -65,6 +67,7 @@ public final class SharedData {
     public static final String LABEL_ID_BINARY_PARAMETERS = "Receiver Determination / Interface Determination";
     public static final String LABEL_IGNORE = "Ignore";
     public static final String LABEL_INTERFACE_DETERMINATION = "Interface Determination";
+    public static final String LABEL_LAST_TENANT = "Last tenant cannot be deleted. You can still edit this tenant.";
     public static final String LABEL_MOVE_ROW_DOWN = "Move row down";
     public static final String LABEL_MOVE_ROW_UP = "Move row up";
     public static final String LABEL_MULTIPLE_XSLTS = "Multiple XSLTs";
@@ -93,6 +96,7 @@ public final class SharedData {
     public static final String LABEL_SHOWN_XSLT_INVALID_SYNTAX = "The shown XSLT might contain invalid syntax";
     public static final String LABEL_STRING_PARAMETERS = "String Parameters";
     public static final String LABEL_SUCCESS = "Success";
+    public static final String LABEL_SURE_TO_DELETE = "Are you sure that you want to delete the selected tenant named \"";
     public static final String LABEL_TENANT_NAME = "Tenant Name";
     public static final String LABEL_TOKEN_URL = "Token URL";
     public static final String LABEL_TRANSPORT = "Replicate?";

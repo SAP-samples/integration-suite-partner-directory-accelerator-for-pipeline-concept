@@ -114,6 +114,11 @@ public class TenantCredentials {
         }
     }
 
+    public static void deleteTenantCredentials(TenantCredentials tenant) {
+        tenantCredentialsList.remove(tenant);
+    }
+
+
     public static TenantCredentials getTenantObjectByCredentials(String url, String tokenurl, String clientid, String clientsecret) {
         return tenantCredentialsList.stream()
                 .filter(tenant -> tenant.getUrl().equals(url) &&

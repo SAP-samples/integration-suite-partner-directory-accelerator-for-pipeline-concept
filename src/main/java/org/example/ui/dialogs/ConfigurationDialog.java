@@ -74,7 +74,7 @@ public class ConfigurationDialog extends JDialog {
         // Critical Checkbox
         gbc.gridx = 0;
         gbc.gridy = 1;
-        add(new JLabel(colonAsterisk(LABEL_CRITICAL)), gbc);
+        add(new JLabel(colon(LABEL_CRITICAL)), gbc);
         gbc.gridx = 1;
         add(criticalCheckBox, gbc);
 

@@ -61,6 +61,9 @@ public class MainFrame extends JFrame {
         JButton editTenantButton = new JButton(LABEL_EDIT_SELECTED_TENANT);
         buttonPanel.add(editTenantButton);
 
+        JButton deleteTenantButton = new JButton(LABEL_DELETE_SELECTED_TENANT);
+        buttonPanel.add(deleteTenantButton);
+
         JButton reloadButton = new JButton(LABEL_RELOAD);
         buttonPanel.add(reloadButton);
 
@@ -118,7 +121,35 @@ public class MainFrame extends JFrame {
             dialogAdd.setVisible(true);
         });
 
-        editTenantButton.addActionListener(actionEvent -> dialogEdit.setVisible(true));
+        editTenantButton.addActionListener(e -> dialogEdit.setVisible(true));
+
+        deleteTenantButton.addActionListener(e -> {
+            if (tenantCredentialsList.size() < 2) {
+                JOptionPane.showMessageDialog(this, LABEL_LAST_TENANT, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
+            } else {
+                boolean deleteTenant = false;
+                String[] options = {LABEL_DELETE, LABEL_CANCEL};
+
+                int option = JOptionPane.showOptionDialog(
+                        this,
+                        LABEL_SURE_TO_DELETE + currentTenantName + "\"?",
+                        LABEL_CONFIRMATION,
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        options,
+                        options[0]
+                );
+
+                deleteTenant = option == 0; // option 0 = delete; option 1 = cancel
+
+                if (deleteTenant) {
+                    jsonFileHandler.deleteTenant(getTenantObjectByCredentials(selectedTenant.getUrl(), selectedTenant.getTokenurl(), selectedTenant.getClientid(), selectedTenant.getClientsecret()));
+                    updateTenantDropdown();
+                    setSelectedTenant(tenantCredentialsList.get(0).getName());
+                }
+            }
+        });
 
         reloadButton.addActionListener(e -> getAndShowLatestAlternativePartners());
 

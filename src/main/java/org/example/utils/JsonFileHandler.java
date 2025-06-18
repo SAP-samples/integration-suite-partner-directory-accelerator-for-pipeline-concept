@@ -114,6 +114,11 @@ public class JsonFileHandler {
         saveJsonFile();
     }
 
+    public void deleteTenant(TenantCredentials oldTenant) {
+        deleteTenantCredentials(oldTenant);
+        saveJsonFile();
+    }
+
     public TenantCredentials getExistingTenantByUrl(String url) {
         for (TenantCredentials tenant : tenantCredentialsList) {
             if (tenant.getUrl().equalsIgnoreCase(url)) {
