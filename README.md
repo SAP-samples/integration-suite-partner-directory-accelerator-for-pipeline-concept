@@ -334,7 +334,7 @@ In case you do not have the Maven command line installed, please follow [this gu
 
 [Create an issue](../../issues) in this repository if you find a bug or have questions about the content.
 
-For additional support, [ask a question in SAP Community](https://answers.sap.com/questions/ask.html).
+Some bugs or questions might have been reported before. If so, you can upvote them by reacting with thumbs up.
 
 ## Contributing
 

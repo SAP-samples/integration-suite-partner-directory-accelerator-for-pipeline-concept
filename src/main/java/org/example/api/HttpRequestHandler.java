@@ -20,6 +20,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.example.utils.SharedData.*;
@@ -142,7 +143,7 @@ public class HttpRequestHandler {
     public String sendGetRequestAlternativePartners() throws IOException, InterruptedException {
         requestTokenIfExpired();
         HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_ALTERNATIVE_PARTNERS + "?$filter=" + JSON_KEY_SCHEME + "%20eq%20'" + SCHEME_SENDER_INTERFACE + "'&$orderby=" + JSON_KEY_AGENCY))
+                .uri(URI.create(url + API_ALTERNATIVE_PARTNERS + "?$filter=" + JSON_KEY_SCHEME + "%20eq%20'" + SCHEME_SENDER_INTERFACE + "'&$orderby=" + JSON_KEY_AGENCY)) // + "?$filter=" + "Scheme%20eq%20'SenderInterface'%20or%20Scheme%20eq%20'BusinessSystemName'%20or%20Scheme%20eq%20'LogicalSystemName'" + "&$orderby=" + JSON_KEY_AGENCY))
                 .GET()
                 .build();
         HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
@@ -249,6 +250,18 @@ public class HttpRequestHandler {
         HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         logHttpResponse(httpResponse, httpRequest.method());
         jsonApiHandler.parseStringParametersJson(httpResponse.body());
+    }
+
+    public Map<String, String> sendGetRequestStringParameterLandscape() throws IOException, InterruptedException {
+        requestTokenIfExpired();
+        HttpRequest httpRequest = requestBuilder
+                .uri(URI.create(url + API_STRING_PARTNERS + "?$filter=" + JSON_KEY_PID + "%20eq%20'" + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE + "'"))
+                .GET()
+                .build();
+        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        logHttpResponse(httpResponse, httpRequest.method());
+
+        return jsonApiHandler.parseStringParameterLandscapeJson(httpResponse.body());
     }
 
     public void sendDeleteRequestStringParametersExistingDetermination(String pid, String id) {

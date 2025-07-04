@@ -47,14 +47,21 @@ public class TransportDialog extends JDialog {
         gbc.gridx = 1;
         centerPanel.add(tenantDropdown, gbc);
 
-        JLabel overwriteLabel = new JLabel(colonAsterisk("Overwrite existing entries"));
-        JCheckBox overwriteCheckBox = new JCheckBox();
-
         gbc.gridx = 0;
         gbc.gridy = 1;
+        JLabel overwriteLabel = new JLabel(colon(LABEL_OVERWRITE_EXISTING_ENTRIES));
         centerPanel.add(overwriteLabel, gbc);
         gbc.gridx = 1;
+        JCheckBox overwriteCheckBox = new JCheckBox();
         centerPanel.add(overwriteCheckBox, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        JLabel landscapeLabel = new JLabel(colon("Include " + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE));
+        centerPanel.add(landscapeLabel, gbc);
+        gbc.gridx = 1;
+        JCheckBox landscapeCheckBox = new JCheckBox();
+        centerPanel.add(landscapeCheckBox, gbc);
 
         add(centerPanel, BorderLayout.CENTER);
 
@@ -90,14 +97,15 @@ public class TransportDialog extends JDialog {
                         }
                     }
 
-                    List<String> uniquePidsToTransport = alternativePartnersToTransport.stream()
+                    List<String> uniquePidsToTransport = new ArrayList<>(alternativePartnersToTransport.stream()
                             .map(AlternativePartner::getPid)
                             .distinct()
-                            .toList();
+                            .toList());
 
                     String selectedTenantName = (String) tenantDropdown.getSelectedItem();
 
                     boolean overwrite = overwriteCheckBox.isSelected();
+                    boolean includeLLandscape = landscapeCheckBox.isSelected();
 
                     List<String> transportErrors = new ArrayList<>();
 
@@ -122,6 +130,9 @@ public class TransportDialog extends JDialog {
                             httpTransportHandler.transportBinaryParameters(jsonBinaryParametersToTransport, overwrite, transportErrors);
                         }
 
+                        if (includeLLandscape) {
+                            uniquePidsToTransport.add(STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE);
+                        }
                         JSONObject jsonStringParametersToTransport = httpRequestHandler.getStringParametersToTransport(uniquePidsToTransport);
                         if (jsonStringParametersToTransport != null) {
                             httpTransportHandler.transportStringParameters(jsonStringParametersToTransport, overwrite, transportErrors);

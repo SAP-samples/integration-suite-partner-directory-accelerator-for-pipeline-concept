@@ -3,6 +3,7 @@ package org.example.ui.pages;
 import org.example.model.AlternativePartner;
 import org.example.ui.components.SearchPanel;
 import org.example.ui.dialogs.AddAlternativePartnerDialog;
+import org.example.ui.dialogs.LandscapeDialog;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -71,6 +72,12 @@ public class AlternativePartnersPage extends JPanel {
 
     private JPanel getSouthButtonPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        JButton landscapeButton = new JButton("Maintain " + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE);
+        landscapeButton.addActionListener(e -> {
+            new LandscapeDialog(parentFrame);
+        });
+        buttonPanel.add(landscapeButton);
 
         JButton addButton = new JButton(LABEL_ADD_ALTERNATIVE_PARTNER);
         addButton.addActionListener(e -> {

@@ -6,9 +6,7 @@ import org.example.model.StringParameter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 import static org.example.utils.SharedData.*;
 
@@ -75,6 +73,24 @@ public class JsonApiHandler {
 
             currentStringParametersList.put(id, stringParameter);
         }
+    }
+
+    public Map<String, String> parseStringParameterLandscapeJson(String jsonResponse) {
+        JSONObject jsonObject = new JSONObject(jsonResponse);
+        JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
+        JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
+
+        Map<String, String> landscapeMapIdValue = new HashMap<>();
+
+        for (int i = 0; i < resultsArray.length(); i++) {
+            JSONObject resultObject = resultsArray.getJSONObject(i);
+            String id = resultObject.getString(JSON_KEY_ID);
+            String value = resultObject.getString(JSON_KEY_VALUE);
+
+            landscapeMapIdValue.put(id, value);
+        }
+
+        return landscapeMapIdValue;
     }
 
     public String getUriFromStringParametersJson(String jsonResponse) {
