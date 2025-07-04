@@ -361,32 +361,32 @@ public class ParametersPage extends JPanel {
         return keyPanel;
     }
 
-    private JPanel showRadioButtonsInterfaceDetermination(JPanel cards, CardLayout cardLayout, Set<String> setReceiverNames) {
-        ButtonGroup buttonGroup = new ButtonGroup();
+    private JPanel showDropdownInterfaceDetermination(JPanel cards, CardLayout cardLayout, Set<String> setReceiverNames) {
+        JPanel panelDropdown = new JPanel();
 
-        ItemListener itemListener = e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                JRadioButton selectedRadioButton = (JRadioButton) e.getSource();
-                String interfaceDetermination = selectedRadioButton.getText();
+        JComboBox<String> comboBox = new JComboBox<>();
 
-                cardLayout.show(cards, interfaceDetermination);
+        comboBox.addActionListener(e -> {
+            JComboBox<?> source = (JComboBox<?>) e.getSource();
+            String selectedItem = (String) source.getSelectedItem();
+            if (selectedItem != null) {
+                cardLayout.show(cards, selectedItem);
             }
-        };
+        });
 
-        JPanel panelRadioButtons = new JPanel();
-        boolean first = true;
-        for (String labelRadioButton : setReceiverNames) {
-            JRadioButton radioButton = new JRadioButton(labelRadioButton);
-            buttonGroup.add(radioButton);
-            radioButton.addItemListener(itemListener);
-            panelRadioButtons.add(radioButton, BorderLayout.NORTH);
-            if (first) {
-                radioButton.setSelected(true);
-                first = false;
+        if (!setReceiverNames.isEmpty()) {
+            for (String receiverName : setReceiverNames) {
+                comboBox.addItem(receiverName);
             }
+
+            comboBox.setSelectedIndex(0);
+
+            String firstItem = (String) comboBox.getSelectedItem();
+            cardLayout.show(cards, firstItem);
         }
 
-        return panelRadioButtons;
+        panelDropdown.add(comboBox);
+        return panelDropdown;
     }
 
     private KeyPanel showTableInterfaceDetermination(TemplateInterfaceDetermination templateInterfaceDetermination, RTextScrollPane rTextScrollPane, BinaryParameter currentInterfaceDetermination, boolean showXsltButtons) {
@@ -925,7 +925,7 @@ public class ParametersPage extends JPanel {
 
         panelInterfaceDetermination.addNewComponent(COMPONENT_INTERFACE_TABLE, tablesInterfaceDeterminations);
 
-        JPanel radioButtonsInterfaces = showRadioButtonsInterfaceDetermination(cardsInterfaceDetermination, cardLayoutInterfaceDetermination, setReceiverNames);
+        JPanel radioButtonsInterfaces = showDropdownInterfaceDetermination(cardsInterfaceDetermination, cardLayoutInterfaceDetermination, setReceiverNames);
 
         panelInterfaceDetermination.add(radioButtonsInterfaces, BorderLayout.NORTH);
         panelInterfaceDetermination.add(cardsInterfaceDetermination, BorderLayout.CENTER);
@@ -980,7 +980,7 @@ public class ParametersPage extends JPanel {
 
                 panelInterfaceDetermination.removeAll();
 
-                JPanel newRadioButtonsInterfaces = showRadioButtonsInterfaceDetermination(cardsInterfaceDetermination, cardLayoutInterfaceDetermination, setReceiverNames);
+                JPanel newRadioButtonsInterfaces = showDropdownInterfaceDetermination(cardsInterfaceDetermination, cardLayoutInterfaceDetermination, setReceiverNames);
 
                 panelInterfaceDetermination.add(newRadioButtonsInterfaces, BorderLayout.NORTH);
                 panelInterfaceDetermination.add(cardsInterfaceDetermination, BorderLayout.CENTER);
@@ -1135,7 +1135,7 @@ public class ParametersPage extends JPanel {
             }
         }
 
-        JPanel panelRadioButtons = showRadioButtonsInterfaceDetermination(cards, cardLayout, listReceiverNames);
+        JPanel panelRadioButtons = showDropdownInterfaceDetermination(cards, cardLayout, listReceiverNames);
 
         panelInterfaceDetermination.add(panelRadioButtons, BorderLayout.NORTH);
         panelInterfaceDetermination.add(cards, BorderLayout.CENTER);
