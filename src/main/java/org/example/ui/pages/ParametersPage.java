@@ -181,7 +181,7 @@ public class ParametersPage extends JPanel {
                     tabbedPane.addChangeListener(e -> {
                         try {
                             int index = tabbedPane.getSelectedIndex();
-                            if (index == 0) { // Binary Parameters
+                            if (index == 0) { // Point to Point String Parameters
                                 listReceiverNames.set(getListReceiverNamesDependingOnDeterminationType(pid));
                                 httpRequestHandler.sendGetRequestStringParameters(pid, listReceiverNames.get());
                                 pointToPointDetermination.removeAll();
@@ -462,12 +462,19 @@ public class ParametersPage extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
 
-        Set<String> listReceiverNames;
+        Set<String> listReceiverNames = new LinkedHashSet<>();
         if (determinationType.equals(LABEL_POINT_TO_POINT)) {
-            listReceiverNames = new LinkedHashSet<>();
-            listReceiverNames.add(currentStringParametersList.get(ID_RECEIVER_DETERMINATION).getValue());
+            try {
+                listReceiverNames.add(currentStringParametersList.get(ID_RECEIVER_DETERMINATION).getValue());
+            } catch (Exception e) {
+                // LOGGER.error(e);
+            }
         } else {
-            listReceiverNames = currentReceiverDetermination.getSetReceiverNames();
+            try {
+                listReceiverNames = currentReceiverDetermination.getSetReceiverNames();
+            } catch (Exception e) {
+                // LOGGER.error(e);
+            }
         }
 
         List<String> stringParameterLabelList = new ArrayList<>();
@@ -1225,11 +1232,21 @@ public class ParametersPage extends JPanel {
                         httpRequestHandler.sendDeleteRequestStringParametersExistingDetermination(pid, ID_INTERFACE_DETERMINATION_);
                         showHttpResponseWithTimer((JLabel) panelResponseInterface.getComponent(0), httpRequestHandler.sendPostRequestStringParameters(pid, ID_INTERFACE_DETERMINATION_ + receiverName, interfaceName));
 
-                        currentStringParametersList.get(ID_RECEIVER_DETERMINATION).setValue(receiverName);
-                        StringParameter stringParameter = currentStringParametersList.get(ID_INTERFACE_DETERMINATION_ + receiverNameInitial);
-                        stringParameter.setValue(receiverName);
+                        StringParameter stringParameterReceiverDetermination = currentStringParametersList.get(ID_RECEIVER_DETERMINATION);
+                        if (stringParameterReceiverDetermination == null) {
+                            stringParameterReceiverDetermination = new StringParameter(pid, ID_RECEIVER_DETERMINATION, receiverName);
+                        } else {
+                            stringParameterReceiverDetermination.setValue(receiverName);
+                        }
+                        currentStringParametersList.put(ID_RECEIVER_DETERMINATION, stringParameterReceiverDetermination);
+
+                        StringParameter stringParameterInterfaceDetermination = currentStringParametersList.get(ID_INTERFACE_DETERMINATION_ + receiverNameInitial);
+                        if (stringParameterInterfaceDetermination == null) {
+                            stringParameterInterfaceDetermination = new StringParameter(pid, ID_INTERFACE_DETERMINATION_ + receiverName, null);
+                        }
+                        stringParameterInterfaceDetermination.setValue(receiverName);
                         currentStringParametersList.remove(ID_INTERFACE_DETERMINATION_ + receiverNameInitial);
-                        currentStringParametersList.put(ID_INTERFACE_DETERMINATION_ + receiverName, stringParameter);
+                        currentStringParametersList.put(ID_INTERFACE_DETERMINATION_ + receiverName, stringParameterInterfaceDetermination);
 
                         receiverNameInitial.set(receiverName);
                         interfaceNameInitial.set(interfaceName);
@@ -1322,7 +1339,11 @@ public class ParametersPage extends JPanel {
         Set<String> listReceiverNames;
         if (determinationType.equals(LABEL_POINT_TO_POINT)) {
             listReceiverNames = new LinkedHashSet<>();
-            listReceiverNames.add(currentStringParametersList.get(ID_RECEIVER_DETERMINATION).getValue());
+            try {
+                listReceiverNames.add(currentStringParametersList.get(ID_RECEIVER_DETERMINATION).getValue());
+            } catch (Exception e) {
+                // LOGGER.error(e);
+            }
         } else {
             try {
                 httpRequestHandler.sendGetRequestBinaryParameters(pid);

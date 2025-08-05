@@ -25,11 +25,11 @@ public class EditableHeader extends JPanel {
     private JButton sendButton;
     private JButton cancelButton;
 
-    public EditableHeader(LinkedHashMap<String, String> hashMap, boolean displayButtons) {
+    public EditableHeader(LinkedHashMap<String, String> hashMap, boolean isExistingEntry) {
         originalHeaderValues = new LinkedHashMap<>(hashMap);
         currentHeaderValues = new LinkedHashMap<>(hashMap);
 
-        this.addButtons = displayButtons;
+        this.addButtons = isExistingEntry;
 
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -40,11 +40,7 @@ public class EditableHeader extends JPanel {
         for (String key : hashMap.keySet()) {
             JLabel keyLabel = new JLabel(colonAsterisk(key));
             JComponent valueComponent;
-            if (key.equals(LABEL_SCHEME)) {
-                JLabel valueLabel = new JLabel(SCHEME_SENDER_INTERFACE);
-                currentHeaderValues.put(key, SCHEME_SENDER_INTERFACE);
-                valueComponent = valueLabel;
-            } else if (!displayButtons && key.equals(LABEL_SELECT_DETERMINATION_TYPE)) {
+            if (!isExistingEntry && key.equals(LABEL_SELECT_DETERMINATION_TYPE)) {
                 ButtonGroup buttonGroup = new ButtonGroup();
                 JPanel panelRadioButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
@@ -63,13 +59,17 @@ public class EditableHeader extends JPanel {
                     });
                 }
                 valueComponent = panelRadioButtons;
-            } else if (displayButtons && key.equals(LABEL_PID)) {
+            } else if (isExistingEntry && key.equals(LABEL_PID)) {
                 String pid = hashMap.get(key);
                 JLabel valueLabel = new JLabel(pid);
                 currentHeaderValues.put(key, pid);
                 valueComponent = valueLabel;
             } else {
                 JTextField valueTextField = new JTextField(hashMap.get(key), DEFAULT_COLUMNS_TEXT_FIELD);
+                if (!isExistingEntry && key.equals(LABEL_SCHEME)) {
+                    valueTextField.setText(SCHEME_SENDER_INTERFACE);
+                    currentHeaderValues.put(key, valueTextField.getText());
+                }
                 valueTextField.getDocument().addDocumentListener(new DocumentListener() {
                     @Override
                     public void insertUpdate(DocumentEvent e) {
@@ -102,7 +102,7 @@ public class EditableHeader extends JPanel {
 
         }
 
-        if (displayButtons) {
+        if (isExistingEntry) {
             sendButton = new JButton(LABEL_SEND_CHANGES_TO_API);
             cancelButton = new JButton(LABEL_CANCEL);
 
@@ -133,7 +133,7 @@ public class EditableHeader extends JPanel {
                         addAlternativePartnerToList(new AlternativePartner(currentHeaderValues.get(LABEL_AGENCY), currentHeaderValues.get(LABEL_SCHEME), currentHeaderValues.get(LABEL_ID_ALTERNATIVE_PARTNERS), currentHeaderValues.get(LABEL_PID)));
                         alternativePartnersPage.refreshTableData(currentAlternativePartnersList);
 
-                        currentReceiverDetermination.updateCurrentBinaryParameter(currentHeaderValues.get(LABEL_PID), currentHeaderValues.get(LABEL_ID_BINARY_PARAMETERS), currentHeaderValues.get(LABEL_CONTENT_TYPE), currentHeaderValues.get(LABEL_VALUE));
+                        // currentReceiverDetermination.updateCurrentBinaryParameter(currentHeaderValues.get(LABEL_PID), currentHeaderValues.get(LABEL_ID_BINARY_PARAMETERS), currentHeaderValues.get(LABEL_CONTENT_TYPE), currentHeaderValues.get(LABEL_VALUE));
                     }
                 } catch (Exception ex) {
                     LOGGER.error(ex);

@@ -104,9 +104,9 @@ public class TenantCredentials {
             newTenant.setTokenExpirationDateTime(oldTenant.getTokenExpirationDateTime());
         }
 
+        int index = tenantCredentialsList.indexOf(oldTenant);
         tenantCredentialsList.remove(oldTenant);
 
-        int index = tenantCredentialsList.indexOf(oldTenant);
         if (index >= 0) {
             tenantCredentialsList.add(index, newTenant);
         } else {

@@ -108,7 +108,7 @@ public class HttpRequestHandler {
         return jsonObject.toString(indentFactor);
     }
 
-    private String createRequestBodyPostBinaryBinaryParameters(String pid, String id, String encodedString) {
+    private String createRequestBodyPostBinaryParameters(String pid, String id, String encodedString) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(JSON_KEY_PID, pid);
         jsonObject.put(JSON_KEY_ID, id);
@@ -142,13 +142,18 @@ public class HttpRequestHandler {
 
     public String sendGetRequestAlternativePartners() throws IOException, InterruptedException {
         requestTokenIfExpired();
+
+        String pidsFromBinaryParameters = sendGetRequestParametersWithReceiverDetermination(API_BINARY_PARAMETERS);
+        String pidsFromStringParameters = sendGetRequestParametersWithReceiverDetermination(API_STRING_PARTNERS);
+        Set<String> uniquePids = jsonApiHandler.getUniquePidsFromEndpoints(pidsFromBinaryParameters, pidsFromStringParameters);
+
         HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_ALTERNATIVE_PARTNERS + "?$filter=" + JSON_KEY_SCHEME + "%20eq%20'" + SCHEME_SENDER_INTERFACE + "'&$orderby=" + JSON_KEY_AGENCY)) // + "?$filter=" + "Scheme%20eq%20'SenderInterface'%20or%20Scheme%20eq%20'BusinessSystemName'%20or%20Scheme%20eq%20'LogicalSystemName'" + "&$orderby=" + JSON_KEY_AGENCY))
+                .uri(URI.create(url + API_ALTERNATIVE_PARTNERS + "?$orderby=" + JSON_KEY_AGENCY))
                 .GET()
                 .build();
         HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         String returnString = logHttpResponse(httpResponse, httpRequest.method());
-        jsonApiHandler.parseAlternativePartnersJson(httpResponse.body());
+        jsonApiHandler.parseAlternativePartnersJson(httpResponse.body(), uniquePids);
         return returnString;
     }
 
@@ -176,6 +181,18 @@ public class HttpRequestHandler {
         logHttpResponse(httpResponse, httpRequest.method());
     }
 
+    // both BinaryParameters and StringParameters
+
+    public String sendGetRequestParametersWithReceiverDetermination(String endpoint) throws IOException, InterruptedException {
+        HttpRequest httpRequest = requestBuilder
+                .uri(URI.create(url + endpoint + "?$filter=" + JSON_KEY_ID + "%20eq%20'" + ID_RECEIVER_DETERMINATION + "'&$select=" + JSON_KEY_PID))
+                .GET()
+                .build();
+        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        logHttpResponse(httpResponse, httpRequest.method());
+        return httpResponse.body();
+    }
+
     // BinaryParameters
 
     public void sendGetRequestBinaryParameters(String pid) throws IOException, InterruptedException {
@@ -192,7 +209,7 @@ public class HttpRequestHandler {
     public String sendPostRequestBinaryParameters(String pid, String id, String valueAsString) throws IOException, InterruptedException {
         requestTokenIfExpired();
         String valueEncoded = base64Encoding(valueAsString);
-        String jsonBody = createRequestBodyPostBinaryBinaryParameters(pid, id, valueEncoded);
+        String jsonBody = createRequestBodyPostBinaryParameters(pid, id, valueEncoded);
 
         HttpRequest httpRequest = requestBuilder
                 .uri(URI.create(url + API_BINARY_PARAMETERS))
@@ -243,10 +260,19 @@ public class HttpRequestHandler {
             filterReceiverSpecificQueue.append(JSON_KEY_PID + "%20eq%20'").append(receiverName).append("'");
         }
 
+        String uri = url + API_STRING_PARTNERS + "?$filter="
+                + JSON_KEY_PID + "%20eq%20'" + pid + "'";
+
+        if (!listReceiverNames.isEmpty()) {
+            uri += "%20or%20(" + JSON_KEY_ID + "%20eq%20'" + STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE
+                    + "'%20and%20(" + filterReceiverSpecificQueue + "))";
+        }
+
         HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_STRING_PARTNERS + "?$filter=" + JSON_KEY_PID + "%20eq%20'" + pid + "'%20or%20(" + JSON_KEY_ID + "%20eq%20'" + STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + "'%20and%20(" + filterReceiverSpecificQueue + "))"))
+                .uri(URI.create(uri))
                 .GET()
                 .build();
+
         HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         logHttpResponse(httpResponse, httpRequest.method());
         jsonApiHandler.parseStringParametersJson(httpResponse.body());
@@ -407,7 +433,7 @@ public class HttpRequestHandler {
                     String value = new String(Base64.getDecoder().decode(resultObject.getString(JSON_KEY_VALUE)));
 
                     String valueEncoded = base64Encoding(value);
-                    String jsonBody = createRequestBodyPostBinaryBinaryParameters(pid, id, valueEncoded);
+                    String jsonBody = createRequestBodyPostBinaryParameters(pid, id, valueEncoded);
 
                     try {
                         requestTokenIfExpired();
@@ -589,6 +615,7 @@ public class HttpRequestHandler {
         } else if (statusCode >= 400 && statusCode <= 599) {
             responseType = LABEL_HTTP_ERROR;
             LOGGER.error(response);
+            LOGGER.error(response.body());
         } else {
             responseType = LABEL_HTTP_WARNING;
             LOGGER.warn(response);

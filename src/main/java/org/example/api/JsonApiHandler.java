@@ -11,8 +11,8 @@ import java.util.*;
 import static org.example.utils.SharedData.*;
 
 public class JsonApiHandler {
-    public void parseAlternativePartnersJson(String jsonResponse) {
-        List<AlternativePartner> partnerList = new ArrayList<>();
+    public void parseAlternativePartnersJson(String jsonResponse, Set<String> uniquePids) {
+        List<AlternativePartner> alternativePartnerList = new ArrayList<>();
         JSONObject jsonObject = new JSONObject(jsonResponse);
         JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
         JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
@@ -23,9 +23,37 @@ public class JsonApiHandler {
             String agency = resultObject.getString(JSON_KEY_AGENCY);
             String id = resultObject.getString(JSON_KEY_ID);
             String scheme = resultObject.getString(JSON_KEY_SCHEME);
-            partnerList.add(new AlternativePartner(agency, scheme, id, pid));
+
+            if (SCHEME_SENDER_INTERFACE.equals(scheme) || uniquePids.contains(pid)) {
+                alternativePartnerList.add(new AlternativePartner(agency, scheme, id, pid));
+            }
         }
-        currentAlternativePartnersList = partnerList;
+
+        currentAlternativePartnersList = alternativePartnerList;
+    }
+
+    public Set<String> getUniquePidsFromEndpoints(String jsonResponseBinary, String jsonResponseString) {
+        Set<String> uniquePids = new HashSet<>();
+
+        uniquePids.addAll(parsePidsFromJson(jsonResponseBinary));
+        uniquePids.addAll(parsePidsFromJson(jsonResponseString));
+
+        return uniquePids;
+    }
+
+    private Set<String> parsePidsFromJson(String jsonResponse) {
+        Set<String> pids = new HashSet<>();
+        JSONObject jsonObject = new JSONObject(jsonResponse);
+        JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
+        JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
+
+        for (int i = 0; i < resultsArray.length(); i++) {
+            JSONObject resultObject = resultsArray.getJSONObject(i);
+            String pid = resultObject.getString(JSON_KEY_PID);
+            pids.add(pid);
+        }
+
+        return pids;
     }
 
     public void parseBinaryParametersJson(String jsonResponse) {
