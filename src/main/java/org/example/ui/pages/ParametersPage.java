@@ -105,6 +105,10 @@ public class ParametersPage extends JPanel {
                     JPanel panelStringParameters = getPanelStringParameters();
                     tabbedPane.add(LABEL_STRING_PARAMETERS, panelStringParameters);
 
+                    // Landscape Stages
+//                    JPanel panelLandscapeStages = getPanelLandscapeStages();
+//                    tabbedPane.add(LABEL_LANDSCAPE_STAGES, panelLandscapeStages);
+
                     tabbedPane.addChangeListener(e -> {
                         try {
                             int index = tabbedPane.getSelectedIndex();
@@ -121,6 +125,12 @@ public class ParametersPage extends JPanel {
                                 panelStringParameters.add(getPanelStringParameters());
                                 panelStringParameters.revalidate();
                                 panelStringParameters.repaint();
+//                            } else if (index == 2) { // Landscape Stages
+//                                // httpRequestHandler.sendGetRequestStringParameters(pid, listReceiverNames.get());
+//                                panelLandscapeStages.removeAll();
+//                                panelLandscapeStages.add(getPanelLandscapeStages());
+//                                panelLandscapeStages.revalidate();
+//                                panelLandscapeStages.repaint();
                             }
                         } catch (Exception ex) {
                             LOGGER.error(ex);
@@ -139,6 +149,10 @@ public class ParametersPage extends JPanel {
                     // String Parameters
                     JPanel panelStringParameters = getPanelStringParameters();
                     tabbedPane.add(LABEL_STRING_PARAMETERS, panelStringParameters);
+
+                    // Landscape Stages
+//                    JPanel panelLandscapeStages = getPanelLandscapeStages();
+//                    tabbedPane.add(LABEL_LANDSCAPE_STAGES, panelLandscapeStages);
 
                     tabbedPane.addChangeListener(e -> {
                         try {
@@ -163,6 +177,12 @@ public class ParametersPage extends JPanel {
                                 panelStringParameters.add(getPanelStringParameters());
                                 panelStringParameters.revalidate();
                                 panelStringParameters.repaint();
+//                            } else if (index == 3) { // Landscape Stages
+//                                // httpRequestHandler.sendGetRequestStringParameters(pid, listReceiverNames.get());
+//                                panelLandscapeStages.removeAll();
+//                                panelLandscapeStages.add(getPanelLandscapeStages());
+//                                panelLandscapeStages.revalidate();
+//                                panelLandscapeStages.repaint();
                             }
                         } catch (Exception ex) {
                             LOGGER.error(ex);
@@ -177,6 +197,10 @@ public class ParametersPage extends JPanel {
                     // String Parameters
                     JPanel panelStringParameters = getPanelStringParameters();
                     tabbedPane.add(LABEL_STRING_PARAMETERS, panelStringParameters);
+
+                    // Landscape Stages
+//                    JPanel panelLandscapeStages = getPanelLandscapeStages();
+//                    tabbedPane.add(LABEL_LANDSCAPE_STAGES, panelLandscapeStages);
 
                     tabbedPane.addChangeListener(e -> {
                         try {
@@ -195,6 +219,12 @@ public class ParametersPage extends JPanel {
                                 panelStringParameters.add(getPanelStringParameters());
                                 panelStringParameters.revalidate();
                                 panelStringParameters.repaint();
+//                            } else if (index == 2) { // Landscape Stages
+//                                // httpRequestHandler.sendGetRequestStringParameters(pid, listReceiverNames.get());
+//                                panelLandscapeStages.removeAll();
+//                                panelLandscapeStages.add(getPanelLandscapeStages());
+//                                panelLandscapeStages.revalidate();
+//                                panelLandscapeStages.repaint();
                             }
                         } catch (Exception ex) {
                             LOGGER.error(ex);
@@ -516,7 +546,10 @@ public class ParametersPage extends JPanel {
             supportedStringParameterList.put(stringParameterId, textFieldStringParameter);
         }
 
-        jPanel.add(panelStringParameters, BorderLayout.CENTER);
+        JScrollPane scrollPaneStringParameters = new JScrollPane(panelStringParameters);
+        scrollPaneStringParameters.setBorder(null);
+        scrollPaneStringParameters.getVerticalScrollBar().setUnitIncrement(10);
+        jPanel.add(scrollPaneStringParameters, BorderLayout.CENTER);
 
         JPanel buttonPanelSend = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel httpResponseLabel = new JLabel();
@@ -526,6 +559,12 @@ public class ParametersPage extends JPanel {
         jPanel.add(buttonPanelSend, BorderLayout.SOUTH);
 
         return jPanel;
+    }
+
+    private JPanel showViewLandscapeStages() {
+        // todo: if landscape string parameter empty or not existing, then show warning to configure landscape first
+        // todo: else show stages maintained in landscape parameter
+        return new JPanel();
     }
 
     private boolean areAllSystemCellsEmpty(JTable table) {
@@ -1287,6 +1326,23 @@ public class ParametersPage extends JPanel {
         panelStringParameters.add(cards, BorderLayout.CENTER);
 
         return panelStringParameters;
+    }
+
+    private JPanel getPanelLandscapeStages() {
+        JPanel panelLandscapeStages = new JPanel(new BorderLayout());
+
+        CardLayout cardLayout = new CardLayout();
+        JPanel cards = new JPanel(cardLayout);
+
+        JPanel cardPanel = new JPanel(getGridLayout());
+        cardPanel.add(showViewLandscapeStages());
+
+        cards.add(cardPanel);
+        cardLayout.show(cards, LABEL_STRING_PARAMETERS);
+
+        panelLandscapeStages.add(cards, BorderLayout.CENTER);
+
+        return panelLandscapeStages;
     }
 
     private GridLayout getGridLayout() {

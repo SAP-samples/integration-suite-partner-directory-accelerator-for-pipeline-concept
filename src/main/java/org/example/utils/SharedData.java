@@ -38,7 +38,6 @@ public final class SharedData {
     public static final String LABEL_COMBINED_XSLT = "Combined XSLT";
     public static final String LABEL_CONFIRMATION = "Confirmation";
     public static final String LABEL_CONDITION = "XPath Condition";
-    public static final String LABEL_CONTENT_TYPE = "ContentType";
     public static final String LABEL_CRITICAL = "Critical";
     public static final String LABEL_DEFAULT = "Default";
     public static final String LABEL_DELETE = "Delete";
@@ -67,9 +66,9 @@ public final class SharedData {
     public static final String LABEL_HTTP_WARNING = "WARNING";
     public static final String LABEL_ID = "ID";
     public static final String LABEL_ID_ALTERNATIVE_PARTNERS = "Sender Interface";
-    public static final String LABEL_ID_BINARY_PARAMETERS = "Receiver Determination / Interface Determination";
     public static final String LABEL_IGNORE = "Ignore";
     public static final String LABEL_INTERFACE_DETERMINATION = "Interface Determination";
+    public static final String LABEL_LANDSCAPE_STAGES = "Landscape Stages";
     public static final String LABEL_LAST_TENANT = "Last tenant cannot be deleted. You can still edit this tenant.";
     public static final String LABEL_MAINTAIN_STRING_PARAMETER = "Maintain String Parameter ";
     public static final String LABEL_MOVE_ROW_DOWN = "Move row down";
@@ -135,8 +134,11 @@ public final class SharedData {
     public static final String STRING_PARAMETER_ID_CUSTOM_XRD_ENDPOINT = "CustomXRDEndpoint";
     public static final String STRING_PARAMETER_ID_CUSTOM_XID_ENDPOINT = "CustomXIDEndpoint";
     public static final String STRING_PARAMETER_ID_INBOUND_QUEUE = "InboundQueue";
+    public static final String STRING_PARAMETER_ID_KEEP_BULK = "KeepBulk";
+    public static final String STRING_PARAMETER_ID_CUSTOM_X_PRE_ENABLED = "CustomXPreEnabled";
+    public static final String STRING_PARAMETER_ID_CUSTOM_X_PRE_ENDPOINT = "CustomXPreEndpoint";
     public static final String STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE = "ReceiverSpecificQueue";
-    public static final String[] STRING_PARAMETER_IDS_ARRAY = {STRING_PARAMETER_ID_INBOUND_CONVERSION_ENDPOINT, STRING_PARAMETER_ID_MAX_JMS_RETRIES, STRING_PARAMETER_ID_REUSE_XRD_ENDPOINT, STRING_PARAMETER_ID_RECEIVER_NOT_DETERMINED_TYPE, STRING_PARAMETER_ID_RECEIVER_NOT_DETERMINED_DEFAULT, STRING_PARAMETER_ID_CUSTOM_XRD_ENDPOINT, STRING_PARAMETER_ID_CUSTOM_XID_ENDPOINT, STRING_PARAMETER_ID_INBOUND_QUEUE};
+    public static final String[] STRING_PARAMETER_IDS_ARRAY = {STRING_PARAMETER_ID_INBOUND_CONVERSION_ENDPOINT, STRING_PARAMETER_ID_MAX_JMS_RETRIES, STRING_PARAMETER_ID_REUSE_XRD_ENDPOINT, STRING_PARAMETER_ID_RECEIVER_NOT_DETERMINED_TYPE, STRING_PARAMETER_ID_RECEIVER_NOT_DETERMINED_DEFAULT, STRING_PARAMETER_ID_CUSTOM_XRD_ENDPOINT, STRING_PARAMETER_ID_CUSTOM_XID_ENDPOINT, STRING_PARAMETER_ID_INBOUND_QUEUE, STRING_PARAMETER_ID_KEEP_BULK, STRING_PARAMETER_ID_CUSTOM_X_PRE_ENABLED, STRING_PARAMETER_ID_CUSTOM_X_PRE_ENDPOINT};
     public static final String STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE = "SAP_Integration_Suite_Landscape";
 
     public static final String LINK_DOCUMENTATION_STRING_PARAMETERS = "https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#message-processing-behavior";
