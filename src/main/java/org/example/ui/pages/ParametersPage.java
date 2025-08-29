@@ -520,7 +520,9 @@ public class ParametersPage extends JPanel {
             String stringParameterId;
             if (stringParameterLabel.startsWith(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE)) {
                 stringParameterId = STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + stringParameterLabel.replaceAll(".*\"(.*?)\".*", "$1"); // extract receiver for id
-            } else {
+            } else if (stringParameterLabel.startsWith(STRING_PARAMETER_LABEL_DATA_STORE)) {
+                stringParameterId = stringParameterLabel.replace(STRING_PARAMETER_LABEL_DATA_STORE, "");
+            }else {
                 stringParameterId = stringParameterLabel;
             }
 
