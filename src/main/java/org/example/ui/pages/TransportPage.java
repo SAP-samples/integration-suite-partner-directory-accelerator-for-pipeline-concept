@@ -93,6 +93,7 @@ public class TransportPage extends JPanel {
 
         JButton transportButton = new JButton(LABEL_TRANSPORT_ALTERNATIVE_PARTNERS);
         transportButton.addActionListener(e -> {
+            searchPanel.resetSearch();
             int counterSelected = 0;
             for (AlternativePartner partner : currentAlternativePartnersList) {
                 if (partner.isSelected()) {

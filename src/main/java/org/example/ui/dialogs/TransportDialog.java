@@ -79,7 +79,7 @@ public class TransportDialog extends JDialog {
                 @Override
                 protected Void doInBackground() {
                     List<AlternativePartner> alternativePartnersToTransport = new ArrayList<>();
-                    for (int i = 0; i < table.getRowCount(); i++) {
+                    for (int i = 0; i < table.getModel().getRowCount(); i++) {
                         Boolean isChecked = (Boolean) table.getValueAt(i, 0);
                         if (isChecked) {
                             String agency = (String) table.getValueAt(i, 1);
@@ -105,7 +105,7 @@ public class TransportDialog extends JDialog {
                     String selectedTenantName = (String) tenantDropdown.getSelectedItem();
 
                     boolean overwrite = overwriteCheckBox.isSelected();
-                    boolean includeLLandscape = landscapeCheckBox.isSelected();
+                    boolean includeLandscape = landscapeCheckBox.isSelected();
 
                     List<String> transportErrors = new ArrayList<>();
 
@@ -125,12 +125,14 @@ public class TransportDialog extends JDialog {
 
                         httpTransportHandler.transportAlternativePartners(alternativePartnersToTransport, overwrite, transportErrors);
 
+                        // Binary Parameters
                         JSONObject jsonBinaryParametersToTransport = httpRequestHandler.getBinaryParametersToTransport(uniquePidsToTransport);
                         if (jsonBinaryParametersToTransport != null) {
                             httpTransportHandler.transportBinaryParameters(jsonBinaryParametersToTransport, overwrite, transportErrors);
                         }
 
-                        if (includeLLandscape) {
+                        // String Parameters
+                        if (includeLandscape) {
                             uniquePidsToTransport.add(STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE);
                         }
                         JSONObject jsonStringParametersToTransport = httpRequestHandler.getStringParametersToTransport(uniquePidsToTransport);

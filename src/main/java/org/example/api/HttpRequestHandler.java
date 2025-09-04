@@ -20,7 +20,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static org.example.utils.SharedData.*;
@@ -31,7 +30,7 @@ public class HttpRequestHandler {
     private final int indentFactor = 4;
     private final String url;
 
-    private TenantCredentials tenantCredentials;
+    private final TenantCredentials tenantCredentials;
 
     public HttpRequestHandler(TenantCredentials tenantCredentials) throws IOException, InterruptedException {
         this.tenantCredentials = tenantCredentials;
@@ -80,7 +79,8 @@ public class HttpRequestHandler {
 
     private void requestTokenIfExpired() throws IOException, InterruptedException {
         if (!tenantCredentials.isTokenValid()) {
-            requestToken();
+            String token = requestToken();
+            requestBuilder.header("Authorization", "Bearer " + token);
         }
     }
 
@@ -153,8 +153,32 @@ public class HttpRequestHandler {
                 .build();
         HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         String returnString = logHttpResponse(httpResponse, httpRequest.method());
-        jsonApiHandler.parseAlternativePartnersJson(httpResponse.body(), uniquePids);
+        jsonApiHandler.parseAlternativePartnersJson(httpResponse.body(), false, uniquePids);
         return returnString;
+    }
+
+    public void sendGetRequestAlternativePartnersLandscape(Set<String> listSystemNames) throws IOException, InterruptedException {
+        requestTokenIfExpired();
+
+        StringBuilder pidFilter = new StringBuilder();
+        for (String receiverName : listSystemNames) {
+            if (!pidFilter.isEmpty()) {
+                pidFilter.append("%20or%20");
+            }
+            pidFilter.append("Pid%20eq%20'").append(receiverName).append("'");
+        }
+
+        String filter = "?$filter=(" + pidFilter + ")%20and%20(Scheme%20eq%20'" + SCHEME_BUSINESS_SYSTEM_NAME
+                + "'%20or%20Scheme%20eq%20'" + SCHEME_LOGICAL_SYSTEM_NAME + "')";
+
+        HttpRequest httpRequest = requestBuilder
+                .uri(URI.create(url + API_ALTERNATIVE_PARTNERS + filter))
+                .GET()
+                .build();
+
+        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        logHttpResponse(httpResponse, httpRequest.method());
+        jsonApiHandler.parseAlternativePartnersJsonLandscape(httpResponse.body());
     }
 
     public String sendPostRequestAlternativePartners(String agency, String scheme, String id, String pid) throws IOException, InterruptedException {
@@ -168,7 +192,7 @@ public class HttpRequestHandler {
         return logHttpResponse(httpResponse, httpRequest.method());
     }
 
-    public void sendDeleteRequestAlternativePartners(String agency, String scheme, String id) throws IOException, InterruptedException {
+    public String sendDeleteRequestAlternativePartners(String agency, String scheme, String id) throws IOException, InterruptedException {
         requestTokenIfExpired();
         String hexAgency = convertStringToHexstring(agency);
         String hexScheme = convertStringToHexstring(scheme);
@@ -178,7 +202,7 @@ public class HttpRequestHandler {
                 .DELETE()
                 .build();
         HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        logHttpResponse(httpResponse, httpRequest.method());
+        return logHttpResponse(httpResponse, httpRequest.method());
     }
 
     // both BinaryParameters and StringParameters
@@ -278,7 +302,7 @@ public class HttpRequestHandler {
         jsonApiHandler.parseStringParametersJson(httpResponse.body());
     }
 
-    public Map<String, String> sendGetRequestStringParameterLandscape() throws IOException, InterruptedException {
+    public void sendGetRequestStringParameterLandscape() throws IOException, InterruptedException {
         requestTokenIfExpired();
         HttpRequest httpRequest = requestBuilder
                 .uri(URI.create(url + API_STRING_PARTNERS + "?$filter=" + JSON_KEY_PID + "%20eq%20'" + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE + "'"))
@@ -287,7 +311,7 @@ public class HttpRequestHandler {
         HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         logHttpResponse(httpResponse, httpRequest.method());
 
-        return jsonApiHandler.parseStringParameterLandscapeJson(httpResponse.body());
+        jsonApiHandler.parseStringParameterLandscapeJson(httpResponse.body());
     }
 
     public void sendDeleteRequestStringParametersExistingDetermination(String pid, String id) {
@@ -357,6 +381,24 @@ public class HttpRequestHandler {
     }
 
     // Transport methods
+
+    public void sendGetRequestAlternativePartnersTransport() throws IOException, InterruptedException {
+        requestTokenIfExpired();
+
+        String pidsFromBinaryParameters = sendGetRequestParametersWithReceiverDetermination(API_BINARY_PARAMETERS);
+        String pidsFromStringParameters = sendGetRequestParametersWithReceiverDetermination(API_STRING_PARTNERS);
+        Set<String> uniquePids = jsonApiHandler.getUniquePidsFromEndpoints(pidsFromBinaryParameters, pidsFromStringParameters);
+
+        sendGetRequestStringParameterLandscape();
+
+        HttpRequest httpRequest = requestBuilder
+                .uri(URI.create(url + API_ALTERNATIVE_PARTNERS + "?$orderby=" + JSON_KEY_AGENCY))
+                .GET()
+                .build();
+        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        logHttpResponse(httpResponse, httpRequest.method());
+        jsonApiHandler.parseAlternativePartnersJson(httpResponse.body(), true, uniquePids);
+    }
 
     public void transportAlternativePartners(List<AlternativePartner> alternativePartnersToTransport, boolean overwrite, List<String> transportErrors) {
         for (AlternativePartner alternativePartner : alternativePartnersToTransport) {

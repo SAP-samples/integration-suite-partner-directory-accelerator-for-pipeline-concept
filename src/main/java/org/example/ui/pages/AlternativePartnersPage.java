@@ -74,9 +74,7 @@ public class AlternativePartnersPage extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         JButton landscapeButton = new JButton("Maintain " + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE);
-        landscapeButton.addActionListener(e -> {
-            new LandscapeDialog(parentFrame);
-        });
+        landscapeButton.addActionListener(e -> new LandscapeDialog(parentFrame));
         buttonPanel.add(landscapeButton);
 
         JButton addButton = new JButton(LABEL_ADD_ALTERNATIVE_PARTNER);
@@ -96,6 +94,11 @@ public class AlternativePartnersPage extends JPanel {
             if (tenantCredentialsList.size() <= 1) {
                 JOptionPane.showMessageDialog(parentFrame, LABEL_TRANSPORT_ERROR_ADD_TENANT, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
             } else {
+                try {
+                    httpRequestHandler.sendGetRequestAlternativePartnersTransport();
+                } catch (Exception exception) {
+                    //
+                }
                 for (AlternativePartner partner : currentAlternativePartnersList) {
                     partner.setSelected(false);
                 }

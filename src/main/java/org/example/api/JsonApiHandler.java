@@ -11,7 +11,7 @@ import java.util.*;
 import static org.example.utils.SharedData.*;
 
 public class JsonApiHandler {
-    public void parseAlternativePartnersJson(String jsonResponse, Set<String> uniquePids) {
+    public void parseAlternativePartnersJson(String jsonResponse, boolean includeLandscape, Set<String> uniquePids) {
         List<AlternativePartner> alternativePartnerList = new ArrayList<>();
         JSONObject jsonObject = new JSONObject(jsonResponse);
         JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
@@ -24,12 +24,37 @@ public class JsonApiHandler {
             String id = resultObject.getString(JSON_KEY_ID);
             String scheme = resultObject.getString(JSON_KEY_SCHEME);
 
-            if (SCHEME_SENDER_INTERFACE.equals(scheme) || uniquePids.contains(pid)) {
-                alternativePartnerList.add(new AlternativePartner(agency, scheme, id, pid));
+            if (!includeLandscape) {
+                if (SCHEME_SENDER_INTERFACE.equals(scheme) || uniquePids.contains(pid)) {
+                    alternativePartnerList.add(new AlternativePartner(agency, scheme, id, pid));
+                }
+            } else {
+                if (SCHEME_SENDER_INTERFACE.equals(scheme) || uniquePids.contains(pid) || currentLandscapeTenantParameters.entrySet().stream().anyMatch(entry -> entry.getValue().equals(agency))) {
+                    alternativePartnerList.add(new AlternativePartner(agency, scheme, id, pid));
+                }
             }
         }
 
         currentAlternativePartnersList = alternativePartnerList;
+    }
+
+    public void parseAlternativePartnersJsonLandscape(String jsonResponse) {
+        List<AlternativePartner> alternativePartnerList = new ArrayList<>();
+        JSONObject jsonObject = new JSONObject(jsonResponse);
+        JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
+        JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
+
+        for (int i = 0; i < resultsArray.length(); i++) {
+            JSONObject resultObject = resultsArray.getJSONObject(i);
+            String pid = resultObject.getString(JSON_KEY_PID);
+            String agency = resultObject.getString(JSON_KEY_AGENCY);
+            String id = resultObject.getString(JSON_KEY_ID);
+            String scheme = resultObject.getString(JSON_KEY_SCHEME);
+
+            alternativePartnerList.add(new AlternativePartner(agency, scheme, id, pid));
+        }
+
+        currentLandscapeScenarioParameters = alternativePartnerList;
     }
 
     public Set<String> getUniquePidsFromEndpoints(String jsonResponseBinary, String jsonResponseString) {
@@ -103,22 +128,20 @@ public class JsonApiHandler {
         }
     }
 
-    public Map<String, String> parseStringParameterLandscapeJson(String jsonResponse) {
+    public void parseStringParameterLandscapeJson(String jsonResponse) {
         JSONObject jsonObject = new JSONObject(jsonResponse);
         JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
         JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
 
-        Map<String, String> landscapeMapIdValue = new HashMap<>();
+        currentLandscapeTenantParameters.clear();
 
         for (int i = 0; i < resultsArray.length(); i++) {
             JSONObject resultObject = resultsArray.getJSONObject(i);
             String id = resultObject.getString(JSON_KEY_ID);
             String value = resultObject.getString(JSON_KEY_VALUE);
 
-            landscapeMapIdValue.put(id, value);
+            currentLandscapeTenantParameters.put(id, value);
         }
-
-        return landscapeMapIdValue;
     }
 
     public String getUriFromStringParametersJson(String jsonResponse) {

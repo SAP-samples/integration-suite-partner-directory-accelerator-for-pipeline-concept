@@ -12,9 +12,8 @@ import static org.example.utils.SharedData.*;
 public class LandscapeDialog extends JDialog {
     private final JPanel mainPanel;
     private final List<JTextField> idFields;
-    private final List<JComboBox<String>> valueDropdowns;
+    private final List<JTextField> valueFields;
     private final List<JButton> deleteButtons;
-    Map<String, String> initialLandscape;
 
     public LandscapeDialog(JFrame parent) {
         super(parent, LABEL_MAINTAIN_STRING_PARAMETER + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE, true);
@@ -23,13 +22,13 @@ public class LandscapeDialog extends JDialog {
         setLocationRelativeTo(parent);
 
         try {
-            initialLandscape = httpRequestHandler.sendGetRequestStringParameterLandscape();
+            httpRequestHandler.sendGetRequestStringParameterLandscape();
         } catch (Exception ex) {
             LOGGER.error(ex);
         }
 
         idFields = new ArrayList<>();
-        valueDropdowns = new ArrayList<>();
+        valueFields = new ArrayList<>();
         deleteButtons = new ArrayList<>();
 
         mainPanel = new JPanel(new GridBagLayout());
@@ -41,14 +40,14 @@ public class LandscapeDialog extends JDialog {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
 
-        JLabel idLabel = new JLabel(colon(LABEL_ID));
+        JLabel idLabel = new JLabel(colon(LABEL_ID + (" (tenant ID)")));
         idLabel.setPreferredSize(new Dimension(100, idLabel.getPreferredSize().height));
         gbc.gridx = 0;
         gbc.gridy = 0;
         mainPanel.add(idLabel, gbc);
 
-        JLabel valueLabel = new JLabel(colon(LABEL_VALUE));
-        valueLabel.setPreferredSize(new Dimension(100, valueLabel.getPreferredSize().height));
+        JLabel valueLabel = new JLabel(colon(LABEL_VALUE + " (e.g., DEV / QA / PRD)"));
+        valueLabel.setPreferredSize(new Dimension(200, valueLabel.getPreferredSize().height));
         gbc.gridx = 1;
         gbc.gridy = 0;
         mainPanel.add(valueLabel, gbc);
@@ -61,8 +60,8 @@ public class LandscapeDialog extends JDialog {
 
         addButton.addActionListener(e -> addRow());
 
-        if (initialLandscape != null && !initialLandscape.isEmpty()) {
-            for (Map.Entry<String, String> entry : initialLandscape.entrySet()) {
+        if (currentLandscapeTenantParameters != null && !currentLandscapeTenantParameters.isEmpty()) {
+            for (Map.Entry<String, String> entry : currentLandscapeTenantParameters.entrySet()) {
                 addRow(entry.getKey(), entry.getValue());
             }
         } else {
@@ -98,10 +97,11 @@ public class LandscapeDialog extends JDialog {
             idField.setText(initialId);
         }
 
-        String[] dropdownOptions = {LANDSCAPE_PRD, LANDSCAPE_QA, LANDSCAPE_DEV};
-        JComboBox<String> valueDropdown = new JComboBox<>(dropdownOptions);
-        valueDropdown.setSelectedItem(initialValue != null ? initialValue : LANDSCAPE_PRD);
-        valueDropdown.setPreferredSize(new Dimension(100, valueDropdown.getPreferredSize().height));
+        JTextField valueField = new JTextField(20);
+        valueField.setPreferredSize(new Dimension(100, valueField.getPreferredSize().height));
+        if (initialValue != null) {
+            valueField.setText(initialValue);
+        }
 
         JButton deleteButton = new JButton(LABEL_DELETE_ENTRY);
 
@@ -111,13 +111,13 @@ public class LandscapeDialog extends JDialog {
         mainPanel.add(idField, gbc);
 
         gbc.gridx = 1;
-        mainPanel.add(valueDropdown, gbc);
+        mainPanel.add(valueField, gbc);
 
         gbc.gridx = 2;
         mainPanel.add(deleteButton, gbc);
 
         idFields.add(idField);
-        valueDropdowns.add(valueDropdown);
+        valueFields.add(valueField);
         deleteButtons.add(deleteButton);
 
         deleteButton.addActionListener(e -> deleteRow(idFields.indexOf(idField)));
@@ -128,11 +128,11 @@ public class LandscapeDialog extends JDialog {
 
     private void deleteRow(int index) {
         mainPanel.remove(idFields.get(index));
-        mainPanel.remove(valueDropdowns.get(index));
+        mainPanel.remove(valueFields.get(index));
         mainPanel.remove(deleteButtons.get(index));
 
         idFields.remove(index);
-        valueDropdowns.remove(index);
+        valueFields.remove(index);
         deleteButtons.remove(index);
 
         mainPanel.revalidate();
@@ -144,13 +144,13 @@ public class LandscapeDialog extends JDialog {
 
         for (int i = 0; i < idFields.size(); i++) {
             String newLandscapeId = idFields.get(i).getText();
-            String newLandscapeValue = (String) valueDropdowns.get(i).getSelectedItem();
+            String newLandscapeValue = valueFields.get(i).getText();
 
             newLandscape.put(newLandscapeId, newLandscapeValue);
 
             try {
-                if (initialLandscape.containsKey(newLandscapeId)) {
-                    if (!newLandscape.get(newLandscapeId).equals(initialLandscape.get(newLandscapeId))) {
+                if (currentLandscapeTenantParameters.containsKey(newLandscapeId)) {
+                    if (!newLandscape.get(newLandscapeId).equals(currentLandscapeTenantParameters.get(newLandscapeId))) {
                         httpRequestHandler.sendPutRequestStringParameters(STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE, newLandscapeId, newLandscapeValue);
                     }
                 } else {
@@ -161,7 +161,7 @@ public class LandscapeDialog extends JDialog {
             }
         }
 
-        for (String key : initialLandscape.keySet()) {
+        for (String key : currentLandscapeTenantParameters.keySet()) {
             try {
                 if (!newLandscape.containsKey(key)) {
                     httpRequestHandler.sendDeleteRequestStringParameters(STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE, key);

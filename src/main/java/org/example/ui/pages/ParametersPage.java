@@ -61,6 +61,8 @@ public class ParametersPage extends JPanel {
 
     private final int defaultGap = 20;
 
+    private final EditableHeader editableHeader;
+
     public ParametersPage(AlternativePartner alternativePartner, JFrame parentFrame) {
         pid = alternativePartner.getPid();
         this.parentFrame = parentFrame;
@@ -74,7 +76,7 @@ public class ParametersPage extends JPanel {
         headerValues.put(LABEL_PID, pid);
 
         JPanel headerContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        EditableHeader editableHeader = new EditableHeader(headerValues, true);
+        editableHeader = new EditableHeader(headerValues, true);
 
         headerContainer.add(editableHeader);
         headerContainer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -106,31 +108,35 @@ public class ParametersPage extends JPanel {
                     tabbedPane.add(LABEL_STRING_PARAMETERS, panelStringParameters);
 
                     // Landscape Stages
-//                    JPanel panelLandscapeStages = getPanelLandscapeStages();
-//                    tabbedPane.add(LABEL_LANDSCAPE_STAGES, panelLandscapeStages);
+                    JPanel panelLandscapeStages = getPanelLandscapeStages();
+                    tabbedPane.add(LABEL_LANDSCAPE_STAGES, panelLandscapeStages);
 
                     tabbedPane.addChangeListener(e -> {
                         try {
                             int index = tabbedPane.getSelectedIndex();
                             if (index == 0) { // Binary Parameters
                                 httpRequestHandler.sendGetRequestBinaryParameters(pid);
+
                                 panelCombinedDetermination.removeAll();
                                 panelCombinedDetermination.add(getPanelCombinedDetermination());
                                 panelCombinedDetermination.revalidate();
                                 panelCombinedDetermination.repaint();
                             } else if (index == 1) { // String Parameters
-                                listReceiverNames.set(getListReceiverNamesDependingOnDeterminationType(pid));
+                                listReceiverNames.set(getListReceiverNamesDependingOnDeterminationType(true));
                                 httpRequestHandler.sendGetRequestStringParameters(pid, listReceiverNames.get());
+
                                 panelStringParameters.removeAll();
                                 panelStringParameters.add(getPanelStringParameters());
                                 panelStringParameters.revalidate();
                                 panelStringParameters.repaint();
-//                            } else if (index == 2) { // Landscape Stages
-//                                // httpRequestHandler.sendGetRequestStringParameters(pid, listReceiverNames.get());
-//                                panelLandscapeStages.removeAll();
-//                                panelLandscapeStages.add(getPanelLandscapeStages());
-//                                panelLandscapeStages.revalidate();
-//                                panelLandscapeStages.repaint();
+                            } else if (index == 2) { // Landscape Stages
+                                httpRequestHandler.sendGetRequestStringParameterLandscape();
+                                httpRequestHandler.sendGetRequestAlternativePartnersLandscape(getSystemNames(true));
+
+                                panelLandscapeStages.removeAll();
+                                panelLandscapeStages.add(getPanelLandscapeStages());
+                                panelLandscapeStages.revalidate();
+                                panelLandscapeStages.repaint();
                             }
                         } catch (Exception ex) {
                             LOGGER.error(ex);
@@ -151,8 +157,8 @@ public class ParametersPage extends JPanel {
                     tabbedPane.add(LABEL_STRING_PARAMETERS, panelStringParameters);
 
                     // Landscape Stages
-//                    JPanel panelLandscapeStages = getPanelLandscapeStages();
-//                    tabbedPane.add(LABEL_LANDSCAPE_STAGES, panelLandscapeStages);
+                    JPanel panelLandscapeStages = getPanelLandscapeStages();
+                    tabbedPane.add(LABEL_LANDSCAPE_STAGES, panelLandscapeStages);
 
                     tabbedPane.addChangeListener(e -> {
                         try {
@@ -171,18 +177,21 @@ public class ParametersPage extends JPanel {
                                     panelInterfaceDetermination.repaint();
                                 }
                             } else if (index == 2) { // String Parameters
-                                listReceiverNames.set(getListReceiverNamesDependingOnDeterminationType(pid));
+                                listReceiverNames.set(getListReceiverNamesDependingOnDeterminationType(true));
                                 httpRequestHandler.sendGetRequestStringParameters(pid, listReceiverNames.get());
+
                                 panelStringParameters.removeAll();
                                 panelStringParameters.add(getPanelStringParameters());
                                 panelStringParameters.revalidate();
                                 panelStringParameters.repaint();
-//                            } else if (index == 3) { // Landscape Stages
-//                                // httpRequestHandler.sendGetRequestStringParameters(pid, listReceiverNames.get());
-//                                panelLandscapeStages.removeAll();
-//                                panelLandscapeStages.add(getPanelLandscapeStages());
-//                                panelLandscapeStages.revalidate();
-//                                panelLandscapeStages.repaint();
+                            } else if (index == 3) { // Landscape Stages
+                                httpRequestHandler.sendGetRequestStringParameterLandscape();
+                                httpRequestHandler.sendGetRequestAlternativePartnersLandscape(getSystemNames(true));
+
+                                panelLandscapeStages.removeAll();
+                                panelLandscapeStages.add(getPanelLandscapeStages());
+                                panelLandscapeStages.revalidate();
+                                panelLandscapeStages.repaint();
                             }
                         } catch (Exception ex) {
                             LOGGER.error(ex);
@@ -199,32 +208,36 @@ public class ParametersPage extends JPanel {
                     tabbedPane.add(LABEL_STRING_PARAMETERS, panelStringParameters);
 
                     // Landscape Stages
-//                    JPanel panelLandscapeStages = getPanelLandscapeStages();
-//                    tabbedPane.add(LABEL_LANDSCAPE_STAGES, panelLandscapeStages);
+                    JPanel panelLandscapeStages = getPanelLandscapeStages();
+                    tabbedPane.add(LABEL_LANDSCAPE_STAGES, panelLandscapeStages);
 
                     tabbedPane.addChangeListener(e -> {
                         try {
                             int index = tabbedPane.getSelectedIndex();
                             if (index == 0) { // Point to Point String Parameters
-                                listReceiverNames.set(getListReceiverNamesDependingOnDeterminationType(pid));
+                                listReceiverNames.set(getListReceiverNamesDependingOnDeterminationType(false));
                                 httpRequestHandler.sendGetRequestStringParameters(pid, listReceiverNames.get());
+
                                 pointToPointDetermination.removeAll();
                                 pointToPointDetermination.add(getPanelPointToPointDetermination());
                                 pointToPointDetermination.revalidate();
                                 pointToPointDetermination.repaint();
                             } else if (index == 1) { // String Parameters
-                                listReceiverNames.set(getListReceiverNamesDependingOnDeterminationType(pid));
+                                listReceiverNames.set(getListReceiverNamesDependingOnDeterminationType(false));
                                 httpRequestHandler.sendGetRequestStringParameters(pid, listReceiverNames.get());
+
                                 panelStringParameters.removeAll();
                                 panelStringParameters.add(getPanelStringParameters());
                                 panelStringParameters.revalidate();
                                 panelStringParameters.repaint();
-//                            } else if (index == 2) { // Landscape Stages
-//                                // httpRequestHandler.sendGetRequestStringParameters(pid, listReceiverNames.get());
-//                                panelLandscapeStages.removeAll();
-//                                panelLandscapeStages.add(getPanelLandscapeStages());
-//                                panelLandscapeStages.revalidate();
-//                                panelLandscapeStages.repaint();
+                            } else if (index == 2) { // Landscape Stages
+                                httpRequestHandler.sendGetRequestStringParameterLandscape();
+                                httpRequestHandler.sendGetRequestAlternativePartnersLandscape(getSystemNames(false));
+
+                                panelLandscapeStages.removeAll();
+                                panelLandscapeStages.add(getPanelLandscapeStages());
+                                panelLandscapeStages.revalidate();
+                                panelLandscapeStages.repaint();
                             }
                         } catch (Exception ex) {
                             LOGGER.error(ex);
@@ -303,7 +316,7 @@ public class ParametersPage extends JPanel {
         String[] labelRadioButtons = {LABEL_ERROR, LABEL_IGNORE, LABEL_DEFAULT};
         String typeSelected = templateReceiverDetermination.getType();
 
-        JTextField defaultReceiverTextField = new JTextField(templateReceiverDetermination.getDefaultReceiver(), 15);
+        JTextField defaultReceiverTextField = new JTextField(templateReceiverDetermination.getDefaultReceiver(), UI_TEXT_FIELD_COLUMNS);
         keyPanel.addNewComponent(COMPONENT_RECEIVER_DEFAULT, defaultReceiverTextField);
 
         JPanel jPanelRadioButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -522,7 +535,7 @@ public class ParametersPage extends JPanel {
                 stringParameterId = STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + stringParameterLabel.replaceAll(".*\"(.*?)\".*", "$1"); // extract receiver for id
             } else if (stringParameterLabel.startsWith(STRING_PARAMETER_LABEL_DATA_STORE)) {
                 stringParameterId = stringParameterLabel.replace(STRING_PARAMETER_LABEL_DATA_STORE, "");
-            }else {
+            } else {
                 stringParameterId = stringParameterLabel;
             }
 
@@ -564,9 +577,175 @@ public class ParametersPage extends JPanel {
     }
 
     private JPanel showViewLandscapeStages() {
-        // todo: if landscape string parameter empty or not existing, then show warning to configure landscape first
-        // todo: else show stages maintained in landscape parameter
-        return new JPanel();
+        JPanel landscapePanel = new JPanel(new BorderLayout());
+
+        if (currentLandscapeTenantParameters.isEmpty()) {
+            JPanel panel = new JPanel();
+            panel.add(new JLabel(LABEL_MAINTAIN_LANDSCAPE_FIRST));
+            landscapePanel.add(panel, BorderLayout.CENTER);
+            return landscapePanel;
+        }
+
+        Set<String> systemNames = getSystemNames(false);
+        JComboBox<String> dropdown = new JComboBox<>(systemNames.toArray(new String[0]));
+        JPanel dropdownPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        dropdownPanel.add(dropdown);
+
+        JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JRadioButton businessSystemNameButton = new JRadioButton(SCHEME_BUSINESS_SYSTEM_NAME, true);
+        JRadioButton logicalSystemNameButton = new JRadioButton(SCHEME_LOGICAL_SYSTEM_NAME);
+
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(businessSystemNameButton);
+        buttonGroup.add(logicalSystemNameButton);
+
+        radioPanel.add(businessSystemNameButton);
+        radioPanel.add(logicalSystemNameButton);
+
+        JPanel selectionPanel = new JPanel(new GridLayout(2, 1));
+        selectionPanel.add(dropdownPanel);
+        selectionPanel.add(radioPanel);
+        landscapePanel.add(selectionPanel, BorderLayout.NORTH);
+
+        KeyPanel contentPanel = new KeyPanel(new GridBagLayout());
+        landscapePanel.add(contentPanel, BorderLayout.CENTER);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(getSendButtonLandscape(contentPanel, dropdown, buttonGroup));
+        landscapePanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        try {
+            String initialSystemAlias = (String) dropdown.getSelectedItem();
+            updateLandscapeContent(contentPanel, gbc, initialSystemAlias, SCHEME_BUSINESS_SYSTEM_NAME);
+
+            businessSystemNameButton.addItemListener(e -> {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    String selectedAlias = (String) dropdown.getSelectedItem();
+                    updateLandscapeContent(contentPanel, gbc, selectedAlias, SCHEME_BUSINESS_SYSTEM_NAME);
+                }
+            });
+
+            logicalSystemNameButton.addItemListener(e -> {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    String selectedAlias = (String) dropdown.getSelectedItem();
+                    updateLandscapeContent(contentPanel, gbc, selectedAlias, SCHEME_LOGICAL_SYSTEM_NAME);
+                }
+            });
+
+            dropdown.addActionListener(e -> {
+                String selectedAlias = (String) dropdown.getSelectedItem();
+                String scheme = getSelectedButtonText(buttonGroup);
+                updateLandscapeContent(contentPanel, gbc, selectedAlias, scheme);
+            });
+        } catch (Exception e) {
+            LOGGER.error(e);
+        }
+
+        return landscapePanel;
+    }
+
+    private void updateLandscapeContent(KeyPanel panel, GridBagConstraints gbc, String systemAlias, String scheme) {
+        panel.removeAll();
+        int rowIndex = 0;
+        for (Map.Entry<String, String> landscapeTenantEntry : currentLandscapeTenantParameters.entrySet()) {
+            String stage = landscapeTenantEntry.getValue();
+
+            String initialSystemName = currentLandscapeScenarioParameters.stream()
+                    .filter(obj -> obj.getAgency().equals(stage)
+                            && obj.getScheme().equals(scheme)
+                            && obj.getPid().equals(systemAlias))
+                    .map(AlternativePartner::getId)
+                    .findFirst()
+                    .orElse("");
+
+            JTextField systemNameField = new JTextField(initialSystemName, 20);
+
+            String uiComponentKey = scheme + "-" + stage + "-" + systemAlias;
+            panel.addNewComponent(uiComponentKey, systemNameField);
+
+            JLabel stageLabel = new JLabel(stage);
+            stageLabel.setPreferredSize(new Dimension(100, stageLabel.getPreferredSize().height));
+
+            JLabel httpLabel = new JLabel("");
+            panel.addNewComponent(uiComponentKey + COMPONENT_SUFFIX_HTTP_LABEL, httpLabel);
+
+            gbc.gridx = 0;
+            gbc.gridy = rowIndex;
+            panel.add(systemNameField, gbc);
+
+            gbc.gridx = 1;
+            panel.add(stageLabel, gbc);
+
+            gbc.gridx = 2;
+            panel.add(httpLabel, gbc);
+
+            rowIndex++;
+        }
+        panel.revalidate();
+        panel.repaint();
+    }
+
+    private JButton getSendButtonLandscape(KeyPanel keyPanel, JComboBox<String> dropdown, ButtonGroup buttonGroup) {
+        JButton sendButton = new JButton(LABEL_SEND_CHANGES_TO_API);
+        sendButton.addActionListener(e -> {
+            String selectedSystemNameAlias = (String) dropdown.getSelectedItem();
+            String selectedScheme = getSelectedButtonText(buttonGroup);
+
+            for (String componentKey : keyPanel.getAllKeys()) {
+                if (componentKey.startsWith(selectedScheme + "-") && componentKey.endsWith("-" + selectedSystemNameAlias)) {
+                    JTextField keyField = (JTextField) keyPanel.getComponent(componentKey);
+
+                    String stage = componentKey.split("-")[1];
+                    String currentSystemName = keyField.getText();
+
+                    String oldSystemName = currentLandscapeScenarioParameters.stream()
+                            .filter(partner -> partner.getScheme().equals(selectedScheme)
+                                    && partner.getAgency().equals(stage)
+                                    && partner.getPid().equals(selectedSystemNameAlias))
+                            .map(AlternativePartner::getId)
+                            .findFirst()
+                            .orElse("");
+
+                    try {
+                        if (!oldSystemName.isEmpty() && currentSystemName.isEmpty()) {
+                            String httpResponse = httpRequestHandler.sendDeleteRequestAlternativePartners(stage, selectedScheme, oldSystemName);
+                            showHttpResponseWithTimer((JLabel) keyPanel.getComponent(componentKey + COMPONENT_SUFFIX_HTTP_LABEL), httpResponse);
+
+                            currentLandscapeScenarioParameters.removeIf(partner ->
+                                    partner.getScheme().equals(selectedScheme)
+                                            && partner.getAgency().equals(stage)
+                                            && partner.getId().equals(oldSystemName)
+                                            && partner.getPid().equals(selectedSystemNameAlias));
+
+                        } else if (!oldSystemName.isEmpty() && !currentSystemName.isEmpty() && !oldSystemName.equals(currentSystemName)) {
+                            httpRequestHandler.sendDeleteRequestAlternativePartners(stage, selectedScheme, oldSystemName);
+                            String httpResponse = httpRequestHandler.sendPostRequestAlternativePartners(stage, selectedScheme, currentSystemName, selectedSystemNameAlias);
+                            showHttpResponseWithTimer((JLabel) keyPanel.getComponent(componentKey + COMPONENT_SUFFIX_HTTP_LABEL), httpResponse);
+
+                            currentLandscapeScenarioParameters.removeIf(partner ->
+                                    partner.getScheme().equals(selectedScheme)
+                                            && partner.getAgency().equals(stage)
+                                            && partner.getId().equals(oldSystemName)
+                                            && partner.getPid().equals(selectedSystemNameAlias));
+                            currentLandscapeScenarioParameters.add(new AlternativePartner(stage, selectedScheme, currentSystemName, selectedSystemNameAlias));
+
+                        } else if (oldSystemName.isEmpty() && !currentSystemName.isEmpty()) {
+                            String httpResponse = httpRequestHandler.sendPostRequestAlternativePartners(stage, selectedScheme, currentSystemName, selectedSystemNameAlias);
+                            showHttpResponseWithTimer((JLabel) keyPanel.getComponent(componentKey + COMPONENT_SUFFIX_HTTP_LABEL), httpResponse);
+
+                            currentLandscapeScenarioParameters.add(new AlternativePartner(stage, selectedScheme, currentSystemName, selectedSystemNameAlias));
+                        }
+                    } catch (Exception exception) {
+                        //
+                    }
+                }
+            }
+        });
+        return sendButton;
     }
 
     private boolean areAllSystemCellsEmpty(JTable table) {
@@ -1393,7 +1572,7 @@ public class ParametersPage extends JPanel {
         }
     }
 
-    private Set<String> getListReceiverNamesDependingOnDeterminationType(String pid) {
+    private Set<String> getListReceiverNamesDependingOnDeterminationType(boolean shouldSendRequest) {
         Set<String> listReceiverNames;
         if (determinationType.equals(LABEL_POINT_TO_POINT)) {
             listReceiverNames = new LinkedHashSet<>();
@@ -1403,13 +1582,22 @@ public class ParametersPage extends JPanel {
                 // LOGGER.error(e);
             }
         } else {
-            try {
-                httpRequestHandler.sendGetRequestBinaryParameters(pid);
-            } catch (Exception e) {
-                LOGGER.error(e);
+            if (shouldSendRequest) {
+                try {
+                    httpRequestHandler.sendGetRequestBinaryParameters(pid);
+                } catch (Exception e) {
+                    LOGGER.error(e);
+                }
             }
             listReceiverNames = currentReceiverDetermination.getSetReceiverNames();
         }
         return listReceiverNames;
+    }
+
+    private Set<String> getSystemNames(boolean shouldSendRequest) {
+        Set<String> systemNames = new LinkedHashSet<>();
+        systemNames.add(editableHeader.currentHeaderValues.get(LABEL_AGENCY));
+        systemNames.addAll(getListReceiverNamesDependingOnDeterminationType(shouldSendRequest));
+        return systemNames;
     }
 }

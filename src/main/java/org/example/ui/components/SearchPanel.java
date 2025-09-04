@@ -84,7 +84,7 @@ public class SearchPanel extends JPanel {
         refreshTableConsumer.accept(filteredList);
     }
 
-    private void resetSearch() {
+    public void resetSearch() {
         refreshTableConsumer.accept(originalData);
         agencySearchField.setText("");
         schemeSearchField.setText("");
