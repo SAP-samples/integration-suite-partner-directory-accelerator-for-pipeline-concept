@@ -260,7 +260,7 @@ By clicking the "Send changes to API" button, existing string parameters startin
 
 In the "String Parameters" tab, the string parameters can be added, updated, and deleted by entering the desired value in the input field of the corresponding ID.
 
-The string parameters relevant to the Pipeline Concept are listed in the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#message-processing-behavior). 
+The string parameters relevant to the Pipeline Concept are listed in the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#message-processing-behavior).
 
 To implement [Point-to-Point scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#special-case%3A-point-to-point-scenarios), please select this option when [adding a new alternative partner](#add-new-alternative-partner).
 
@@ -340,10 +340,10 @@ When generating an XSLT or trying to send it to the API, a syntax validation che
 
 Currently, there are some limits which the tool is not capable of:
 
-* **Deletion** of existing alternative partners and binary parameters is not possible (see [issue #7](../../issues/7). String parameters can be deleted. To delete existing entries, the [Partner Directory API](https://hub.sap.com/api/PartnerDirectory/overview) or the [Partner Directory UI](https://help.sap.com/docs/integration-suite/sap-integration-suite/managing-partner-directory-entries?version=CLOUD) can be used.
+* **Deletion** of existing alternative partners and binary parameters is not possible (see [issue #7](../../issues/7)). String parameters can be deleted. To delete existing entries, the [Partner Directory API](https://hub.sap.com/api/PartnerDirectory/overview) or the [Partner Directory UI](https://help.sap.com/docs/integration-suite/sap-integration-suite/managing-partner-directory-entries?version=CLOUD) can be used.
 * The string parameter "ReceiverSpecificQueue" can currently not be [replicated](#replication-page).
 * The [special case "Bypass Receiver Determination"](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/special-cases#pipeline-bypass-options) (which uses a string parameter for receiver determination and an XSLT for interface determination) is currently not supported.
-* Partner IDs cannot be changed (see [issue #9]((../../issues/9).
+* Partner IDs cannot be changed (see [issue #9](../../issues/9).
 * For the community extension [Process Integration Pipeline Extension - Restart via Data Store](https://community.sap.com/t5/integration-blog-posts/process-integration-pipeline-extension-restart-via-data-store/ba-p/14153116), the restart job profiles are currently not supported. In contrast, the scenario-specific restart configuration settings (string parameters RetryDataStore, restartMode, and MaxDataStoreRetries) are supported.
 
 To find or to report an issue, please refer to section [How to obtain support](#how-to-obtain-support).
