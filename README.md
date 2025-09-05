@@ -26,10 +26,12 @@ Before using this tool, please make yourself familiar with the Pipeline Concept.
         - [Tenant dropdown menu](#tenant-dropdown-menu)
         - [Add new tenant](#add-new-tenant)
         - [Edit selected tenant](#edit-selected-tenant)
+        - [Delete selected tenant](#delete-selected-tenant)
         - [Reload data from API](#reload-data-from-api)
     + [Alternative Partners Page](#alternative-partners-page)
         - [Search option](#search-option)
         - [Alternative Partners Table](#alternative-partners-table)
+        - [Maintain SAP_Integration_Suite_Landscape](#maintain-sap_integration_suite_landscape)
         - [Add New Alternative Partner](#add-new-alternative-partner)
         - [Replication to another Tenant](#replication-to-another-tenant)
     + [Parameters Page](#parameters-page)
@@ -40,10 +42,11 @@ Before using this tool, please make yourself familiar with the Pipeline Concept.
             * [Interface Determination](#interface-determination)
         - [Option 3: Point to Point](#option-3-point-to-point)
         - [String Parameters](#string-parameters)
+        - [Landscape Stages](#landscape-stages)
     + [Replication Page](#replication-page)
         - [Replication Table](#replication-table)
         - [(De)Select all shown entries](#deselect-all-shown-entries)
-        - [Replication to another Tenant](#replication-to-another-tenant-1)
+        - [Dialog for Replication to another Tenant](#dialog-for-replication-to-another-tenant)
 * [Troubleshooting](#troubleshooting)
     + [Error when configuring API: (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target](#error-when-configuring-api-certificate_unknown-pkix-path-building-failed-sunsecurityprovidercertpathsuncertpathbuilderexception-unable-to-find-valid-certification-path-to-requested-target)
     + [Error when configuring API: JSONObject["d"] not found / <br/> Error when configuring API: A JSONObject text must begin with '{' at 1 [character 2 line 1] / <br/> Error when configuring API: URI with undefined scheme](#error-when-configuring-api-jsonobjectd-not-found---error-when-configuring-api-a-jsonobject-text-must-begin-with--at-1-character-2-line-1---error-when-configuring-api-uri-with-undefined-scheme)
@@ -130,6 +133,12 @@ If you are facing errors while configuring the API, please refer to the section 
 
 The "Edit selected tenant" button gives you the option to edit the tenant which you have currently selected. E.g., you can update outdated credentials, give it a different name, or (un)mark it as critical. The meaning of the input fields is explained [above](#add-new-tenant).
 
+#### Delete selected tenant
+
+By using the "Delete selected tenant" button, you can remove the credentials maintained for the current tenant (which in the background will remove this tenant from your local `tenants.json` file, you can find more information about this file [here](#tenant-dropdown-menu)).
+
+The last tenant cannot be deleted. Instead, you can [edit the currently selected tenant](#edit-selected-tenant).
+
 #### Reload data from API
 
 The "Reload data from API" button can be used to get the latest data from the API and display the latest alternative partners in the [table below](#alternative-partners-table).
@@ -146,17 +155,25 @@ It is possible to search entries within the [alternative partners table](#altern
 
 #### Alternative Partners Table
 
-Since the tool is developed to support the Pipeline Concept, only these entries are shown for which the scheme equals "SenderInterface".
+Since the tool is developed to support the Pipeline Concept, so in the table, only these alternative partners are shown which are related to the Pipeline, by using filter criteria: all alternative partners are shown where the scheme equals "SenderInterface". Additionally, to support [XI inbound scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#partner-id), alternative partners are displayed for which a receiver determination is maintained as a binary parameter or string parameter.
 
 You can sort the entries of the table by clicking on the name of the column you want to sort by.
 
 To edit an alternative partner and interact with the binary parameters and string parameters with the same Partner ID, click on a row of the table to navigate to its [parameters page](#parameters-page).
 
+#### Maintain SAP_Integration_Suite_Landscape
+
+![Maintain SAP_Integration_Suite_Landscape](images/LandscapeDialog.png)
+
+With the [string parameter SAP_Integration_Suite_Landscape](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/landscape-stages#prerequisite:-map-tenant-name-to-landscape-stage), you can map a tenant name to a stage ID. Depending on the number of stages in your landscape, you can add more lines to create new entries. Additionally, you can change or delete existing entries.
+
+For demonstration purposes, in the screenshot, a trial tenant is shown as sample DEV tenant.
+
 #### Add New Alternative Partner
 
 ![Add New Alternative Partner Image](images/AddAlternativePartnerDialog.png)
 
-At the bottom of the page, the "Add new Alternative Partner" button allows you to create a new entry for an alternative partner. Insert the required values: **Sender System** (named "agency" for alternative partner), **Sender Interface** (named "id" for alternative partner), and **Partner ID** (also known as PID). The value for "**Scheme**" is constantly set to "SenderInterface" because this is required for the Pipeline Concept.
+At the bottom of the page, the "Add new Alternative Partner" button allows you to create a new alternative partner. Insert the required values: **Sender System** (named "agency" for alternative partner), **Sender Interface** (named "id" for alternative partner), and **Partner ID** (also known as PID). The value for "**Scheme**" is set to "SenderInterface" by default because this is used by most scenarios for the Pipeline Concept. For [XI inbound scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#partner-id) using the Scheme as namespace, you can change this default value.
 
 Additionally, decide for a type of receiver / interface determination:
 * **[Option 1: Combined XSLT](#option-1-combined-xslt)** is the default and allows you to have receiver and interface determinations combined in one single XSLT mapping, as released in version 1.0.8 of the Pipeline Concept.
@@ -165,7 +182,7 @@ Additionally, decide for a type of receiver / interface determination:
 
 > Please note that if you choose a type of receiver / interface determination but do not create any determination while the tool is running, this information will not be preserved upon restarting the tool. This is because the tool does not have a data store for the type of receiver / interface determination to retain information across multiple sessions.
 
-By sending the data to the API, a new alternative partner is created and shown in the [alternative partners table](#alternative-partners-table). Please note that after creating a new alternative partner, it is not possible to change the Partner ID (PID) in this UI tool. By clicking on your newly created entry in the table, you can also add binary parameters and string parameters.
+By sending the data to the API, a new alternative partner is created and shown as last entry in the [alternative partners table](#alternative-partners-table). Please note that after creating a new alternative partner, it is not possible to change the Partner ID (PID) in this UI tool (see [known issues](#known-issues). By clicking on your newly created entry in the table, you can also add binary parameters, string parameters, and alternative partners for landscape stages.
 
 #### Replication to another Tenant
 
@@ -187,7 +204,7 @@ In the "Receiver and Interface Determination" tab, a combined XSLT mapping for b
 
 For the receiver determination, it consists of two parts: the processing if no receiver is found (represented by radio buttons) and conditions with resulting receivers (represented by a table). If no receiver is found, the options "Error", "Ignore", and "Default" are available. In case the "Default" option is selected, a default receiver system needs to be specified. In the table, conditions and resulting receiver systems can be specified. It is possible to add new rows, move a selected row up or down, and delete a selected row.
 
-For each receiver specified in the receiver determination, an interface determination should be present. First, select the receiver for which you want to see the interface determination. The radio buttons contain all receiver systems present in the receiver determination. In the table, conditions and resulting receiver interfaces can be specified. It is possible to add new rows, move a selected row up or down, and delete a selected row.
+For each receiver specified in the receiver determination, an interface determination should be present. First, select the receiver for which you want to see the interface determination. The dropdown menu contain all receiver systems present in the receiver determination. In the table, conditions and resulting receiver interfaces can be specified. It is possible to add new rows, move a selected row up or down, and delete a selected row.
 
 By clicking the "Generate resulting XSLT" button, the information from the table on the left-hand side is read to generate an XSLT based on this data and show it on the right-hand side. Now, the newly generated XSLT can be sent to the API.
 
@@ -219,7 +236,7 @@ If you get an invalid syntax warning, please refer to the [troubleshooting secti
 
 In the "Interface Determination" tab, XSLT mappings to determine the interface for each possible receiver can be created or edited. For each receiver specified in the receiver determination, an interface determination should be present.
 
-First, select the receiver for which you want to see the interface determination. The radio buttons contain all receiver systems present in the receiver determination.
+First, select the receiver for which you want to see the interface determination. The dropdown menu contain all receiver systems present in the receiver determination.
 
 In the table, conditions and resulting receiver interfaces can be specified. It is possible to add new rows, move a selected row up or down, and delete a selected row.
 
@@ -243,11 +260,25 @@ By clicking the "Send changes to API" button, existing string parameters startin
 
 In the "String Parameters" tab, the string parameters can be added, updated, and deleted by entering the desired value in the input field of the corresponding ID.
 
-All string parameters relevant to the Pipeline Concept are listed in the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#message-processing-behavior).
+The string parameters relevant to the Pipeline Concept are listed in the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#message-processing-behavior). 
 
 To implement [Point-to-Point scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#special-case%3A-point-to-point-scenarios), please select this option when [adding a new alternative partner](#add-new-alternative-partner).
 
 By clicking the "Send changes to API" button, all values in the input fields are read and sent to the API to create or update the relevant string parameter. If an input field is empty, the relevant string parameter will be deleted if it exists.
+
+#### Landscape Stages
+
+![Landscape Stages Image](images/ParametersPageLandscapeStages.png)
+
+The support of [landscape stages](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/landscape-stages) was introduced with version 1.0.9 of the Pipeline Concept.
+
+Make sure to [maintain the string parameter SAP_Integration_Suite_Landscape](#maintain-sap_integration_suite_landscape) before using the tab for landscape stages.
+
+All sender and receiver systems of the current scenario are shown in the dropdown. This should be the system alias. With the radio buttons, you can switch between BusinessSystemName and LogicalSystemName.
+
+For each value maintained in SAP_Integration_Suite_Landscape, a line is shown. If mappings of actual name to alias are existing, these are shown. Note that only these mappings are shown where the stage (alias of alternative partner) matches one of the value in SAP_Integration_Suite_Landscape.
+
+You can maintain new actual system names, and edit or existing ones. By clicking "Send changes to API", HTTP requests are sent to reflect your changes in the Partner Directory.
 
 ### Replication Page
 
@@ -257,19 +288,23 @@ The idea of the replication page is to allow selecting multiple entries of the P
 
 ![Replication Page Image](images/ReplicationPage.png)
 
-The replication table shows alternative partners (similar to the [alternative partners table](#alternative-partners-table)) and is extended by a checkbox column. By clicking a checkbox in a row, the alternative partner is selected for replication.
+The replication table shows alternative partners and is extended by a checkbox column. By clicking a checkbox in a row, the alternative partner is selected for replication. In this table, the alternative partners of the [alternative partners table](#alternative-partners-table) are shown as well as the alternative partners for [landscape stages](#landscape-stages).
+
+Selecting an alternative partner means that during replication, all binary parameters and string parameters with the same Pid are replicated as well.
 
 #### (De)Select all shown entries
 
 The buttons "Deselect all shown entries" and "Select all shown entries" on the bottom allow to (de)select multiple alternative partners at once. This can be used in combination with the [search option](#search-option) which with you can filter for specific entries and select all these filtered entries at once.
 
-#### Replication to another Tenant
+#### Dialog for Replication to another Tenant
 
 ![Replication Page Dialog](images/ReplicationDialog.png)
 
 Once you have selected all alternative partners to replicate, you can click on "Replicate to another Tenant". By using the dropdown menu, you need to select your target tenant from the list of tenants you previously added.
 
 You can decide to overwrite entries which already exist in the target tenant. If the checkbox is not checked, only HTTP Post requests are sent to create new entries. If the combination of keys of an entry already exist, the request will fail. In contrast, if the checkbox is checked, an HTTP Post request is sent at first. If the combination of keys already exist, the tools sends an additional HTTP Put request to overwrite the existing entry in the target tenant.
+
+If you select "Include SAP_Integration_Suite_Landscape", all string parameters having the Pid "SAP_Integration_Suite_Landscape" are included in the replication.
 
 The button "Replicate x alternative partners with binary / string parameters to selected tenant" starts the replication to the selected tenant. Depending (among others) on the number of replicated entries and your network connection, this can take some time. During replication, you can see details in the logs. Once finished, the view is switched to the [alternative partners page](#alternative-partners-page) of the target tenant.
 
@@ -305,8 +340,11 @@ When generating an XSLT or trying to send it to the API, a syntax validation che
 
 Currently, there are some limits which the tool is not capable of:
 
-* **Deletion** of existing alternative partners and binary parameters is not possible. String parameters can be deleted. To delete existing entries, the [Partner Directory API](https://hub.sap.com/api/PartnerDirectory/overview) or the [Partner Directory UI](https://help.sap.com/docs/integration-suite/sap-integration-suite/managing-partner-directory-entries?version=CLOUD) can be used.
-* [**Landscape stages**](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/landscape-stages) using the string parameter SAP_Integration_Suite_Landscape are not supported as it was introduced in version 1.0.9 of the Pipeline Concept.
+* **Deletion** of existing alternative partners and binary parameters is not possible (see [issue #7](../../issues/7). String parameters can be deleted. To delete existing entries, the [Partner Directory API](https://hub.sap.com/api/PartnerDirectory/overview) or the [Partner Directory UI](https://help.sap.com/docs/integration-suite/sap-integration-suite/managing-partner-directory-entries?version=CLOUD) can be used.
+* The string parameter "ReceiverSpecificQueue" can currently not be [replicated](#replication-page).
+* The [special case "Bypass Receiver Determination"](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/special-cases#pipeline-bypass-options) (which uses a string parameter for receiver determination and an XSLT for interface determination) is currently not supported.
+* Partner IDs cannot be changed (see [issue #9]((../../issues/9).
+* For the community extension [Process Integration Pipeline Extension - Restart via Data Store](https://community.sap.com/t5/integration-blog-posts/process-integration-pipeline-extension-restart-via-data-store/ba-p/14153116), the restart job profiles are currently not supported. In contrast, the scenario-specific restart configuration settings (string parameters RetryDataStore, restartMode, and MaxDataStoreRetries) are supported.
 
 To find or to report an issue, please refer to section [How to obtain support](#how-to-obtain-support).
 

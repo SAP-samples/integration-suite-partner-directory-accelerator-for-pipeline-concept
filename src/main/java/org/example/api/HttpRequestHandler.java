@@ -72,7 +72,7 @@ public class HttpRequestHandler {
 
         tenantCredentials.setAccessToken(token);
         tenantCredentials.setTokenExpirationDateTime(tokenExpirationDateTime);
-        jsonFileHandler.updateTenantToken(tenantCredentials.getUrl(), token, tokenExpirationDateTime);
+        jsonFileHandler.saveJsonFile();
 
         return token;
     }
@@ -80,7 +80,7 @@ public class HttpRequestHandler {
     private void requestTokenIfExpired() throws IOException, InterruptedException {
         if (!tenantCredentials.isTokenValid()) {
             String token = requestToken();
-            requestBuilder.header("Authorization", "Bearer " + token);
+            requestBuilder.setHeader("Authorization", "Bearer " + token);
         }
     }
 

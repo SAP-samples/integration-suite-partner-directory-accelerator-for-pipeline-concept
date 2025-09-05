@@ -89,6 +89,7 @@ public class ParametersPage extends JPanel {
         JTabbedPane tabbedPane = new JTabbedPane();
 
         try {
+            LOGGER.info("Parameters Page selected with Pid \"{}\"", pid);
             httpRequestHandler.sendGetRequestBinaryParameters(pid);
             httpRequestHandler.sendGetRequestStringParameters(pid);
 
@@ -114,6 +115,7 @@ public class ParametersPage extends JPanel {
                     tabbedPane.addChangeListener(e -> {
                         try {
                             int index = tabbedPane.getSelectedIndex();
+                            LOGGER.info("Selected tab: {}", tabbedPane.getTitleAt(index));
                             if (index == 0) { // Binary Parameters
                                 httpRequestHandler.sendGetRequestBinaryParameters(pid);
 
@@ -163,6 +165,7 @@ public class ParametersPage extends JPanel {
                     tabbedPane.addChangeListener(e -> {
                         try {
                             int index = tabbedPane.getSelectedIndex();
+                            LOGGER.info("Selected tab: {}", tabbedPane.getTitleAt(index));
                             if (index == 0 || index == 1) { // Binary Parameters
                                 httpRequestHandler.sendGetRequestBinaryParameters(pid);
                                 if (index == 0) {
@@ -214,6 +217,7 @@ public class ParametersPage extends JPanel {
                     tabbedPane.addChangeListener(e -> {
                         try {
                             int index = tabbedPane.getSelectedIndex();
+                            LOGGER.info("Selected tab: {}", tabbedPane.getTitleAt(index));
                             if (index == 0) { // Point to Point String Parameters
                                 listReceiverNames.set(getListReceiverNamesDependingOnDeterminationType(false));
                                 httpRequestHandler.sendGetRequestStringParameters(pid, listReceiverNames.get());

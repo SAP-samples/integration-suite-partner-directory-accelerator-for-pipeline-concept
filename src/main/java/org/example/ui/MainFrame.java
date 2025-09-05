@@ -151,7 +151,10 @@ public class MainFrame extends JFrame {
             }
         });
 
-        reloadButton.addActionListener(e -> getAndShowLatestAlternativePartners());
+        reloadButton.addActionListener(e -> {
+            LOGGER.info("Reload Alternative Partners");
+            getAndShowLatestAlternativePartners();
+        });
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -187,7 +190,7 @@ public class MainFrame extends JFrame {
                 }
 
                 try {
-                    LOGGER.info("Tenant URL selected: {}", selectedTenant.getUrl());
+                    LOGGER.info("Tenant \"{}\" selected with URL {}", selectedTenant.getName(), selectedTenant.getUrl());
                     httpRequestHandler = new HttpRequestHandler(selectedTenant);
 
                     getAndShowLatestAlternativePartners();

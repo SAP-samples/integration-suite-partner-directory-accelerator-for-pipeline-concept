@@ -91,6 +91,7 @@ public class AlternativePartnersPage extends JPanel {
 
         JButton transportButton = new JButton(LABEL_TRANSPORT_ALTERNATIVE_PARTNERS);
         transportButton.addActionListener(e -> {
+            LOGGER.info("Replication Page selected");
             if (tenantCredentialsList.size() <= 1) {
                 JOptionPane.showMessageDialog(parentFrame, LABEL_TRANSPORT_ERROR_ADD_TENANT, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
             } else {

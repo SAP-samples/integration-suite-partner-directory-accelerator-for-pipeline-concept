@@ -177,13 +177,4 @@ public class JsonFileHandler {
 
         return tenantsList;
     }
-
-    public void updateTenantToken(String url, String accessToken, String expirationDateTime) {
-        TenantCredentials oldTenant = getExistingTenantByUrl(url);
-
-        if (oldTenant != null) {
-            TenantCredentials newTenant = new TenantCredentials(oldTenant.getName(), oldTenant.isCritical(), oldTenant.getUrl(), oldTenant.getTokenurl(), oldTenant.getClientid(), oldTenant.getClientsecret(), accessToken, expirationDateTime);
-            replaceTenant(oldTenant, newTenant);
-        }
-    }
 }
