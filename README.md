@@ -66,8 +66,6 @@ Before using this tool, please make yourself familiar with the Pipeline Concept.
 
 The tool is built using OpenJDK 17 by SapMachine, which is required and can be downloaded [here](https://sap.github.io/SapMachine/).
 
-As a web-based alternative, the SAP Business Application Studio can be used. A tutorial on how to set it up can be found [here](https://developers.sap.com/tutorials/appstudio-onboarding.html). A dev space of type "Basic" includes everything needed to run the tool.
-
 ## Download and Installation
 
 Please download the latest version of the tool from the [releases section](../../releases/latest).
@@ -280,7 +278,7 @@ All sender and receiver systems of the current scenario are shown in the dropdow
 
 For each value maintained in SAP_Integration_Suite_Landscape, a line is shown. If mappings of actual name to alias are existing, these are shown. Note that only these mappings are shown where the stage (alias of alternative partner) matches one of the value in SAP_Integration_Suite_Landscape.
 
-You can maintain new actual system names, and edit or existing ones. By clicking "Send changes to API", HTTP requests are sent to reflect your changes in the Partner Directory.
+You can maintain new actual system names, and edit or existing ones. By clicking "Send changes to API", HTTP requests are sent to reflect your changes in the Partner Directory. **Note that only the currently shown entries are sent to the API.** This means that if you are making changes for different systems or schemes, make sure to send them to the API every time before switching to a new view.
 
 ### Replication Page
 
