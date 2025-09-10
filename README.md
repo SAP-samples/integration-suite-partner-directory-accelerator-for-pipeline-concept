@@ -12,9 +12,22 @@ The purpose of this tool is to simplify the interaction with the Partner Directo
 
 Before using this tool, please make yourself familiar with the Pipeline Concept. An introduction to the Pipeline Concept can be found in this [SAP Community blog](https://community.sap.com/t5/technology-blogs-by-sap/introducing-the-new-pipeline-concept-in-cloud-integration/ba-p/13639651). Being used for the Pipeline Concept, the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept) provides further information on the Partner Directory. The tool is written in Java 17 and uses the Partner Directory API to provide a Java Swing UI for simple user interaction with the Partner Directory content. More information about this API is available on the [Business Accelerator Hub](https://hub.sap.com/api/PartnerDirectory/overview).
 
+## Upcoming Events
+
+As part of Devtoberfest, there will be the following sessions related to these topics:
+
+[🔴 Pipeline for Cloud Integration](https://community.sap.com/t5/devtoberfest/pipeline-for-cloud-integration/ev-p/14179023) \
+October 01, 2025, 9:30 AM CEST by Alexander Bundschuh \
+(session generally about the Pipeline Concept)
+
+[🔴 Partner Directory Accelerator Tool for Pipeline Concept - an SAP Open-Source Project](https://community.sap.com/t5/devtoberfest/partner-directory-accelerator-tool-for-pipeline-concept-an-sap-open-source/ev-p/14179964) \
+October 15, 2025, 3:00 PM CEST by Lorena Hanser \
+(session specifically about this accelerator tool)
+
 ## Table of Content
 
 * [Description](#description)
+* [Upcoming Events](#upcoming-events)
 * [Table of Content](#table-of-content)
 * [Requirements](#requirements)
 * [Download and Installation](#download-and-installation)
