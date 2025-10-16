@@ -12,23 +12,11 @@ The purpose of this tool is to simplify the interaction with the Partner Directo
 
 Before using this tool, please make yourself familiar with the Pipeline Concept. An introduction to the Pipeline Concept can be found in this [SAP Community blog](https://community.sap.com/t5/technology-blogs-by-sap/introducing-the-new-pipeline-concept-in-cloud-integration/ba-p/13639651). Being used for the Pipeline Concept, the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept) provides further information on the Partner Directory. The tool is written in Java 17 and uses the Partner Directory API to provide a Java Swing UI for simple user interaction with the Partner Directory content. More information about this API is available on the [Business Accelerator Hub](https://hub.sap.com/api/PartnerDirectory/overview).
 
-## Upcoming Events
-
-As part of Devtoberfest, there will be the following sessions related to these topics:
-
-[🔴 Pipeline for Cloud Integration](https://community.sap.com/t5/devtoberfest/pipeline-for-cloud-integration/ev-p/14179023) \
-October 01, 2025, 9:30 AM CEST by Alexander Bundschuh \
-(session generally about the Pipeline Concept)
-
-[🔴 Partner Directory Accelerator Tool for Pipeline Concept - an SAP Open-Source Project](https://community.sap.com/t5/devtoberfest/partner-directory-accelerator-tool-for-pipeline-concept-an-sap-open-source/ev-p/14179964) \
-October 15, 2025, 3:00 PM CEST by Lorena Hanser \
-(session specifically about this accelerator tool)
-
 ## Table of Content
 
 * [Description](#description)
-* [Upcoming Events](#upcoming-events)
 * [Table of Content](#table-of-content)
+* [Events](#events)
 * [Requirements](#requirements)
 * [Download and Installation](#download-and-installation)
     + [On Windows](#on-windows)
@@ -74,6 +62,18 @@ October 15, 2025, 3:00 PM CEST by Lorena Hanser \
 * [How to obtain support](#how-to-obtain-support)
 * [Contributing](#contributing)
 * [License](#license)
+
+## Events
+
+As part of Devtoberfest 2025, two sessions took place which are related to this tool. These session are available on YouTube and can serve as an introduction:
+
+[🔴 Accelerate your move to the cloud via Pipeline for Cloud Integration](https://www.youtube.com/watch?v=LFfW8rnm4fU) \
+By Alexander Bundschuh \
+Session generally about the Pipeline Concept
+
+[🔴 Partner Directory Accelerator Tool for Pipeline Concept - an SAP Open-Source Project](https://www.youtube.com/watch?v=m51z53fc1c4) \
+By Lorena Hanser \
+Session specifically about this accelerator tool by focusing on setup and usage
 
 ## Requirements
 
@@ -356,7 +356,7 @@ Currently, there are some limits which the tool is not capable of:
 * **Deletion** of existing alternative partners and binary parameters is not possible (see [issue #7](../../issues/7)). String parameters can be deleted. To delete existing entries, the [Partner Directory API](https://hub.sap.com/api/PartnerDirectory/overview) or the [Partner Directory UI](https://help.sap.com/docs/integration-suite/sap-integration-suite/managing-partner-directory-entries?version=CLOUD) can be used.
 * The string parameter "ReceiverSpecificQueue" can currently not be [replicated](#replication-page).
 * The [special case "Bypass Receiver Determination"](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/special-cases#pipeline-bypass-options) (which uses a string parameter for receiver determination and an XSLT for interface determination) is currently not supported.
-* Partner IDs cannot be changed (see [issue #9](../../issues/9).
+* Partner IDs cannot be changed (see [issue #9](../../issues/9)).
 * For the community extension [Process Integration Pipeline Extension - Restart via Data Store](https://community.sap.com/t5/integration-blog-posts/process-integration-pipeline-extension-restart-via-data-store/ba-p/14153116), the restart job profiles are currently not supported. In contrast, the scenario-specific restart configuration settings (string parameters RetryDataStore, restartMode, and MaxDataStoreRetries) are supported.
 
 To find or to report an issue, please refer to section [How to obtain support](#how-to-obtain-support).
