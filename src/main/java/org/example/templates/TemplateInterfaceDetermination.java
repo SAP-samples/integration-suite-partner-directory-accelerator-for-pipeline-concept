@@ -70,7 +70,7 @@ public class TemplateInterfaceDetermination implements TemplateObjects {
         this.hashMapConditionService.clear();
     }
 
-    public void xsltToObjectInterfaceDetermination(String xslt) throws Exception {
+    public void xsltToObjectInterfaceDetermination(String xslt) throws Exception { // only for multiple XSLTs
         this.clear();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -89,7 +89,7 @@ public class TemplateInterfaceDetermination implements TemplateObjects {
         }
     }
 
-    public void xsltToObjectInterfaceDetermination(String xslt, String receiverName) throws Exception {
+    public void xsltToObjectInterfaceDetermination(String xslt, String receiverName) throws Exception { // only for combined XSLTs
         this.clear();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -97,27 +97,16 @@ public class TemplateInterfaceDetermination implements TemplateObjects {
         Document document = builder.parse(new InputSource(new StringReader(xslt)));
         XPath xPath = XPathFactory.newInstance().newXPath();
 
-        XPathExpression expr = xPath.compile("//Interface/Service/text()");
+        XPathExpression expr = xPath.compile("//Service[text()='" + receiverName + "']/following-sibling::Interfaces//Interface/Service/text()");
         NodeList nodeList = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             String interfaceName = node.getNodeValue();
 
-            // interfaces with condition
-            expr = xPath.compile("//*[@test]/Interface/Service[text()='" + interfaceName + "']/../../../../child::Service/text()");
-            String receiverOfNode = (String) expr.evaluate(document, XPathConstants.STRING);
-            if (receiverOfNode.equals(receiverName)) {
-                expr = xPath.compile("//*[@test]/Interface/Service[text()='" + interfaceName + "']/parent::Interface/../@test");
-                String condition = (String) expr.evaluate(document, XPathConstants.STRING);
-                this.setHashMapConditionService(condition, interfaceName);
-            } else {
-                // interfaces without condition
-                expr = xPath.compile("//Interface/Service[text()='" + interfaceName + "']/../../../child::Service/text()");
-                receiverOfNode = (String) expr.evaluate(document, XPathConstants.STRING);
-                if (receiverOfNode.equals(receiverName)) {
-                    this.setHashMapConditionService("", interfaceName);
-                }
-            }
+            expr = xPath.compile("//Service[text()='" + receiverName + "']/following-sibling::Interfaces//Interface/Service[text()='" + interfaceName + "']/parent::Interface/../@test");
+            String condition = (String) expr.evaluate(document, XPathConstants.STRING); // if condition does not exist in XSLT, this string is empty
+
+            this.setHashMapConditionService(condition, interfaceName);
         }
     }
 }
