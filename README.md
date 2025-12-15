@@ -182,9 +182,9 @@ For demonstration purposes, in the screenshot, a trial tenant is shown as sample
 
 #### Add New Alternative Partner
 
-![Add New Alternative Partner Image](images/AddAlternativePartnerDialog.png)
+![Add New Alternative Partner Image](images/AddAlternativePartnerDialogNew.png)
 
-At the bottom of the page, the "Add new Alternative Partner" button allows you to create a new alternative partner. Insert the required values: **Sender System** (named "agency" for alternative partner), **Sender Interface** (named "id" for alternative partner), and **Partner ID** (also known as PID). The value for "**Scheme**" is set to "SenderInterface" by default because this is used by most scenarios for the Pipeline Concept. For [XI inbound scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#partner-id) using the Scheme as namespace, you can change this default value.
+At the bottom of the page, the "Add new Alternative Partner" button allows you to create a new alternative partner. Insert the required values: **Sender System** (named "agency" for alternative partner), **Sender Interface** (named "id" for alternative partner), and **Partner ID** (also known as PID). The only function of the **Sender Type (Default/XI)** option buttons is to adjust this form to the style of Alternative Partner entry. The value for "**Scheme**" is fixed to "SenderInterface" for default scenarios (non-SAP senders and IDoc). For [XI inbound scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#partner-id) the Scheme field changes to **Interface Name**, while the Interface Name field changes to **Namespace**, as described in the linked documentation.  
 
 Additionally, decide for a type of receiver / interface determination:
 * **[Option 1: Combined XSLT](#option-1-combined-xslt)** is the default and allows you to have receiver and interface determinations combined in one single XSLT mapping, as released in version 1.0.8 of the Pipeline Concept.

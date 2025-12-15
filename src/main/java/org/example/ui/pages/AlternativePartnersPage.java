@@ -86,6 +86,7 @@ public class AlternativePartnersPage extends JPanel {
         JButton addButton = new JButton(LABEL_ADD_ALTERNATIVE_PARTNER);
         addButton.addActionListener(e -> {
             LinkedHashMap<String, String> headerValues = new LinkedHashMap<>();
+            headerValues.put(LABEL_SENDER_TYPE, "");
             headerValues.put(LABEL_AGENCY, "");
             headerValues.put(LABEL_SCHEME, "");
             headerValues.put(LABEL_ID_ALTERNATIVE_PARTNERS, "");

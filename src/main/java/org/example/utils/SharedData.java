@@ -68,6 +68,7 @@ public final class SharedData {
     public static final String LABEL_HTTP_WARNING = "WARNING";
     public static final String LABEL_ID = "ID";
     public static final String LABEL_ID_ALTERNATIVE_PARTNERS = "Sender Interface";
+    public static final String LABEL_ID_ALTERNATIVE_PARTNERS_XI = "Namespace";
     public static final String LABEL_IGNORE = "Ignore";
     public static final String LABEL_INTERFACE_DETERMINATION = "Interface Determination";
     public static final String LABEL_LANDSCAPE_STAGES = "Landscape Stages";
@@ -91,12 +92,16 @@ public final class SharedData {
     public static final String LABEL_RESET = "Reset";
     public static final String LABEL_SAVE = "Save";
     public static final String LABEL_SCHEME = "Scheme";
+    public static final String LABEL_SCHEME_XI = "Sender Interface";
     public static final String LABEL_SELECT_TENANT_TO_TRANSPORT = "Select tenant to replicate";
     public static final String LABEL_SEND_ANYWAY = "Send anyway";
     public static final String LABEL_SEND_ANYWAY_QUESTION = "Do you want to send the shown XSLT to the API anyway?";
     public static final String LABEL_SEND_CHANGES_TO_API = "Send changes to API";
     public static final String LABEL_SEND_NEW_TO_API = "Send new entry to API";
     public static final String LABEL_SEND_XSLT_TO_API = "Send shown XSLT to API";
+    public static final String LABEL_SENDER_DEFAULT = "Default";
+    public static final String LABEL_SENDER_TYPE = "Sender Type (Default/XI)";
+    public static final String LABEL_SENDER_XI = "XI Sender";
     public static final String LABEL_SEARCH = "Search";
     public static final String LABEL_SELECT_DETERMINATION_TYPE = "Select type of Receiver / Interface Determination";
     public static final String LABEL_SELECT_LOCAL_JSON_FILE = "Select local JSON file";
@@ -165,6 +170,7 @@ public final class SharedData {
     public static final String LINK_DOCUMENTATION_STRING_PARAMETERS = "https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#message-processing-behavior";
 
     public static final String[] LABELS_DETERMINATION_TYPES = {LABEL_COMBINED_XSLT, LABEL_MULTIPLE_XSLTS, LABEL_POINT_TO_POINT};
+    public static final String[] LABELS_SENDER_TYPES = {LABEL_SENDER_DEFAULT, LABEL_SENDER_XI};
 
     public static final String COMPONENT_RECEIVER_NOT_FOUND = "C Rec not found";
     public static final String COMPONENT_RECEIVER_DEFAULT = "C Rec default";
