@@ -19,7 +19,7 @@ import java.util.Map;
 public final class SharedData {
     public static AlternativePartnersPage alternativePartnersPage;
 
-    public static final String UI_TITLE = "Partner Directory Accelerator UI";
+    public static final String UI_TITLE = "Partner Directory Accelerator UI (version 1.0.1)";
     public static final int UI_PADDING = 5;
     public static final int UI_TEXT_FIELD_COLUMNS = 20;
 
@@ -74,6 +74,7 @@ public final class SharedData {
     public static final String LABEL_LAST_TENANT = "Last tenant cannot be deleted. You can still edit this tenant.";
     public static final String LABEL_MAINTAIN_LANDSCAPE_FIRST = "To setup landscape stages for a scenario, first maintain String Parameter \"" + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE + "\" (on bottom of Alternative Partners Page).";
     public static final String LABEL_MAINTAIN_STRING_PARAMETER = "Maintain String Parameter ";
+    // public static final String LABEL_MIGRATE_TILDE_ID = "migrateTilde";
     public static final String LABEL_MOVE_ROW_DOWN = "Move row down";
     public static final String LABEL_MOVE_ROW_UP = "Move row up";
     public static final String LABEL_MULTIPLE_XSLTS = "Multiple XSLTs";

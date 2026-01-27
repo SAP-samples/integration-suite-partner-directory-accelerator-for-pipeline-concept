@@ -73,10 +73,12 @@ public class AlternativePartnersPage extends JPanel {
     private JPanel getSouthButtonPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
+        // landscape button
         JButton landscapeButton = new JButton("Maintain " + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE);
         landscapeButton.addActionListener(e -> new LandscapeDialog(parentFrame));
         buttonPanel.add(landscapeButton);
 
+        // add button
         JButton addButton = new JButton(LABEL_ADD_ALTERNATIVE_PARTNER);
         addButton.addActionListener(e -> {
             LinkedHashMap<String, String> headerValues = new LinkedHashMap<>();
@@ -89,6 +91,7 @@ public class AlternativePartnersPage extends JPanel {
         });
         buttonPanel.add(addButton);
 
+        // replicate button
         JButton transportButton = new JButton(LABEL_TRANSPORT_ALTERNATIVE_PARTNERS);
         transportButton.addActionListener(e -> {
             LOGGER.info("Replication Page selected");

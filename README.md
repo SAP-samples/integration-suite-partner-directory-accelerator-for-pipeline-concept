@@ -73,7 +73,8 @@ Session generally about the Pipeline Concept
 
 [🔴 Partner Directory Accelerator Tool for Pipeline Concept - an SAP Open-Source Project](https://www.youtube.com/watch?v=m51z53fc1c4) \
 By Lorena Hanser \
-Session specifically about this accelerator tool by focusing on setup and usage
+Session specifically about this accelerator tool by focusing on setup and usage \
+[Link to slides](https://dam.sap.com/mac/app/p/pdf/asset/preview/th6sDWU?ltr=a&rc=10&doi=SAP1247290)
 
 ## Requirements
 
@@ -327,7 +328,7 @@ The button "Replicate x alternative partners with binary / string parameters to 
 
 This error can occur when you try to send the initial HTTP request but a certificate is missing. To resolve the error, you need to import the SSL certificate of the SAP Integration Suite into the local JRE keystore. To do so, download the certificate from SAP Integration Suite URL and store it on your local device. Then, import the certificate into your local JRE keystore, as explained in [this guide](https://www.ibm.com/docs/en/cognos-tm1/10.2.2?topic=ictocyoiatwas-add-certificates-jre-keystore).
 
-### Error when configuring API: JSONObject["d"] not found / <br/> Error when configuring API: A JSONObject text must begin with '{' at 1 [character 2 line 1] / <br/> Error when configuring API: URI with undefined scheme
+### Error when configuring API: JSONObject["d"] not found / <br/> Error when configuring API: A JSONObject text must begin with '{' at 1 [character 2 line 1] / <br/> Error when configuring API: URI with undefined scheme / <br/> Error when configuring API: null
 
 This error can occur when the initial HTTP request fails. Please double-check that the credentials you provided meet the requirements as described in the previous section **[Add new tenant](#add-new-tenant)** (e.g., that the URL ends with "/api/v1/"), and check for typos in the credentials.
 
