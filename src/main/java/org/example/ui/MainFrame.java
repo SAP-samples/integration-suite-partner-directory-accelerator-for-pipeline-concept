@@ -36,8 +36,8 @@ public class MainFrame extends JFrame {
 
         setTitle(UI_TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(screenSize.width, screenSize.height);
-        setLocation(0, 0);
+        setSize(screenSize.width-100, screenSize.height-100);
+        setLocation(50, 50);
 
         jsonApiHandler = new JsonApiHandler();
         xsltHandler = new XsltHandler();

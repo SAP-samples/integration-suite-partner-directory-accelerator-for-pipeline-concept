@@ -3,8 +3,7 @@ package org.example.api;
 import org.example.model.AlternativePartner;
 import org.example.model.BinaryParameter;
 import org.example.model.StringParameter;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.*;
 
 import java.util.*;
 
@@ -132,6 +131,19 @@ public class JsonApiHandler {
         JSONObject jsonObject = new JSONObject(jsonResponse);
         JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
         JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
+
+        // sort array by created date of the PD entry (I think it's the best way to affect the sort order of the list by the user)
+        // we need to convert the JSONArray first into a normal array, sort it and convert it back.
+        ArrayList<JSONObject> jsonList = new ArrayList<>();
+        for (int i = 0; i < resultsArray.length(); i++) {
+            jsonList.add(resultsArray.getJSONObject(i));
+        }
+        jsonList.sort((obj1, obj2) -> {
+            String time1 = obj1.getString("CreatedTime");
+            String time2 = obj2.getString("CreatedTime");
+            return time1.compareTo(time2);
+        });
+        resultsArray = new JSONArray(jsonList);
 
         currentLandscapeTenantParameters.clear();
 

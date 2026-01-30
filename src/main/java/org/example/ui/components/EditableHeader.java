@@ -40,7 +40,43 @@ public class EditableHeader extends JPanel {
         for (String key : hashMap.keySet()) {
             JLabel keyLabel = new JLabel(colonAsterisk(key));
             JComponent valueComponent;
-            if (!isExistingEntry && key.equals(LABEL_SELECT_DETERMINATION_TYPE)) {
+            if (!isExistingEntry && key.equals(LABEL_SENDER_TYPE)) {
+                ButtonGroup buttonGroup = new ButtonGroup();
+                JPanel panelRadioButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+                for (String labelRadioButton : LABELS_SENDER_TYPES) {
+                    JRadioButton radioButton = new JRadioButton(labelRadioButton);
+                    buttonGroup.add(radioButton);
+                    panelRadioButtons.add(radioButton);
+                    if (labelRadioButton.equals(LABEL_SENDER_DEFAULT)) {
+                        radioButton.setSelected(true);
+                        currentHeaderValues.put(key, LABEL_SENDER_DEFAULT);
+                    }
+                    radioButton.addItemListener(e -> {
+                        if (e.getStateChange() == ItemEvent.SELECTED) {
+                            if (labelRadioButton.equals(LABEL_SENDER_DEFAULT)) {
+                                getComponentAtKey(LABEL_SCHEME_XI).setEnabled(false);
+                                getLabelAtKey(LABEL_ID_ALTERNATIVE_PARTNERS_XI).setText(colonAsterisk(LABEL_ID_ALTERNATIVE_PARTNERS));
+                                getLabelAtKey(LABEL_SCHEME_XI).setText(colonAsterisk(LABEL_SCHEME));
+                                currentHeaderValues.put(LABEL_SCHEME, "SenderInterface"); //
+                                currentHeaderValues.put(LABEL_SENDER_TYPE, LABEL_SENDER_DEFAULT);
+                                updateFieldValues();
+                            }
+                            if (labelRadioButton.equals(LABEL_SENDER_XI)) {
+                                getComponentAtKey(LABEL_SCHEME).setEnabled(true);
+                                getLabelAtKey(LABEL_ID_ALTERNATIVE_PARTNERS).setText(colonAsterisk(LABEL_ID_ALTERNATIVE_PARTNERS_XI));
+                                getLabelAtKey(LABEL_SCHEME).setText(colonAsterisk(LABEL_SCHEME_XI));
+                                currentHeaderValues.put(LABEL_SCHEME_XI, "");
+                                currentHeaderValues.put(LABEL_SENDER_TYPE, LABEL_SENDER_XI);
+                                updateFieldValues();
+
+                            }
+                        }
+                    });
+                }
+                valueComponent = panelRadioButtons;
+            }
+            else if (!isExistingEntry && key.equals(LABEL_SELECT_DETERMINATION_TYPE)) {
                 ButtonGroup buttonGroup = new ButtonGroup();
                 JPanel panelRadioButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
@@ -68,6 +104,7 @@ public class EditableHeader extends JPanel {
                 JTextField valueTextField = new JTextField(hashMap.get(key), DEFAULT_COLUMNS_TEXT_FIELD);
                 if (!isExistingEntry && key.equals(LABEL_SCHEME)) {
                     valueTextField.setText(SCHEME_SENDER_INTERFACE);
+                    valueTextField.setEnabled(false);
                     currentHeaderValues.put(key, valueTextField.getText());
                 }
                 valueTextField.getDocument().addDocumentListener(new DocumentListener() {
@@ -194,6 +231,17 @@ public class EditableHeader extends JPanel {
             if (component instanceof JTextField) {
                 if (colonAsterisk(key).equals(((JLabel) getComponent(getComponentZOrder(component) - 1)).getText())) {
                     return component;
+                }
+            }
+        }
+        return null;
+    }
+
+    public JLabel getLabelAtKey(String key) {
+        for (Component component : getComponents()) {
+            if (component instanceof JLabel) {
+                if (colonAsterisk(key).equals(((JLabel) component).getText())) {
+                    return (JLabel) component;
                 }
             }
         }

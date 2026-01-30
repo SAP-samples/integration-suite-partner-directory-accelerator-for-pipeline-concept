@@ -433,6 +433,7 @@ public class HttpRequestHandler {
                 int statusCode = httpResponse.statusCode();
                 if (!(statusCode >= 200 && statusCode <= 299)) {
                     transportErrors.add(logging);
+                    throw new Exception();
                 }
             } catch (Exception e) {
                 String errorMessage = "Error sending HTTP request for alternative partner (agency: " + agency + ", scheme: " + scheme + ", id: " + id + ", pid: " + pid + "): ";
