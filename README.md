@@ -326,7 +326,7 @@ The button "Replicate x alternative partners with binary / string parameters to 
 
 ### Error when configuring API: (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
 
-This error can occur when you try to send the initial HTTP request but a certificate is missing. To resolve the error, you need to import the SSL certificate of the SAP Integration Suite into the local JRE keystore. To do so, download the certificate from SAP Integration Suite URL and store it on your local device. Then, import the certificate into your local JRE keystore, as explained in [this guide](https://www.ibm.com/docs/en/cognos-tm1/10.2.2?topic=ictocyoiatwas-add-certificates-jre-keystore).
+This error can occur when you try to send the initial HTTP request but a certificate is missing. To resolve the error, you need to import the SSL certificate of the SAP Integration Suite into the local JRE keystore. To do so, download the certificate from SAP Integration Suite URL and store it on your local device. Then, import the certificate into your local JRE keystore, as explained in [this guide](https://www.ibm.com/docs/en/tnpm/1.4.5?topic=security-import-certificate-jre-keystore). After importing the certificate, please restart the accelerator tool.
 
 ### Error when configuring API: JSONObject["d"] not found / <br/> Error when configuring API: A JSONObject text must begin with '{' at 1 [character 2 line 1] / <br/> Error when configuring API: URI with undefined scheme / <br/> Error when configuring API: null
 
