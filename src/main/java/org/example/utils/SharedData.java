@@ -32,6 +32,9 @@ public final class SharedData {
     public static final String LABEL_ALTERNATIVE = "Alternative";
     public static final String LABEL_AGENCY = "Sender System";
     public static final String LABEL_BACK = "Back to Alternative Partners";
+    public static final String LABEL_BACK_TO_ALL = "Back to all Alternative Partners";
+    public static final String LABEL_BACKUP_CREATED = "Backup was created and ";
+    public static final String LABEL_BACKUP_QUESTION = "Save files locally as backup?";
     public static final String LABEL_BUTTON_DESELECT_ALL = "Deselect all shown entries";
     public static final String LABEL_BUTTON_SELECT_ALL = "Select all shown entries";
     public static final String LABEL_CANCEL = "Cancel";
@@ -40,16 +43,20 @@ public final class SharedData {
     public static final String LABEL_COMBINED_XSLT = "Combined XSLT";
     public static final String LABEL_CONFIRMATION = "Confirmation";
     public static final String LABEL_CONDITION = "XPath Condition";
+    public static final String LABEL_CONTAINS_SYNTAX_ERRORS = " contains syntax errors.";
     public static final String LABEL_CRITICAL = "Critical";
     public static final String LABEL_DEFAULT = "Default";
     public static final String LABEL_DELETE = "Delete";
     public static final String LABEL_DELETE_ENTRY = "Delete this entry";
     public static final String LABEL_DELETE_ROW = "Delete row";
     public static final String LABEL_DELETE_SELECTED_TENANT = "Delete selected tenant";
+    public static final String LABEL_DOES_NOT_EXIST = " does not exist.";
     public static final String LABEL_EDIT_SELECTED_TENANT = "Edit selected tenant";
+    public static final String LABEL_ENTRIES = "Entries";
     public static final String LABEL_ERROR = "Error";
     public static final String LABEL_ERROR_EMPTY_INPUT = "Input field may not be empty.";
     public static final String LABEL_ERROR_READING_JSON_FILE = "Error when reading JSON file. Make sure the JSON file is in the right format.";
+    public static final String LABEL_ERROR_MERGING_XSLT = "Error when merging XSLT";
     public static final String LABEL_ERROR_SELECT_AT_LEAST_ONE_ENTRY = "Select at least one alternative partner to replicate.";
     public static final String LABEL_ERROR_SELECTED_TENANT_NOT_FOUND = "Selected tenant not found in list of tenants.";
     public static final String LABEL_ERROR_TENANT_NAME_ALREADY_EXISTS = "Tenant name already exists. Choose a unique tenant name.";
@@ -74,7 +81,12 @@ public final class SharedData {
     public static final String LABEL_LAST_TENANT = "Last tenant cannot be deleted. You can still edit this tenant.";
     public static final String LABEL_MAINTAIN_LANDSCAPE_FIRST = "To setup landscape stages for a scenario, first maintain String Parameter \"" + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE + "\" (on bottom of Alternative Partners Page).";
     public static final String LABEL_MAINTAIN_STRING_PARAMETER = "Maintain String Parameter ";
-    // public static final String LABEL_MIGRATE_TILDE_ID = "migrateTilde";
+    public static final String LABEL_MERGE_XSLTS = "Merge XSLTs";
+    public static final String LABEL_MERGE_XSLTS_ID = "mergeXslts";
+    public static final String LABEL_MIGRATE_DEPRECATED_ENTRIES = "Migrate deprecated entries";
+    public static final String LABEL_MIGRATE_DEPRECATED_ENTRIES_ID = "migrateDeprecatedEntries";
+    public static final String LABEL_MIGRATE_TILDE = "Migrate Pids with tilde";
+    public static final String LABEL_MIGRATE_TILDE_ID = "migrateTilde";
     public static final String LABEL_MOVE_ROW_DOWN = "Move row down";
     public static final String LABEL_MOVE_ROW_UP = "Move row up";
     public static final String LABEL_MULTIPLE_XSLTS = "Multiple XSLTs";
@@ -83,6 +95,7 @@ public final class SharedData {
     public static final String LABEL_PLACEHOLDER_EMPTY_DROPDOWN = "Add new tenant first...";
     public static final String LABEL_POINT_TO_POINT = "Point to Point";
     public static final String LABEL_POINT_TO_POINT_DETERMINATION = "Point to Point Determination";
+    public static final String LABEL_PREVIEW_MERGED_XSLT = "Preview of merged XSLT";
     public static final String LABEL_RECEIVER_COMPONENT = "Receiver System";
     public static final String LABEL_RECEIVER_DETERMINATION = "Receiver Determination";
     public static final String LABEL_RECEIVER_INTERFACE = "Receiver Interface";
@@ -129,6 +142,7 @@ public final class SharedData {
     public static final String LABEL_VALUE = "Value";
     public static final String LABEL_WARNING = "Warning";
     public static final String LABEL_WARNING_DELETE_LAST_ROW = "Cannot delete the last row.";
+    public static final String LABEL_XSLTS_MERGED_SUCCESSFULLY = "XSLTs were merged successfully.";
 
     public static final String STRING_PARAMETER_ID_INBOUND_CONVERSION_ENDPOINT = "InboundConversionEndpoint";
     public static final String STRING_PARAMETER_ID_MAX_JMS_RETRIES = "MaxJMSRetries";
@@ -176,6 +190,7 @@ public final class SharedData {
     public static final String COMPONENT_SUFFIX_HTTP_LABEL = "-httpLabel";
 
     public static final String TENANTS_FILE_NAME = "tenants.json";
+    public static final String BACKUP_DIRECTORY_NAME = "backup";
 
     public static final String JSON_KEY_ACCESS_TOKEN = "access_token";
     public static final String JSON_KEY_AGENCY = "Agency";
@@ -202,6 +217,7 @@ public final class SharedData {
     public static final String JSON_KEY_URI = "uri";
     public static final String JSON_KEY_URL = "url";
     public static final String JSON_KEY_VALUE = "Value";
+    public static final String JSON_KEY___NEXT = "__next";
 
     public static final String JSON_VALUE_GENERATED = "This file is automatically generated and contains sensitive data. Please do not share this file and please do not change the content in this file.";
     public static final String JSON_VALUE_XSL = "xsl";
@@ -268,5 +284,9 @@ public final class SharedData {
 
     public static String colonAsterisk(String string) {
         return space(colon(string)) + "*";
+    }
+
+    public static String colonSpace(String string) {
+        return space(colon(string));
     }
 }

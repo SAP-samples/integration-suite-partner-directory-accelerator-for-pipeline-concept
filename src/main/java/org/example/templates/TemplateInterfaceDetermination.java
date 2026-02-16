@@ -17,8 +17,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TemplateInterfaceDetermination implements TemplateObjects {
-    private final Map<String, List<String>> hashMapConditionService = new LinkedHashMap<>();
-    private Set<String> params = new HashSet<>();
+    private final Map<String, List<String>> hashMapConditionService = new LinkedHashMap<>(); // XPath condition with receiver interface(s)
+    private Set<String> params = new HashSet<>(); // e.g. dc_country like in <xsl:if test="$dc_country = 'DE'"> and <xsl:param name="dc_country"/>
 
     public Map<String, List<String>> getHashMapConditionService() {
         return hashMapConditionService;

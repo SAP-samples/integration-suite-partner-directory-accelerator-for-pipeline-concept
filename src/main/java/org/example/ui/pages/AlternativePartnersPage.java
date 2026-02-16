@@ -12,7 +12,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
+import static org.example.ui.components.LabelTimer.showHttpResponseWithTimer;
 import static org.example.utils.SharedData.*;
 
 public class AlternativePartnersPage extends JPanel {
@@ -112,6 +114,59 @@ public class AlternativePartnersPage extends JPanel {
             }
         });
         buttonPanel.add(transportButton);
+
+//        // migrate deprecated entries
+//        JButton migrateDeprecatedEntries = new JButton(LABEL_MIGRATE_DEPRECATED_ENTRIES);
+//        migrateDeprecatedEntries.addActionListener(e -> {
+//            LOGGER.info("Migrate Deprecated Page selected");
+//            MigrateTildePage migrateDeprecatedEntriesPage = new MigrateTildePage(parentFrame);
+//            panelContainer.add(migrateDeprecatedEntriesPage, LABEL_MIGRATE_DEPRECATED_ENTRIES_ID);
+//            cardLayout.show(panelContainer, LABEL_MIGRATE_DEPRECATED_ENTRIES_ID);
+//        });
+//        buttonPanel.add(migrateDeprecatedEntries);
+
+//        // migrate button
+//        JButton migrateTildeButton = new JButton(LABEL_MIGRATE_TILDE);
+//        migrateTildeButton.addActionListener(e -> {
+//            LOGGER.info("Migrate Tilde Page selected");
+//            MigrateTildePage migrateTildePage = new MigrateTildePage(parentFrame);
+//            panelContainer.add(migrateTildePage, LABEL_MIGRATE_TILDE_ID);
+//            cardLayout.show(panelContainer, LABEL_MIGRATE_TILDE_ID);
+//        });
+//        buttonPanel.add(migrateTildeButton);
+
+        // merge button
+        JButton mergeButton = new JButton(LABEL_MERGE_XSLTS);
+        mergeButton.addActionListener(e -> {
+            LOGGER.info("Merge Page selected");
+
+            try {
+                String httpResponse = httpRequestHandler.sendGetRequestAlternativePartners(false);
+                Set<String> pidsWithInterfaceDetermination = httpRequestHandler.sendGetRequestBinaryParametersIdsInterfaceDetermination();
+
+                List<AlternativePartner> alternativePartnersMultipleXslts = currentAlternativePartnersList.stream()
+                        .filter(partner -> pidsWithInterfaceDetermination.contains(partner.getPid()))
+                        .toList();
+
+                List<String> pidsMultipleXslts = alternativePartnersMultipleXslts.stream()
+                        .map(AlternativePartner::getPid)
+                        .toList();
+
+                Set<String> pidsWithoutCombinedDetermination = httpRequestHandler.sendGetRequestBinaryParametersXsltsReceiverDetermination(pidsMultipleXslts);
+
+                alternativePartnersMultipleXslts = alternativePartnersMultipleXslts.stream()
+                        .filter(partner -> pidsWithoutCombinedDetermination.contains(partner.getPid()))
+                        .toList();
+
+                MergeXsltsPage mergeXsltsPage = new MergeXsltsPage(parentFrame, alternativePartnersMultipleXslts);
+                panelContainer.add(mergeXsltsPage, LABEL_MERGE_XSLTS_ID);
+                cardLayout.show(panelContainer, LABEL_MERGE_XSLTS_ID);
+                showHttpResponseWithTimer(httpResponseLabelHeader, httpResponse);
+            } catch (Exception ex) {
+                LOGGER.error(ex.getMessage());
+            }
+        });
+        buttonPanel.add(mergeButton);
 
         return buttonPanel;
     }

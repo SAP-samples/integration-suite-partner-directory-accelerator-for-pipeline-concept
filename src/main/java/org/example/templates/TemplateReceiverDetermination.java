@@ -27,8 +27,8 @@ import static org.example.utils.SharedData.*;
 public class TemplateReceiverDetermination implements TemplateObjects {
     private String type;
     private String defaultReceiver;
-    private final Map<String, List<String>> hashMapConditionReceiver = new LinkedHashMap<>();
-    private Set<String> params = new HashSet<>();
+    private final Map<String, List<String>> hashMapConditionReceiver = new LinkedHashMap<>(); // XPath condition with receiver system(s)
+    private Set<String> params = new HashSet<>(); // e.g. dc_country like in <xsl:if test="$dc_country = 'DE'"> and <xsl:param name="dc_country"/>
 
     public String getType() {
         return type;

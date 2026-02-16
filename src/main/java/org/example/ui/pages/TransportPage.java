@@ -111,7 +111,7 @@ public class TransportPage extends JPanel {
         add(buttonPanel, BorderLayout.AFTER_LAST_LINE);
     }
 
-    public void refreshTableData(List<AlternativePartner> data) {
+    private void refreshTableData(List<AlternativePartner> data) {
         tableModel.setRowCount(0);
         for (AlternativePartner partner : data) {
             tableModel.addRow(new Object[]{partner.isSelected(), partner.getAgency(), partner.getScheme(), partner.getId(), partner.getPid()});

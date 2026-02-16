@@ -140,11 +140,15 @@ public class HttpRequestHandler {
 
     // AlternativePartners
 
-    public String sendGetRequestAlternativePartners() throws IOException, InterruptedException {
+    public String sendGetRequestAlternativePartners(boolean includeStringParameters) throws IOException, InterruptedException {
         requestTokenIfExpired();
 
         String pidsFromBinaryParameters = sendGetRequestParametersWithReceiverDetermination(API_BINARY_PARAMETERS);
-        String pidsFromStringParameters = sendGetRequestParametersWithReceiverDetermination(API_STRING_PARTNERS);
+
+        String pidsFromStringParameters = null;
+        if (includeStringParameters) {
+            pidsFromStringParameters = sendGetRequestParametersWithReceiverDetermination(API_STRING_PARTNERS);
+        }
         Set<String> uniquePids = jsonApiHandler.getUniquePidsFromEndpoints(pidsFromBinaryParameters, pidsFromStringParameters);
 
         HttpRequest httpRequest = requestBuilder
@@ -230,6 +234,35 @@ public class HttpRequestHandler {
         jsonApiHandler.parseBinaryParametersJson(httpResponse.body());
     }
 
+    public Set<String> sendGetRequestIdsBinaryParameters(String pid) throws IOException, InterruptedException { // get all binary parameters of scenario to delete before mering XSLTs
+        requestTokenIfExpired();
+        HttpRequest httpRequest = requestBuilder
+                .uri(URI.create(url + API_BINARY_PARAMETERS + "?$filter=" + JSON_KEY_PID + "%20eq%20'" + pid + "'%20and%20(" + JSON_KEY_ID + "%20eq%20'" + ID_RECEIVER_DETERMINATION + "'%20or%20startswith(" + JSON_KEY_ID + ",%20'" + ID_INTERFACE_DETERMINATION_ + "'))%20and%20startswith(" + JSON_KEY_CONTENT_TYPE + ",%20'" + JSON_VALUE_XSL + "')&$select=" + JSON_KEY_ID))
+                .GET()
+                .build();
+        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        logHttpResponse(httpResponse, httpRequest.method());
+        return jsonApiHandler.parseIdsFromJson(httpResponse.body());
+    }
+
+    public Set<String> sendGetRequestBinaryParametersIdsInterfaceDetermination() throws IOException, InterruptedException { // for merging overview
+        requestTokenIfExpired();
+        HttpRequest httpRequest = requestBuilder
+                .uri(URI.create(url + API_BINARY_PARAMETERS + "?$filter=startswith(" + JSON_KEY_ID + ",%20'" + ID_INTERFACE_DETERMINATION_ + "')%20and%20startswith(" + JSON_KEY_CONTENT_TYPE + ",%20'" + JSON_VALUE_XSL + "')&$select=" + JSON_KEY_PID))
+                .GET()
+                .build();
+        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        logHttpResponse(httpResponse, httpRequest.method());
+        return jsonApiHandler.parsePidsFromJson(httpResponse.body());
+    }
+
+    public Set<String> sendGetRequestBinaryParametersXsltsReceiverDetermination(List<String> pidsMultipleXslts) throws IOException, InterruptedException {
+        requestTokenIfExpired();
+        String endpoint = API_BINARY_PARAMETERS + "?$filter=" + JSON_KEY_ID + "%20eq%20'" + ID_RECEIVER_DETERMINATION + "'%20and%20startswith(" + JSON_KEY_CONTENT_TYPE + ",%20'" + JSON_VALUE_XSL + "')&$select=" + JSON_KEY_PID + ",%20" + JSON_KEY_VALUE + "&$orderby=LastModifiedTime";
+        JSONObject jsonObject = sendRequestsAndHandlePagination(endpoint);
+        return jsonApiHandler.checkXsltsForMerging(String.valueOf(jsonObject), pidsMultipleXslts);
+    }
+
     public String sendPostRequestBinaryParameters(String pid, String id, String valueAsString) throws IOException, InterruptedException {
         requestTokenIfExpired();
         String valueEncoded = base64Encoding(valueAsString);
@@ -258,6 +291,16 @@ public class HttpRequestHandler {
         } else {
             return this.sendPostRequestBinaryParameters(pid, id, valueAsString);
         }
+    }
+
+    public void sendDeleteRequestBinaryParameters(String pid, String id) throws IOException, InterruptedException {
+        requestTokenIfExpired();
+        HttpRequest httpRequest = requestBuilder
+                .uri(URI.create(url + API_BINARY_PARAMETERS + "(" + JSON_KEY_PID + "='" + pid + "'," + JSON_KEY_ID + "='" + id + "')"))
+                .DELETE()
+                .build();
+        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        logHttpResponse(httpResponse, httpRequest.method());
     }
 
     // String Parameters
@@ -646,6 +689,40 @@ public class HttpRequestHandler {
         }
 
         return filterBuilder.toString();
+    }
+
+    private JSONObject sendRequestsAndHandlePagination(String endpoint) throws IOException, InterruptedException {
+        JSONObject combinedJson = new JSONObject();
+        JSONArray combinedResultsArray = new JSONArray();
+        String nextEndpoint = endpoint;
+        String uri;
+
+        do {
+            uri = this.url + nextEndpoint;
+
+            HttpRequest httpRequest = requestBuilder
+                    .uri(URI.create(uri))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> httpResponse = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            logHttpResponse(httpResponse, httpRequest.method());
+
+            JSONObject responseJson = new JSONObject(httpResponse.body());
+
+            JSONArray currentResults = responseJson.getJSONObject(JSON_KEY_D).getJSONArray(JSON_KEY_RESULTS);
+
+            for (int i = 0; i < currentResults.length(); i++) {
+                combinedResultsArray.put(currentResults.get(i));
+            }
+
+            nextEndpoint = responseJson.getJSONObject(JSON_KEY_D).optString(JSON_KEY___NEXT, null);
+
+        } while (nextEndpoint != null && !nextEndpoint.isEmpty());
+
+        combinedJson.put(JSON_KEY_D, new JSONObject().put(JSON_KEY_RESULTS, combinedResultsArray));
+
+        return combinedJson;
     }
 
     private String logHttpResponse(HttpResponse<String> response, String requestMethod) {

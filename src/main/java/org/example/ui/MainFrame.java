@@ -206,7 +206,7 @@ public class MainFrame extends JFrame {
     public void getAndShowLatestAlternativePartners() {
         String httpResponse;
         try {
-            httpResponse = httpRequestHandler.sendGetRequestAlternativePartners();
+            httpResponse = httpRequestHandler.sendGetRequestAlternativePartners(true);
 
             panelContainer.removeAll();
             panelContainer.add(new AlternativePartnersPage(this));

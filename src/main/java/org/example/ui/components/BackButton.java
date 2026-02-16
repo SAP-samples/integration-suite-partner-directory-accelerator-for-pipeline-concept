@@ -14,7 +14,7 @@ public class BackButton extends JButton {
         addActionListener(e -> {
             try {
                 LOGGER.info("Alternative Partner Page selected");
-                String httpResponse = httpRequestHandler.sendGetRequestAlternativePartners();
+                String httpResponse = httpRequestHandler.sendGetRequestAlternativePartners(true);
                 showHttpResponseWithTimer(httpResponseLabelHeader, httpResponse);
 
                 panelContainer.removeAll();

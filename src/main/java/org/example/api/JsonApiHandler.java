@@ -5,7 +5,17 @@ import org.example.model.BinaryParameter;
 import org.example.model.StringParameter;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+import java.io.StringReader;
 import java.util.*;
 
 import static org.example.utils.SharedData.*;
@@ -58,27 +68,71 @@ public class JsonApiHandler {
     }
 
     public Set<String> getUniquePidsFromEndpoints(String jsonResponseBinary, String jsonResponseString) {
-        Set<String> uniquePids = new HashSet<>();
 
-        uniquePids.addAll(parsePidsFromJson(jsonResponseBinary));
-        uniquePids.addAll(parsePidsFromJson(jsonResponseString));
+        Set<String> uniquePids = new HashSet<>(parsePidsFromJson(jsonResponseBinary));
+        if (jsonResponseString != null) {
+            uniquePids.addAll(parsePidsFromJson(jsonResponseString));
+        }
 
         return uniquePids;
     }
 
-    private Set<String> parsePidsFromJson(String jsonResponse) {
-        Set<String> pids = new HashSet<>();
+    private Set<String> parseKeyFromJson(String jsonResponse, String key) {
+        Set<String> stringSet = new HashSet<>();
         JSONObject jsonObject = new JSONObject(jsonResponse);
         JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
         JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
 
         for (int i = 0; i < resultsArray.length(); i++) {
             JSONObject resultObject = resultsArray.getJSONObject(i);
-            String pid = resultObject.getString(JSON_KEY_PID);
-            pids.add(pid);
+            String valueOfKey = resultObject.getString(key);
+            stringSet.add(valueOfKey);
         }
 
-        return pids;
+        return stringSet;
+    }
+
+    public Set<String> parsePidsFromJson(String jsonResponse) {
+        return parseKeyFromJson(jsonResponse, JSON_KEY_PID);
+    }
+
+    public Set<String> parseIdsFromJson(String jsonResponse) {
+        return parseKeyFromJson(jsonResponse, JSON_KEY_ID);
+    }
+
+    public Set<String> checkXsltsForMerging(String jsonResponse, List<String> pidsMultipleXslts) {
+        JSONObject jsonObject = new JSONObject(jsonResponse);
+        JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
+        JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
+
+        Set<String> pidsWithoutCombinedDetermination = new HashSet<>();
+
+        for (int i = 0; i < resultsArray.length(); i++) {
+            JSONObject resultObject = resultsArray.getJSONObject(i);
+            String pid = resultObject.getString(JSON_KEY_PID);
+
+            if (pidsMultipleXslts.contains(pid)) {
+                try {
+                    String value = new String(Base64.getDecoder().decode(resultObject.getString(JSON_KEY_VALUE)));
+
+                    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder builder = factory.newDocumentBuilder();
+                    Document document = builder.parse(new InputSource(new StringReader(value)));
+                    XPath xPath = XPathFactory.newInstance().newXPath();
+
+                    XPathExpression expression = xPath.compile("//Receiver/Interfaces");
+                    NodeList nodeListInterfaces = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
+
+                    if (nodeListInterfaces.getLength() == 0) {
+                        pidsWithoutCombinedDetermination.add(pid);
+                    }
+                } catch (Exception e) {
+                    // if parsing doesn't work, pid is not added
+                }
+            }
+        }
+
+        return pidsWithoutCombinedDetermination;
     }
 
     public void parseBinaryParametersJson(String jsonResponse) {

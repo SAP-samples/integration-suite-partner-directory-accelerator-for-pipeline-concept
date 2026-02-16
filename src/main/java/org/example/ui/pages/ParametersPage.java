@@ -7,6 +7,8 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 import org.example.exceptions.DefaultReceiverMissingException;
 import org.example.exceptions.TableEmptyException;
+import org.example.exceptions.XsltNotExistsException;
+import org.example.exceptions.XsltSyntaxException;
 import org.example.model.AlternativePartner;
 
 import javax.swing.*;
@@ -17,9 +19,7 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 
 import java.awt.event.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -31,10 +31,7 @@ import org.example.model.StringParameter;
 import org.example.templates.TemplateInterfaceDetermination;
 import org.example.templates.TemplateReceiverDetermination;
 import org.example.templates.TemplateCombinedDetermination;
-import org.example.ui.components.BackButton;
-import org.example.ui.components.EditableHeader;
-import org.example.ui.components.KeyButtonGroup;
-import org.example.ui.components.KeyPanel;
+import org.example.ui.components.*;
 import org.example.utils.XsltSyntaxValidator;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -272,7 +269,7 @@ public class ParametersPage extends JPanel {
             Theme theme = Theme.load(themeStream);
             theme.apply(valueTextArea);
         } catch (Exception e) {
-            LOGGER.error("Error while loading theme to display XSLT: " + e);
+            LOGGER.error("Error while loading theme to display XSLT: {}", e.getMessage());
         }
 
         RTextScrollPane rTextScrollPane = new RTextScrollPane(valueTextArea);
@@ -382,6 +379,7 @@ public class ParametersPage extends JPanel {
             buttonPanelTop.add(getMoveRowUpButton(table, tableModel));
             buttonPanelTop.add(getMoveRowDownButton(table, tableModel));
             buttonPanelTop.add(getDeleteButton(table, tableModel));
+            buttonPanelTop.add(getMergeXsltButton());
             buttonPanelTop.add(getGenerateXsltButtonReceiverDetermination(table, buttonGroup, defaultReceiverTextField));
 
             JPanel buttonPanelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -932,8 +930,9 @@ public class ParametersPage extends JPanel {
                 }
 
                 // interface determinations
+                List<String> currentReceiverNames = objectCombinedDetermination.receiverDetermination.getCurrentReceiverNames();
                 for (Map.Entry<String, JTable> entry : mapTablesInterfaces.entrySet()) {
-                    if (!entry.getKey().isEmpty()) {
+                    if (!entry.getKey().isEmpty() && currentReceiverNames.contains(entry.getKey())) {
                         JTable tableInterface = entry.getValue();
                         if (tableInterface.isEditing()) {
                             tableInterface.getCellEditor().stopCellEditing();
@@ -956,7 +955,7 @@ public class ParametersPage extends JPanel {
                 String xslt = xsltHandler.handleXslt(ID_COMBINED_DETERMINATION, objectCombinedDetermination);
                 showUpdatedXslt(this.rTextScrollPaneCombinedDetermination, xslt);
                 currentReceiverDetermination.setValue(xslt);
-                showDialogInvalidXslt(xslt);
+                validateXsltAndShowDialogInvalidXslt(xslt);
             } catch (Exception ex) {
                 handleExceptionXsltGeneration(ex);
             }
@@ -996,7 +995,7 @@ public class ParametersPage extends JPanel {
                 String xslt = xsltHandler.handleXslt(ID_RECEIVER_DETERMINATION, objectReceiverDetermination);
                 showUpdatedXslt(this.rTextScrollPaneReceiverDetermination, xslt);
                 currentReceiverDetermination.setValue(xslt);
-                showDialogInvalidXslt(xslt);
+                validateXsltAndShowDialogInvalidXslt(xslt);
             } catch (Exception ex) {
                 handleExceptionXsltGeneration(ex);
             }
@@ -1028,7 +1027,7 @@ public class ParametersPage extends JPanel {
                 String xslt = xsltHandler.handleXslt(ID_INTERFACE_DETERMINATION, objectInterfaceDetermination);
                 showUpdatedXslt(rTextScrollPane, xslt);
                 currentInterfaceDetermination.setValue(xslt);
-                showDialogInvalidXslt(xslt);
+                validateXsltAndShowDialogInvalidXslt(xslt);
             } catch (IOException | TemplateException ex) {
                 LOGGER.error(ex);
             } catch (TableEmptyException ex) {
@@ -1038,6 +1037,137 @@ public class ParametersPage extends JPanel {
             }
         });
         return generateXsltButton;
+    }
+
+    private JButton getMergeXsltButton() {
+        JButton mergeButton = new JButton(LABEL_MERGE_XSLTS);
+
+        mergeButton.addActionListener(e -> {
+            try {
+                JDialog dialog = new JDialog(parentFrame, LABEL_PREVIEW_MERGED_XSLT, true);
+                dialog.setLayout(new BorderLayout());
+
+                httpRequestHandler.sendGetRequestBinaryParameters(pid);
+                objectCombinedDetermination.xsltsToObjectCombinedDetermination(currentReceiverDetermination.getValueNotEmpty());
+                String mergedXslt = xsltHandler.handleXslt(ID_COMBINED_DETERMINATION, objectCombinedDetermination);
+
+                String resultXsltValidation = validateXsltSyntax(mergedXslt);
+                showDialogInvalidXslt(resultXsltValidation);
+
+                RTextScrollPane rTextScrollPaneMergedXslt = initializeRSyntaxTextArea();
+                rTextScrollPaneMergedXslt.getTextArea().setText(mergedXslt);
+                dialog.add(rTextScrollPaneMergedXslt, BorderLayout.CENTER);
+
+                JPanel buttonPanel = new JPanel(new FlowLayout());
+
+                JButton cancelButton = new JButton(LABEL_CANCEL);
+                cancelButton.addActionListener(e1 -> dialog.dispose());
+                buttonPanel.add(cancelButton);
+
+                buttonPanel.add(Box.createHorizontalStrut(100));
+
+                JLabel backupLabel = new JLabel(LABEL_BACKUP_QUESTION);
+                buttonPanel.add(backupLabel);
+                JCheckBox backupCheckBox = new JCheckBox();
+                buttonPanel.add(backupCheckBox);
+
+                JButton sendButton = new JButton(LABEL_SEND_XSLT_TO_API);
+                sendButton.addActionListener(e1 -> {
+                    try {
+                        boolean sendToApi = true;
+                        if (!resultXsltValidation.isEmpty()) { // if xslt contains errors -> show warning
+                            String[] options = {LABEL_SEND_ANYWAY, LABEL_CANCEL};
+
+                            int option = JOptionPane.showOptionDialog(
+                                    null,
+                                    colon(LABEL_SHOWN_XSLT_INVALID_SYNTAX) + "\n" + resultXsltValidation + "\n" + LABEL_SEND_ANYWAY_QUESTION,
+                                    LABEL_CONFIRMATION,
+                                    JOptionPane.DEFAULT_OPTION,
+                                    JOptionPane.QUESTION_MESSAGE,
+                                    null,
+                                    options,
+                                    options[1]
+                            );
+
+                            sendToApi = option == 0; // option 0 = send; option 1 = cancel
+                        }
+
+                        if (sendToApi) {
+                            // delete old binary parameters
+                            Set<String> setOfIds = httpRequestHandler.sendGetRequestIdsBinaryParameters(pid);
+                            for (String id : setOfIds) {
+                                // create backup
+                                if (backupCheckBox.isSelected()) {
+                                    String subdirectoryPath = BACKUP_DIRECTORY_NAME;
+                                    File subdirectory = new File(subdirectoryPath);
+
+                                    if (!subdirectory.exists()) {
+                                        subdirectory.mkdirs();
+                                    }
+
+                                    FileWriter fileWriter = new FileWriter(subdirectoryPath + File.separator + pid + "_" + id + "." + JSON_VALUE_XSL);
+
+                                    String xsltToBackup = "";
+                                    if (id.equals(ID_RECEIVER_DETERMINATION)) {
+                                        xsltToBackup = currentReceiverDetermination.getValue();
+                                    } else if (id.startsWith(ID_INTERFACE_DETERMINATION_)) {
+                                        xsltToBackup = currentInterfaceDeterminationsList.get(id.substring(ID_INTERFACE_DETERMINATION_.length())).getValue();
+                                    }
+
+                                    fileWriter.write(xsltToBackup);
+                                    fileWriter.flush();
+                                }
+
+                                httpRequestHandler.sendDeleteRequestBinaryParameters(pid, id);
+                            }
+
+                            httpRequestHandler.sendPostRequestBinaryParameters(pid, ID_RECEIVER_DETERMINATION, mergedXslt);
+
+                            LinkedHashMap<String, String> alternativePartnerValues = editableHeader.currentHeaderValues;
+                            String agency = alternativePartnerValues.get(LABEL_AGENCY);
+                            String scheme = alternativePartnerValues.get(LABEL_SCHEME);
+                            String id = alternativePartnerValues.get(LABEL_ID_ALTERNATIVE_PARTNERS);
+                            AlternativePartner alternativePartner = new AlternativePartner(agency, scheme, id, pid);
+
+                            ParametersPage binaryParameterDetailPage = new ParametersPage(alternativePartner, parentFrame);
+                            panelContainer.add(binaryParameterDetailPage, pid);
+                            cardLayout.show(panelContainer, pid);
+                            dialog.dispose();
+                            String successMessage = "";
+                            if (backupCheckBox.isSelected()) {
+                                successMessage = LABEL_BACKUP_CREATED;
+                            }
+                            JOptionPane.showMessageDialog(this, successMessage + LABEL_XSLTS_MERGED_SUCCESSFULLY, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
+                        }
+
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, colonSpace(LABEL_ERROR_MERGING_XSLT) + ex.getMessage(), LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+                        LOGGER.error(ex);
+                    }
+                });
+                buttonPanel.add(sendButton);
+
+                dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+                dialog.setSize(800, 500);
+                dialog.setLocationRelativeTo(parentFrame);
+                dialog.setVisible(true);
+            } catch (Exception ex) {
+                String errorMessage = "";
+                if (ex instanceof XsltNotExistsException) {
+                    errorMessage = LABEL_INTERFACE_DETERMINATION + " for " + ((XsltNotExistsException) ex).getReceiverName() + LABEL_DOES_NOT_EXIST;
+                } else if (ex instanceof XsltSyntaxException) {
+                    if (((XsltSyntaxException) ex).isInterfaceDetermination()) {
+                        errorMessage = LABEL_INTERFACE_DETERMINATION + " for " + ((XsltSyntaxException) ex).getReceiverName() + LABEL_CONTAINS_SYNTAX_ERRORS;
+                    } else {
+                        errorMessage = LABEL_RECEIVER_DETERMINATION + LABEL_CONTAINS_SYNTAX_ERRORS;
+                    }
+                }
+                JOptionPane.showMessageDialog(this, colonSpace(LABEL_ERROR_MERGING_XSLT) + errorMessage, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+                LOGGER.error(ex);
+            }
+        });
+        return mergeButton;
     }
 
     private JPanel getSendButtonBinaryParameters(BinaryParameter binaryParameter) {
@@ -1569,11 +1699,15 @@ public class ParametersPage extends JPanel {
         return xsltSyntaxValidator.validateXsltSyntax(xslt);
     }
 
-    private void showDialogInvalidXslt(String xslt) {
-        String result = validateXsltSyntax(xslt);
+    private void showDialogInvalidXslt(String result) {
         if (!result.isEmpty()) {
             showErrorDialog(LABEL_WARNING, colon(LABEL_GENERATED_XSLT_INVALID_SYNTAX) + "\n" + result);
         }
+    }
+
+    private void validateXsltAndShowDialogInvalidXslt(String xslt) {
+        String result = validateXsltSyntax(xslt);
+        showDialogInvalidXslt(result);
     }
 
     private Set<String> getListReceiverNamesDependingOnDeterminationType(boolean shouldSendRequest) {
