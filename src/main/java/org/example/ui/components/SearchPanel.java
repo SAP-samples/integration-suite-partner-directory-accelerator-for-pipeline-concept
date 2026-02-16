@@ -19,6 +19,7 @@ public class SearchPanel extends JPanel {
     private final JTextField pidSearchField;
     private final JButton searchButton;
     private final JButton resetButton;
+    private final JLabel entryCountLabel;
     private final List<AlternativePartner> originalData;
     private final Consumer<List<AlternativePartner>> refreshTableConsumer;
 
@@ -35,6 +36,7 @@ public class SearchPanel extends JPanel {
         pidSearchField = new JTextField(searchFieldWidth);
         searchButton = new JButton(LABEL_SEARCH);
         resetButton = new JButton(LABEL_RESET);
+        entryCountLabel = new JLabel(colonSpace(LABEL_ENTRIES) + originalData.size());
 
         add(new JLabel(colon(LABEL_AGENCY)));
         add(agencySearchField);
@@ -46,6 +48,7 @@ public class SearchPanel extends JPanel {
         add(pidSearchField);
         add(searchButton);
         add(resetButton);
+        add(entryCountLabel);
 
         setupListeners();
     }
@@ -82,6 +85,7 @@ public class SearchPanel extends JPanel {
                 .collect(Collectors.toList());
 
         refreshTableConsumer.accept(filteredList);
+        updateEntryCountLabel(filteredList.size());
     }
 
     public void resetSearch() {
@@ -90,5 +94,10 @@ public class SearchPanel extends JPanel {
         schemeSearchField.setText("");
         idSearchField.setText("");
         pidSearchField.setText("");
+        updateEntryCountLabel(originalData.size());
+    }
+
+    private void updateEntryCountLabel(int count) {
+        entryCountLabel.setText(colonSpace(LABEL_ENTRIES) + count);
     }
 }
