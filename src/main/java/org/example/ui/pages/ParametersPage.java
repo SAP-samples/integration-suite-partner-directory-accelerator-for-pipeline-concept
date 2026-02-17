@@ -1079,7 +1079,7 @@ public class ParametersPage extends JPanel {
                             String[] options = {LABEL_SEND_ANYWAY, LABEL_CANCEL};
 
                             int option = JOptionPane.showOptionDialog(
-                                    null,
+                                    parentFrame,
                                     colon(LABEL_SHOWN_XSLT_INVALID_SYNTAX) + "\n" + resultXsltValidation + "\n" + LABEL_SEND_ANYWAY_QUESTION,
                                     LABEL_CONFIRMATION,
                                     JOptionPane.DEFAULT_OPTION,
@@ -1137,11 +1137,11 @@ public class ParametersPage extends JPanel {
                             if (backupCheckBox.isSelected()) {
                                 successMessage = LABEL_BACKUP_CREATED;
                             }
-                            JOptionPane.showMessageDialog(this, successMessage + LABEL_XSLTS_MERGED_SUCCESSFULLY, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(parentFrame, successMessage + LABEL_XSLTS_MERGED_SUCCESSFULLY, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
                         }
 
                     } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(this, colonSpace(LABEL_ERROR_MERGING_XSLT) + ex.getMessage(), LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(parentFrame, colonSpace(LABEL_ERROR_MERGING_XSLT) + ex.getMessage(), LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
                         LOGGER.error(ex);
                     }
                 });
@@ -1183,7 +1183,7 @@ public class ParametersPage extends JPanel {
                     String[] options = {LABEL_SEND_ANYWAY, LABEL_CANCEL};
 
                     int option = JOptionPane.showOptionDialog(
-                            null,
+                            parentFrame,
                             colon(LABEL_SHOWN_XSLT_INVALID_SYNTAX) + "\n" + resultXsltValidation + "\n" + LABEL_SEND_ANYWAY_QUESTION,
                             LABEL_CONFIRMATION,
                             JOptionPane.DEFAULT_OPTION,
@@ -1197,7 +1197,7 @@ public class ParametersPage extends JPanel {
                 }
 
                 if (sendToApi) {
-                    String httpResponsePut = httpRequestHandler.sendPutRequestBinaryParameters(pid, binaryParameter.getId(), binaryParameter.getValue());
+                    String httpResponsePut = httpRequestHandler.sendPutPostRequestBinaryParameters(pid, binaryParameter.getId(), binaryParameter.getValue());
                     showHttpResponseWithTimer(responseLabel, httpResponsePut);
                 }
             } catch (Exception ex) {
@@ -1574,16 +1574,20 @@ public class ParametersPage extends JPanel {
             String interfaceName = textFieldInterface.getText();
             if (receiverName.isEmpty() || interfaceName.isEmpty()) {
                 showErrorDialog(LABEL_ERROR, LABEL_ERROR_EMPTY_INPUT);
+                textFieldReceiver.setText(receiverNameInitial.get() == null || receiverNameInitial.get().isEmpty() ? textFieldReceiver.getText() : receiverNameInitial.get());
+                textFieldInterface.setText(interfaceNameInitial.get() == null || interfaceNameInitial.get().isEmpty() ? textFieldInterface.getText() : interfaceNameInitial.get());
             } else {
                 try {
                     boolean receiverChanged = !receiverName.equals(receiverNameInitial.get());
                     boolean interfaceChanged = !interfaceName.equals(interfaceNameInitial.get());
 
                     if (receiverChanged) {
-                        httpRequestHandler.sendDeleteRequestStringParametersExistingDetermination(pid, ID_RECEIVER_DETERMINATION);
-                        showHttpResponseWithTimer((JLabel) panelResponseReceiver.getComponent(0), httpRequestHandler.sendPostRequestStringParameters(pid, ID_RECEIVER_DETERMINATION, receiverName));
+                        if (!receiverNameInitial.get().isEmpty()) {
+                            httpRequestHandler.sendDeleteRequestStringParameters(pid, ID_RECEIVER_DETERMINATION);
+                            httpRequestHandler.sendDeleteRequestStringParameters(pid, ID_INTERFACE_DETERMINATION_ + receiverNameInitial.get());
+                        }
 
-                        httpRequestHandler.sendDeleteRequestStringParametersExistingDetermination(pid, ID_INTERFACE_DETERMINATION_);
+                        showHttpResponseWithTimer((JLabel) panelResponseReceiver.getComponent(0), httpRequestHandler.sendPostRequestStringParameters(pid, ID_RECEIVER_DETERMINATION, receiverName));
                         showHttpResponseWithTimer((JLabel) panelResponseInterface.getComponent(0), httpRequestHandler.sendPostRequestStringParameters(pid, ID_INTERFACE_DETERMINATION_ + receiverName, interfaceName));
 
                         StringParameter stringParameterReceiverDetermination = currentStringParametersList.get(ID_RECEIVER_DETERMINATION);
@@ -1605,7 +1609,9 @@ public class ParametersPage extends JPanel {
                         receiverNameInitial.set(receiverName);
                         interfaceNameInitial.set(interfaceName);
                     } else if (interfaceChanged) {
-                        httpRequestHandler.sendDeleteRequestStringParametersExistingDetermination(pid, ID_INTERFACE_DETERMINATION_);
+                        if (!interfaceNameInitial.get().isEmpty()) {
+                            httpRequestHandler.sendDeleteRequestStringParameters(pid, ID_INTERFACE_DETERMINATION_ + receiverNameInitial.get());
+                        }
                         showHttpResponseWithTimer((JLabel) panelResponseInterface.getComponent(0), httpRequestHandler.sendPostRequestStringParameters(pid, ID_INTERFACE_DETERMINATION_ + receiverName, interfaceName));
 
                         StringParameter stringParameter = currentStringParametersList.get(ID_INTERFACE_DETERMINATION_ + receiverName);

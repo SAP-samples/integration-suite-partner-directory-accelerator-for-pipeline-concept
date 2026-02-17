@@ -2,6 +2,7 @@ package org.example.ui.dialogs;
 
 import org.example.model.AlternativePartner;
 import org.example.ui.components.EditableHeader;
+import org.example.ui.pages.ParametersPage;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -40,11 +41,17 @@ public class AddAlternativePartnerDialog extends JDialog {
 
                 tableModel.addRow(new String[]{agency, scheme, id, pid});
 
-                currentAlternativePartnersList.add(new AlternativePartner(agency, scheme, id, pid, determinationType));
+                AlternativePartner alternativePartner = new AlternativePartner(agency, scheme, id, pid, determinationType);
+                currentAlternativePartnersList.add(alternativePartner);
+
+                dispose();
+
+                ParametersPage binaryParameterDetailPage = new ParametersPage(alternativePartner, parent);
+                panelContainer.add(binaryParameterDetailPage, pid);
+                cardLayout.show(panelContainer, pid);
             } catch (Exception ex) {
-                LOGGER.error(ex);
+                JOptionPane.showMessageDialog(this, ex.getMessage(), LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
             }
-            dispose();
         });
         buttonPanel.add(saveButton);
 

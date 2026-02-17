@@ -7,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -30,9 +29,14 @@ public class HttpRequestHandler {
     private final int indentFactor = 4;
     private final String url;
 
+    private String latestResponseLabel;
+    private int latestStatusCode;
+    private String latestResponseType;
+    private HttpResponse<String> latestResponse;
+
     private final TenantCredentials tenantCredentials;
 
-    public HttpRequestHandler(TenantCredentials tenantCredentials) throws IOException, InterruptedException {
+    public HttpRequestHandler(TenantCredentials tenantCredentials) throws Exception {
         this.tenantCredentials = tenantCredentials;
 
         String baseUrl = tenantCredentials.getUrl();
@@ -54,7 +58,7 @@ public class HttpRequestHandler {
         this.url = baseUrl;
     }
 
-    private String requestToken() throws IOException, InterruptedException {
+    private String requestToken() throws Exception {
         HttpRequest requestToken = HttpRequest.newBuilder()
                 .uri(URI.create(tenantCredentials.getTokenurl()))
                 .header("Authorization", "Basic " + Base64.getEncoder().encodeToString((tenantCredentials.getClientid() + ":" + tenantCredentials.getClientsecret()).getBytes()))
@@ -63,7 +67,8 @@ public class HttpRequestHandler {
                 .build();
 
         HttpResponse<String> responseToken = client.send(requestToken, HttpResponse.BodyHandlers.ofString());
-        logHttpResponse(responseToken, requestToken.method());
+
+        setResponseAndLog(responseToken, requestToken.method());
 
         JSONObject tokenResponse = new JSONObject(responseToken.body());
         String token = tokenResponse.getString(JSON_KEY_ACCESS_TOKEN);
@@ -77,7 +82,7 @@ public class HttpRequestHandler {
         return token;
     }
 
-    private void requestTokenIfExpired() throws IOException, InterruptedException {
+    private void requestTokenIfExpired() throws Exception {
         if (!tenantCredentials.isTokenValid()) {
             String token = requestToken();
             requestBuilder.setHeader("Authorization", "Bearer " + token);
@@ -108,62 +113,54 @@ public class HttpRequestHandler {
         return jsonObject.toString(indentFactor);
     }
 
-    private String createRequestBodyPostBinaryParameters(String pid, String id, String encodedString) {
+    private String createRequestBodyPostBinaryParameters(String pid, String id, String valueEncoded) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(JSON_KEY_PID, pid);
         jsonObject.put(JSON_KEY_ID, id);
         jsonObject.put(JSON_KEY_CONTENT_TYPE, JSON_VALUE_XSL);
-        jsonObject.put(JSON_KEY_VALUE, encodedString);
+        jsonObject.put(JSON_KEY_VALUE, valueEncoded);
         return jsonObject.toString(indentFactor);
     }
 
-    private String createRequestBodyPutBinaryParameters(String encodedString) {
+    private String createRequestBodyPutBinaryParameters(String valueEncoded) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(JSON_KEY_CONTENT_TYPE, JSON_VALUE_XSL);
-        jsonObject.put(JSON_KEY_VALUE, encodedString);
+        jsonObject.put(JSON_KEY_VALUE, valueEncoded);
         return jsonObject.toString(indentFactor);
     }
 
-    private String createRequestBodyPostStringParameters(String pid, String id, String value) {
+    private String createRequestBodyPostStringParameters(String pid, String id, String valueEncoded) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(JSON_KEY_PID, pid);
         jsonObject.put(JSON_KEY_ID, id);
-        jsonObject.put(JSON_KEY_VALUE, value);
+        jsonObject.put(JSON_KEY_VALUE, valueEncoded);
         return jsonObject.toString(indentFactor);
     }
 
-    private String createRequestBodyPutStringParameters(String value) {
+    private String createRequestBodyPutStringParameters(String valueEncoded) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(JSON_KEY_VALUE, value);
+        jsonObject.put(JSON_KEY_VALUE, valueEncoded);
         return jsonObject.toString(indentFactor);
     }
 
     // AlternativePartners
 
-    public String sendGetRequestAlternativePartners(boolean includeStringParameters) throws IOException, InterruptedException {
-        requestTokenIfExpired();
+    public String sendGetRequestAlternativePartners(boolean includeStringParameters) throws Exception {
+        JSONObject pidsFromBinaryParameters = sendGetRequestParametersWithReceiverDetermination(API_BINARY_PARAMETERS);
 
-        String pidsFromBinaryParameters = sendGetRequestParametersWithReceiverDetermination(API_BINARY_PARAMETERS);
-
-        String pidsFromStringParameters = null;
+        JSONObject pidsFromStringParameters = null;
         if (includeStringParameters) {
             pidsFromStringParameters = sendGetRequestParametersWithReceiverDetermination(API_STRING_PARTNERS);
         }
         Set<String> uniquePids = jsonApiHandler.getUniquePidsFromEndpoints(pidsFromBinaryParameters, pidsFromStringParameters);
 
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_ALTERNATIVE_PARTNERS + "?$orderby=" + JSON_KEY_AGENCY))
-                .GET()
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        String returnString = logHttpResponse(httpResponse, httpRequest.method());
-        jsonApiHandler.parseAlternativePartnersJson(httpResponse.body(), false, uniquePids);
-        return returnString;
+        String endpoint = API_ALTERNATIVE_PARTNERS + "?$orderby=" + JSON_KEY_AGENCY;
+        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
+        jsonApiHandler.parseAlternativePartnersJson(jsonResponseBody, false, uniquePids);
+        return this.latestResponseLabel;
     }
 
-    public void sendGetRequestAlternativePartnersLandscape(Set<String> listSystemNames) throws IOException, InterruptedException {
-        requestTokenIfExpired();
-
+    public void sendGetRequestAlternativePartnersLandscape(Set<String> listSystemNames) throws Exception {
         StringBuilder pidFilter = new StringBuilder();
         for (String receiverName : listSystemNames) {
             if (!pidFilter.isEmpty()) {
@@ -175,150 +172,114 @@ public class HttpRequestHandler {
         String filter = "?$filter=(" + pidFilter + ")%20and%20(Scheme%20eq%20'" + SCHEME_BUSINESS_SYSTEM_NAME
                 + "'%20or%20Scheme%20eq%20'" + SCHEME_LOGICAL_SYSTEM_NAME + "')";
 
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_ALTERNATIVE_PARTNERS + filter))
-                .GET()
-                .build();
-
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        logHttpResponse(httpResponse, httpRequest.method());
-        jsonApiHandler.parseAlternativePartnersJsonLandscape(httpResponse.body());
+        String endpoint = API_ALTERNATIVE_PARTNERS + filter;
+        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
+        jsonApiHandler.parseAlternativePartnersJsonLandscape(jsonResponseBody);
     }
 
-    public String sendPostRequestAlternativePartners(String agency, String scheme, String id, String pid) throws IOException, InterruptedException {
-        requestTokenIfExpired();
+    public String sendPostRequestAlternativePartners(String agency, String scheme, String id, String pid) throws Exception {
+        return sendPostRequestAlternativePartners(agency, scheme, id, pid, true);
+    }
+
+    private String sendPostRequestAlternativePartners(String agency, String scheme, String id, String pid, boolean isResponseLogged) throws Exception {
         String jsonBody = createRequestBodyPostAlternativePartners(agency, scheme, id, pid);
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_ALTERNATIVE_PARTNERS))
-                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        return logHttpResponse(httpResponse, httpRequest.method());
+        return sendPostRequest(API_ALTERNATIVE_PARTNERS, jsonBody, isResponseLogged);
     }
 
-    public String sendDeleteRequestAlternativePartners(String agency, String scheme, String id) throws IOException, InterruptedException {
-        requestTokenIfExpired();
+    private void sendPutRequestAlternativePartners(String agency, String scheme, String id, String pid, boolean isResponseLogged) throws Exception {
         String hexAgency = convertStringToHexstring(agency);
         String hexScheme = convertStringToHexstring(scheme);
         String hexId = convertStringToHexstring(id);
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_ALTERNATIVE_PARTNERS + "(" + JSON_KEY_HEXAGENCY + "='" + hexAgency + "'," + JSON_KEY_HEXSCHEME + "='" + hexScheme + "'," + JSON_KEY_HEXID + "='" + hexId + "')"))
-                .DELETE()
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        return logHttpResponse(httpResponse, httpRequest.method());
+        String endpoint = API_ALTERNATIVE_PARTNERS + "(" + JSON_KEY_HEXAGENCY + "='" + hexAgency + "'," + JSON_KEY_HEXSCHEME + "='" + hexScheme + "'," + JSON_KEY_HEXID + "='" + hexId + "')";
+        String jsonBody = createRequestBodyPutAlternativePartners(pid);
+        sendPutRequest(endpoint, jsonBody, isResponseLogged);
+    }
+
+    public String sendDeleteRequestAlternativePartners(String agency, String scheme, String id) throws Exception {
+        String hexAgency = convertStringToHexstring(agency);
+        String hexScheme = convertStringToHexstring(scheme);
+        String hexId = convertStringToHexstring(id);
+        String endpoint = API_ALTERNATIVE_PARTNERS + "(" + JSON_KEY_HEXAGENCY + "='" + hexAgency + "'," + JSON_KEY_HEXSCHEME + "='" + hexScheme + "'," + JSON_KEY_HEXID + "='" + hexId + "')";
+        return sendDeleteRequest(endpoint);
     }
 
     // both BinaryParameters and StringParameters
 
-    public String sendGetRequestParametersWithReceiverDetermination(String endpoint) throws IOException, InterruptedException {
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + endpoint + "?$filter=" + JSON_KEY_ID + "%20eq%20'" + ID_RECEIVER_DETERMINATION + "'&$select=" + JSON_KEY_PID))
-                .GET()
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        logHttpResponse(httpResponse, httpRequest.method());
-        return httpResponse.body();
+    public JSONObject sendGetRequestParametersWithReceiverDetermination(String endpoint) throws Exception {
+        return sendGetRequestsAndHandlePagination(endpoint + "?$filter=" + JSON_KEY_ID + "%20eq%20'" + ID_RECEIVER_DETERMINATION + "'&$select=" + JSON_KEY_PID);
     }
 
     // BinaryParameters
 
-    public void sendGetRequestBinaryParameters(String pid) throws IOException, InterruptedException {
-        requestTokenIfExpired();
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_BINARY_PARAMETERS + "?$filter=startswith(" + JSON_KEY_CONTENT_TYPE + ",'" + JSON_VALUE_XSL + "')%20and%20" + JSON_KEY_PID + "%20eq%20'" + pid + "'"))
-                .GET()
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        logHttpResponse(httpResponse, httpRequest.method());
-        jsonApiHandler.parseBinaryParametersJson(httpResponse.body());
+    public void sendGetRequestBinaryParameters(String pid) throws Exception {
+        String endpoint = API_BINARY_PARAMETERS + "?$filter=startswith(" + JSON_KEY_CONTENT_TYPE + ",'" + JSON_VALUE_XSL + "')%20and%20" + JSON_KEY_PID + "%20eq%20'" + pid + "'";
+        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
+        jsonApiHandler.parseBinaryParametersJson(jsonResponseBody);
     }
 
-    public Set<String> sendGetRequestIdsBinaryParameters(String pid) throws IOException, InterruptedException { // get all binary parameters of scenario to delete before mering XSLTs
-        requestTokenIfExpired();
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_BINARY_PARAMETERS + "?$filter=" + JSON_KEY_PID + "%20eq%20'" + pid + "'%20and%20(" + JSON_KEY_ID + "%20eq%20'" + ID_RECEIVER_DETERMINATION + "'%20or%20startswith(" + JSON_KEY_ID + ",%20'" + ID_INTERFACE_DETERMINATION_ + "'))%20and%20startswith(" + JSON_KEY_CONTENT_TYPE + ",%20'" + JSON_VALUE_XSL + "')&$select=" + JSON_KEY_ID))
-                .GET()
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        logHttpResponse(httpResponse, httpRequest.method());
-        return jsonApiHandler.parseIdsFromJson(httpResponse.body());
+    public Set<String> sendGetRequestIdsBinaryParameters(String pid) throws Exception { // get all binary parameters of scenario to delete before mering XSLTs
+        String endpoint = API_BINARY_PARAMETERS + "?$filter=" + JSON_KEY_PID + "%20eq%20'" + pid + "'%20and%20(" + JSON_KEY_ID + "%20eq%20'" + ID_RECEIVER_DETERMINATION + "'%20or%20startswith(" + JSON_KEY_ID + ",%20'" + ID_INTERFACE_DETERMINATION_ + "'))%20and%20startswith(" + JSON_KEY_CONTENT_TYPE + ",%20'" + JSON_VALUE_XSL + "')&$select=" + JSON_KEY_ID;
+        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
+        return jsonApiHandler.parseIdsFromJson(jsonResponseBody);
     }
 
-    public Set<String> sendGetRequestBinaryParametersIdsInterfaceDetermination() throws IOException, InterruptedException { // for merging overview
-        requestTokenIfExpired();
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_BINARY_PARAMETERS + "?$filter=startswith(" + JSON_KEY_ID + ",%20'" + ID_INTERFACE_DETERMINATION_ + "')%20and%20startswith(" + JSON_KEY_CONTENT_TYPE + ",%20'" + JSON_VALUE_XSL + "')&$select=" + JSON_KEY_PID))
-                .GET()
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        logHttpResponse(httpResponse, httpRequest.method());
-        return jsonApiHandler.parsePidsFromJson(httpResponse.body());
+    public Set<String> sendGetRequestBinaryParametersIdsInterfaceDetermination() throws Exception { // for merging overview
+        String endpoint = API_BINARY_PARAMETERS + "?$filter=startswith(" + JSON_KEY_ID + ",%20'" + ID_INTERFACE_DETERMINATION_ + "')%20and%20startswith(" + JSON_KEY_CONTENT_TYPE + ",%20'" + JSON_VALUE_XSL + "')&$select=" + JSON_KEY_PID;
+        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
+        return jsonApiHandler.parsePidsFromJson(jsonResponseBody);
     }
 
-    public Set<String> sendGetRequestBinaryParametersXsltsReceiverDetermination(List<String> pidsMultipleXslts) throws IOException, InterruptedException {
-        requestTokenIfExpired();
+    public Set<String> sendGetRequestBinaryParametersXsltsReceiverDetermination(List<String> pidsMultipleXslts) throws Exception {
         String endpoint = API_BINARY_PARAMETERS + "?$filter=" + JSON_KEY_ID + "%20eq%20'" + ID_RECEIVER_DETERMINATION + "'%20and%20startswith(" + JSON_KEY_CONTENT_TYPE + ",%20'" + JSON_VALUE_XSL + "')&$select=" + JSON_KEY_PID + ",%20" + JSON_KEY_VALUE + "&$orderby=LastModifiedTime";
-        JSONObject jsonObject = sendRequestsAndHandlePagination(endpoint);
-        return jsonApiHandler.checkXsltsForMerging(String.valueOf(jsonObject), pidsMultipleXslts);
+        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
+        return jsonApiHandler.checkXsltsForMerging(jsonResponseBody, pidsMultipleXslts);
     }
 
-    public String sendPostRequestBinaryParameters(String pid, String id, String valueAsString) throws IOException, InterruptedException {
-        requestTokenIfExpired();
+    public void sendPostRequestBinaryParameters(String pid, String id, String valueAsString) throws Exception {
+        sendPostRequestBinaryParameters(pid, id, valueAsString, true);
+    }
+
+    private void sendPostRequestBinaryParameters(String pid, String id, String valueAsString, boolean isResponseLogged) throws Exception {
         String valueEncoded = base64Encoding(valueAsString);
         String jsonBody = createRequestBodyPostBinaryParameters(pid, id, valueEncoded);
-
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_BINARY_PARAMETERS))
-                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        return logHttpResponse(httpResponse, httpRequest.method());
+        sendPostRequest(API_BINARY_PARAMETERS, jsonBody, isResponseLogged);
     }
 
-    public String sendPutRequestBinaryParameters(String pid, String id, String valueAsString) throws IOException, InterruptedException {
-        requestTokenIfExpired();
+    public String sendPutRequestBinaryParameters(String pid, String id, String valueAsString, boolean isResponseLogged) throws Exception {
+        String endpoint = API_BINARY_PARAMETERS + "(" + JSON_KEY_PID + "='" + pid + "'," + JSON_KEY_ID + "='" + id + "')";
         String valueEncoded = base64Encoding(valueAsString);
         String jsonBody = createRequestBodyPutBinaryParameters(valueEncoded);
 
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_BINARY_PARAMETERS + "(" + JSON_KEY_PID + "='" + pid + "'," + JSON_KEY_ID + "='" + id + "')"))
-                .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        if (httpResponse.statusCode() != 404) {
-            return logHttpResponse(httpResponse, httpRequest.method());
-        } else {
-            return this.sendPostRequestBinaryParameters(pid, id, valueAsString);
-        }
+        sendPutRequest(endpoint, jsonBody, isResponseLogged);
+
+        return latestResponseLabel;
     }
 
-    public void sendDeleteRequestBinaryParameters(String pid, String id) throws IOException, InterruptedException {
-        requestTokenIfExpired();
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_BINARY_PARAMETERS + "(" + JSON_KEY_PID + "='" + pid + "'," + JSON_KEY_ID + "='" + id + "')"))
-                .DELETE()
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        logHttpResponse(httpResponse, httpRequest.method());
+    public String sendPutPostRequestBinaryParameters(String pid, String id, String valueAsString) throws Exception {
+        sendPutRequestBinaryParameters(pid, id, valueAsString, false);
+
+        if (this.latestStatusCode == 404) {
+            this.sendPostRequestBinaryParameters(pid, id, valueAsString, false);
+        }
+
+        logLatestResponse();
+        return latestResponseLabel;
+    }
+
+    public void sendDeleteRequestBinaryParameters(String pid, String id) throws Exception {
+        String endpoint = API_BINARY_PARAMETERS + "(" + JSON_KEY_PID + "='" + pid + "'," + JSON_KEY_ID + "='" + id + "')";
+        sendDeleteRequest(endpoint);
     }
 
     // String Parameters
 
-    public void sendGetRequestStringParameters(String pid) throws IOException, InterruptedException {
-        requestTokenIfExpired();
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_STRING_PARTNERS + "?$filter=" + JSON_KEY_PID + "%20eq%20'" + pid + "'"))
-                .GET()
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        logHttpResponse(httpResponse, httpRequest.method());
-        jsonApiHandler.parseStringParametersJson(httpResponse.body());
+    public void sendGetRequestStringParameters(String pid) throws Exception {
+        String endpoint = API_STRING_PARTNERS + "?$filter=" + JSON_KEY_PID + "%20eq%20'" + pid + "'";
+        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
+        jsonApiHandler.parseStringParametersJson(jsonResponseBody);
     }
 
-    public void sendGetRequestStringParameters(String pid, Set<String> listReceiverNames) throws IOException, InterruptedException {
-        requestTokenIfExpired();
-
+    public void sendGetRequestStringParameters(String pid, Set<String> listReceiverNames) throws Exception {
         StringBuilder filterReceiverSpecificQueue = new StringBuilder();
         for (String receiverName : listReceiverNames) {
             if (!filterReceiverSpecificQueue.isEmpty()) {
@@ -327,120 +288,61 @@ public class HttpRequestHandler {
             filterReceiverSpecificQueue.append(JSON_KEY_PID + "%20eq%20'").append(receiverName).append("'");
         }
 
-        String uri = url + API_STRING_PARTNERS + "?$filter="
+        String endpoint = API_STRING_PARTNERS + "?$filter="
                 + JSON_KEY_PID + "%20eq%20'" + pid + "'";
 
         if (!listReceiverNames.isEmpty()) {
-            uri += "%20or%20(" + JSON_KEY_ID + "%20eq%20'" + STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE
+            endpoint += "%20or%20(" + JSON_KEY_ID + "%20eq%20'" + STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE
                     + "'%20and%20(" + filterReceiverSpecificQueue + "))";
         }
 
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(uri))
-                .GET()
-                .build();
-
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        logHttpResponse(httpResponse, httpRequest.method());
-        jsonApiHandler.parseStringParametersJson(httpResponse.body());
+        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
+        jsonApiHandler.parseStringParametersJson(jsonResponseBody);
     }
 
-    public void sendGetRequestStringParameterLandscape() throws IOException, InterruptedException {
-        requestTokenIfExpired();
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_STRING_PARTNERS + "?$filter=" + JSON_KEY_PID + "%20eq%20'" + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE + "'"))
-                .GET()
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        logHttpResponse(httpResponse, httpRequest.method());
-
-        jsonApiHandler.parseStringParameterLandscapeJson(httpResponse.body());
+    public void sendGetRequestStringParameterLandscape() throws Exception {
+        String endpoint = API_STRING_PARTNERS + "?$filter=" + JSON_KEY_PID + "%20eq%20'" + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE + "'";
+        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
+        jsonApiHandler.parseStringParameterLandscapeJson(jsonResponseBody);
     }
 
-    public void sendDeleteRequestStringParametersExistingDetermination(String pid, String id) {
-        try {
-            requestTokenIfExpired();
-            HttpRequest httpRequest = requestBuilder
-                    .uri(URI.create(url + API_STRING_PARTNERS + "?$filter=" + JSON_KEY_PID + "%20eq%20'" + pid + "'%20and%20startswith(" + JSON_KEY_ID + ",'" + id + "')"))
-                    .GET()
-                    .build();
-            HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-            logHttpResponse(httpResponse, httpRequest.method());
-
-            if (!jsonApiHandler.isResultsEmpty(httpResponse.body())) {
-                String uriToDelete = jsonApiHandler.getUriFromStringParametersJson(httpResponse.body());
-                sendDeleteRequestStringParameters(uriToDelete);
-            }
-        } catch (Exception e) {
-            LOGGER.warn(e);
-        }
+    public String sendPostRequestStringParameters(String pid, String id, String value) throws Exception {
+        return sendPostRequestStringParameters(pid, id, value, true);
     }
 
-    public String sendPostRequestStringParameters(String pid, String id, String value) throws IOException, InterruptedException {
+    public String sendPostRequestStringParameters(String pid, String id, String value, boolean isResponseLogged) throws Exception {
         String jsonBody = createRequestBodyPostStringParameters(pid, id, value);
-        requestTokenIfExpired();
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_STRING_PARTNERS))
-                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        return logHttpResponse(httpResponse, httpRequest.method());
+        return sendPostRequest(API_STRING_PARTNERS, jsonBody, isResponseLogged);
     }
 
-    public String sendPutRequestStringParameters(String pid, String id, String value) throws IOException, InterruptedException {
+    public String sendPutRequestStringParameters(String pid, String id, String value) throws Exception {
+        return sendPutRequestStringParameters(pid, id, value, true);
+    }
+
+    private String sendPutRequestStringParameters(String pid, String id, String value, boolean isResponseLogged) throws Exception {
+        String endpoint = API_STRING_PARTNERS + "(" + JSON_KEY_PID + "='" + pid + "'," + JSON_KEY_ID + "='" + id + "')";
         String jsonBody = createRequestBodyPutStringParameters(value);
-        requestTokenIfExpired();
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_STRING_PARTNERS + "(" + JSON_KEY_PID + "='" + pid + "'," + JSON_KEY_ID + "='" + id + "')"))
-                .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        String outputPut = logHttpResponse(httpResponse, httpRequest.method());
-        if (httpResponse.statusCode() != 404) {
-            return outputPut;
-        } else {
-            return this.sendPostRequestStringParameters(pid, id, value);
-        }
+        sendPutRequest(endpoint, jsonBody, isResponseLogged);
+        return this.latestResponseLabel;
     }
 
-    public String sendDeleteRequestStringParameters(String pid, String id) throws IOException, InterruptedException {
-        requestTokenIfExpired();
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_STRING_PARTNERS + "(" + JSON_KEY_PID + "='" + pid + "'," + JSON_KEY_ID + "='" + id + "')"))
-                .DELETE()
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        return logHttpResponse(httpResponse, httpRequest.method());
-    }
-
-    public void sendDeleteRequestStringParameters(String uriToDelete) throws IOException, InterruptedException {
-        requestTokenIfExpired();
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(uriToDelete))
-                .DELETE()
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        logHttpResponse(httpResponse, httpRequest.method());
+    public String sendDeleteRequestStringParameters(String pid, String id) throws Exception {
+        String endpoint = API_STRING_PARTNERS + "(" + JSON_KEY_PID + "='" + pid + "'," + JSON_KEY_ID + "='" + id + "')";
+        return sendDeleteRequest(endpoint);
     }
 
     // Transport methods
 
-    public void sendGetRequestAlternativePartnersTransport() throws IOException, InterruptedException {
-        requestTokenIfExpired();
-
-        String pidsFromBinaryParameters = sendGetRequestParametersWithReceiverDetermination(API_BINARY_PARAMETERS);
-        String pidsFromStringParameters = sendGetRequestParametersWithReceiverDetermination(API_STRING_PARTNERS);
+    public void sendGetRequestAlternativePartnersTransport() throws Exception {
+        JSONObject pidsFromBinaryParameters = sendGetRequestParametersWithReceiverDetermination(API_BINARY_PARAMETERS);
+        JSONObject pidsFromStringParameters = sendGetRequestParametersWithReceiverDetermination(API_STRING_PARTNERS);
         Set<String> uniquePids = jsonApiHandler.getUniquePidsFromEndpoints(pidsFromBinaryParameters, pidsFromStringParameters);
 
         sendGetRequestStringParameterLandscape();
 
-        HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(url + API_ALTERNATIVE_PARTNERS + "?$orderby=" + JSON_KEY_AGENCY))
-                .GET()
-                .build();
-        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        logHttpResponse(httpResponse, httpRequest.method());
-        jsonApiHandler.parseAlternativePartnersJson(httpResponse.body(), true, uniquePids);
+        String endpoint = API_ALTERNATIVE_PARTNERS + "?$orderby=" + JSON_KEY_AGENCY;
+        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
+        jsonApiHandler.parseAlternativePartnersJson(jsonResponseBody, true, uniquePids);
     }
 
     public void transportAlternativePartners(List<AlternativePartner> alternativePartnersToTransport, boolean overwrite, List<String> transportErrors) {
@@ -451,31 +353,15 @@ public class HttpRequestHandler {
             String pid = alternativePartner.getPid();
 
             try {
-                String jsonBody = createRequestBodyPostAlternativePartners(agency, scheme, id, pid);
-                requestTokenIfExpired();
-                HttpRequest httpRequest = requestBuilder
-                        .uri(URI.create(url + API_ALTERNATIVE_PARTNERS))
-                        .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
-                        .build();
-                HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+                sendPostRequestAlternativePartners(agency, scheme, id, pid, false);
 
-                if (httpResponse.statusCode() == 400 && overwrite) {
-                    jsonBody = createRequestBodyPutAlternativePartners(pid);
-                    String hexAgency = convertStringToHexstring(agency);
-                    String hexScheme = convertStringToHexstring(scheme);
-                    String hexId = convertStringToHexstring(id);
-                    requestTokenIfExpired();
-                    httpRequest = requestBuilder
-                            .uri(URI.create(url + API_ALTERNATIVE_PARTNERS + "(" + JSON_KEY_HEXAGENCY + "='" + hexAgency + "'," + JSON_KEY_HEXSCHEME + "='" + hexScheme + "'," + JSON_KEY_HEXID + "='" + hexId + "')"))
-                            .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
-                            .build();
-                    httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+                if (this.latestStatusCode == 400 && overwrite) {
+                    sendPutRequestAlternativePartners(agency, scheme, id, pid, false);
                 }
+                logLatestResponse();
 
-                String logging = logHttpResponse(httpResponse, httpRequest.method());
-                int statusCode = httpResponse.statusCode();
-                if (!(statusCode >= 200 && statusCode <= 299)) {
-                    transportErrors.add(logging);
+                if (!(this.latestStatusCode >= 200 && this.latestStatusCode <= 299)) {
+                    transportErrors.add(this.latestResponseLabel);
                 }
             } catch (Exception e) {
                 String errorMessage = "Error sending HTTP request for alternative partner (agency: " + agency + ", scheme: " + scheme + ", id: " + id + ", pid: " + pid + "): ";
@@ -489,14 +375,8 @@ public class HttpRequestHandler {
         String filter = buildPidFilterBinaryParameters(pidsToTransport);
 
         try {
-            requestTokenIfExpired();
-            HttpRequest httpRequest = requestBuilder
-                    .uri(URI.create(url + API_BINARY_PARAMETERS + filter))
-                    .GET()
-                    .build();
-            HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-            logHttpResponse(httpResponse, httpRequest.method());
-            return new JSONObject(httpResponse.body());
+            String endpoint = API_BINARY_PARAMETERS + filter;
+            return sendGetRequestsAndHandlePagination(endpoint);
         } catch (Exception e) {
             LOGGER.error(e);
         }
@@ -515,34 +395,19 @@ public class HttpRequestHandler {
                     JSONObject resultObject = resultsArray.getJSONObject(i);
                     String pid = resultObject.getString(JSON_KEY_PID);
                     String id = resultObject.getString(JSON_KEY_ID);
-                    String value = new String(Base64.getDecoder().decode(resultObject.getString(JSON_KEY_VALUE)));
-
-                    String valueEncoded = base64Encoding(value);
-                    String jsonBody = createRequestBodyPostBinaryParameters(pid, id, valueEncoded);
+                    String valueAsString = base64Decoding(resultObject.getString(JSON_KEY_VALUE));
 
                     try {
-                        requestTokenIfExpired();
-                        HttpRequest httpRequest = requestBuilder
-                                .uri(URI.create(url + API_BINARY_PARAMETERS))
-                                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
-                                .build();
-                        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+                        sendPostRequestBinaryParameters(pid, id, valueAsString, false);
 
-                        if (httpResponse.statusCode() == 400 && overwrite) {
-                            jsonBody = createRequestBodyPutBinaryParameters(valueEncoded);
-
-                            requestTokenIfExpired();
-                            httpRequest = requestBuilder
-                                    .uri(URI.create(url + API_BINARY_PARAMETERS + "(" + JSON_KEY_PID + "='" + pid + "'," + JSON_KEY_ID + "='" + id + "')"))
-                                    .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
-                                    .build();
-                            httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+                        if (this.latestStatusCode == 400 && overwrite) {
+                            sendPutRequestBinaryParameters(pid, id, valueAsString, false);
                         }
 
-                        String logging = logHttpResponse(httpResponse, httpRequest.method());
-                        int statusCode = httpResponse.statusCode();
-                        if (!(statusCode >= 200 && statusCode <= 299)) {
-                            transportErrors.add(logging);
+                        logLatestResponse();
+
+                        if (!(this.latestStatusCode >= 200 && this.latestStatusCode <= 299)) {
+                            transportErrors.add(this.latestResponseLabel);
                         }
                     } catch (Exception e) {
                         String errorMessage = "Error sending HTTP request for binary parameter (id: " + id + ", pid: " + pid + "): ";
@@ -568,14 +433,8 @@ public class HttpRequestHandler {
         String filter = buildPidFilterStringParameters(pidsToTransport);
 
         try {
-            requestTokenIfExpired();
-            HttpRequest httpRequest = requestBuilder
-                    .uri(URI.create(url + API_STRING_PARTNERS + filter))
-                    .GET()
-                    .build();
-            HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-            logHttpResponse(httpResponse, httpRequest.method());
-            return new JSONObject(httpResponse.body());
+            String endpoint = API_STRING_PARTNERS + filter;
+            return sendGetRequestsAndHandlePagination(endpoint);
         } catch (Exception e) {
             LOGGER.error(e);
         }
@@ -596,31 +455,17 @@ public class HttpRequestHandler {
                     String id = resultObject.getString(JSON_KEY_ID);
                     String value = resultObject.getString(JSON_KEY_VALUE);
 
-                    String jsonBody = createRequestBodyPostStringParameters(pid, id, value);
-
                     try {
-                        requestTokenIfExpired();
-                        HttpRequest httpRequest = requestBuilder
-                                .uri(URI.create(url + API_STRING_PARTNERS))
-                                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
-                                .build();
-                        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+                        sendPostRequestStringParameters(pid, id, value, false);
 
-                        if (httpResponse.statusCode() == 400 && overwrite) {
-                            jsonBody = createRequestBodyPutStringParameters(value);
-
-                            requestTokenIfExpired();
-                            httpRequest = requestBuilder
-                                    .uri(URI.create(url + API_STRING_PARTNERS + "(" + JSON_KEY_PID + "='" + pid + "'," + JSON_KEY_ID + "='" + id + "')"))
-                                    .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
-                                    .build();
-                            httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+                        if (this.latestStatusCode == 400 && overwrite) {
+                            sendPutRequestStringParameters(pid, id, value, false);
                         }
 
-                        String logging = logHttpResponse(httpResponse, httpRequest.method());
-                        int statusCode = httpResponse.statusCode();
-                        if (!(statusCode >= 200 && statusCode <= 299)) {
-                            transportErrors.add(logging);
+                        logLatestResponse();
+
+                        if (!(this.latestStatusCode >= 200 && this.latestStatusCode <= 299)) {
+                            transportErrors.add(this.latestResponseLabel);
                         }
 
                     } catch (Exception e) {
@@ -647,6 +492,10 @@ public class HttpRequestHandler {
 
     private String base64Encoding(String forEncoding) {
         return Base64.getEncoder().encodeToString(forEncoding.getBytes());
+    }
+
+    private String base64Decoding(String forDecoding) {
+        return new String(Base64.getDecoder().decode(forDecoding));
     }
 
     private String convertStringToHexstring(String str) {
@@ -691,11 +540,15 @@ public class HttpRequestHandler {
         return filterBuilder.toString();
     }
 
-    private JSONObject sendRequestsAndHandlePagination(String endpoint) throws IOException, InterruptedException {
+    // send requests unified
+
+    private JSONObject sendGetRequestsAndHandlePagination(String endpoint) throws Exception {
         JSONObject combinedJson = new JSONObject();
         JSONArray combinedResultsArray = new JSONArray();
         String nextEndpoint = endpoint;
         String uri;
+
+        requestTokenIfExpired();
 
         do {
             uri = this.url + nextEndpoint;
@@ -706,10 +559,9 @@ public class HttpRequestHandler {
                     .build();
 
             HttpResponse<String> httpResponse = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-            logHttpResponse(httpResponse, httpRequest.method());
+            setResponseAndLog(httpResponse, httpRequest.method());
 
             JSONObject responseJson = new JSONObject(httpResponse.body());
-
             JSONArray currentResults = responseJson.getJSONObject(JSON_KEY_D).getJSONArray(JSON_KEY_RESULTS);
 
             for (int i = 0; i < currentResults.length(); i++) {
@@ -725,20 +577,89 @@ public class HttpRequestHandler {
         return combinedJson;
     }
 
-    private String logHttpResponse(HttpResponse<String> response, String requestMethod) {
-        int statusCode = response.statusCode();
-        String responseType;
-        if (statusCode >= 200 && statusCode <= 299) {
-            responseType = LABEL_HTTP_SUCCESS;
-            LOGGER.info(response);
-        } else if (statusCode >= 400 && statusCode <= 599) {
-            responseType = LABEL_HTTP_ERROR;
-            LOGGER.error(response);
-            LOGGER.error(response.body());
+    private String sendPostRequest(String endpoint, String jsonBody, boolean isResponseLogged) throws Exception {
+        requestTokenIfExpired();
+        HttpRequest httpRequest = requestBuilder
+                .uri(URI.create(this.url + endpoint))
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
+        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        String returnString;
+        if (isResponseLogged) {
+            returnString = setResponseAndLog(httpResponse, httpRequest.method());
+            if (this.latestStatusCode != 201) {
+                String errorMessage;
+                try {
+                    errorMessage = (new JSONObject(this.latestResponse.body()).getJSONObject("error").getJSONObject("message").getString("value"));
+                } catch (Exception e) {
+                    errorMessage = this.latestResponse.body();
+                }
+                throw new Exception(errorMessage);
+            }
         } else {
-            responseType = LABEL_HTTP_WARNING;
-            LOGGER.warn(response);
+            returnString = setResponseAttributes(httpResponse, httpRequest.method());
         }
-        return responseType + ": " + requestMethod + " Status Code: " + response.statusCode();
+        return returnString;
+    }
+
+    private String sendPutRequest(String endpoint, String jsonBody, boolean isResponseLogged) throws Exception {
+        requestTokenIfExpired();
+        HttpRequest httpRequest = requestBuilder
+                .uri(URI.create(this.url + endpoint))
+                .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
+        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        if (isResponseLogged) {
+            return setResponseAndLog(httpResponse, httpRequest.method());
+        } else {
+            return setResponseAttributes(httpResponse, httpRequest.method());
+        }
+    }
+
+    private String sendDeleteRequest(String endpoint) throws Exception {
+        requestTokenIfExpired();
+        HttpRequest httpRequest = requestBuilder
+                .uri(URI.create(this.url + endpoint))
+                .DELETE()
+                .build();
+        HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        return setResponseAndLog(httpResponse, httpRequest.method());
+    }
+
+    // helper methods for logging and working with HTTP responses
+
+    private String setResponseAttributes(HttpResponse<String> response, String requestMethod) {
+        this.latestStatusCode = response.statusCode();
+        this.latestResponseType = getResponseType(latestStatusCode);
+        this.latestResponse = response;
+        this.latestResponseLabel = latestResponseType + ": " + requestMethod + " Status Code: " + latestStatusCode;
+        return this.latestResponseLabel;
+    }
+
+    private String getResponseType(int latestStatusCode) {
+        if (latestStatusCode >= 200 && latestStatusCode <= 299) {
+            return LABEL_HTTP_SUCCESS;
+        } else if (latestStatusCode >= 400 && latestStatusCode <= 599) {
+            return LABEL_HTTP_ERROR;
+        } else {
+            return LABEL_HTTP_WARNING;
+        }
+    }
+
+    private void logLatestResponse() {
+        if (this.latestResponseType.equals(LABEL_HTTP_SUCCESS)) {
+            LOGGER.info(this.latestResponse);
+        } else if (this.latestResponseType.equals(LABEL_HTTP_ERROR)) {
+            LOGGER.error(this.latestResponse);
+            LOGGER.error(this.latestResponse.body());
+        } else {
+            LOGGER.warn(this.latestResponse);
+        }
+    }
+
+    private String setResponseAndLog(HttpResponse<String> response, String requestMethod) {
+        setResponseAttributes(response, requestMethod);
+        logLatestResponse();
+        return this.latestResponseLabel;
     }
 }

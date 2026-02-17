@@ -21,10 +21,9 @@ import java.util.*;
 import static org.example.utils.SharedData.*;
 
 public class JsonApiHandler {
-    public void parseAlternativePartnersJson(String jsonResponse, boolean includeLandscape, Set<String> uniquePids) {
+    public void parseAlternativePartnersJson(JSONObject jsonResponseBody, boolean includeLandscape, Set<String> uniquePids) {
         List<AlternativePartner> alternativePartnerList = new ArrayList<>();
-        JSONObject jsonObject = new JSONObject(jsonResponse);
-        JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
+        JSONObject dObject = jsonResponseBody.getJSONObject(JSON_KEY_D);
         JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
 
         for (int i = 0; i < resultsArray.length(); i++) {
@@ -48,10 +47,9 @@ public class JsonApiHandler {
         currentAlternativePartnersList = alternativePartnerList;
     }
 
-    public void parseAlternativePartnersJsonLandscape(String jsonResponse) {
+    public void parseAlternativePartnersJsonLandscape(JSONObject jsonResponseBody) {
         List<AlternativePartner> alternativePartnerList = new ArrayList<>();
-        JSONObject jsonObject = new JSONObject(jsonResponse);
-        JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
+        JSONObject dObject = jsonResponseBody.getJSONObject(JSON_KEY_D);
         JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
 
         for (int i = 0; i < resultsArray.length(); i++) {
@@ -67,20 +65,19 @@ public class JsonApiHandler {
         currentLandscapeScenarioParameters = alternativePartnerList;
     }
 
-    public Set<String> getUniquePidsFromEndpoints(String jsonResponseBinary, String jsonResponseString) {
+    public Set<String> getUniquePidsFromEndpoints(JSONObject jsonResponseBodyBinary, JSONObject jsonResponseBodyString) {
 
-        Set<String> uniquePids = new HashSet<>(parsePidsFromJson(jsonResponseBinary));
-        if (jsonResponseString != null) {
-            uniquePids.addAll(parsePidsFromJson(jsonResponseString));
+        Set<String> uniquePids = new HashSet<>(parsePidsFromJson(jsonResponseBodyBinary));
+        if (jsonResponseBodyString != null) {
+            uniquePids.addAll(parsePidsFromJson(jsonResponseBodyString));
         }
 
         return uniquePids;
     }
 
-    private Set<String> parseKeyFromJson(String jsonResponse, String key) {
+    private Set<String> parseKeyFromJson(JSONObject jsonResponseBody, String key) {
         Set<String> stringSet = new HashSet<>();
-        JSONObject jsonObject = new JSONObject(jsonResponse);
-        JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
+        JSONObject dObject = jsonResponseBody.getJSONObject(JSON_KEY_D);
         JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
 
         for (int i = 0; i < resultsArray.length(); i++) {
@@ -92,17 +89,16 @@ public class JsonApiHandler {
         return stringSet;
     }
 
-    public Set<String> parsePidsFromJson(String jsonResponse) {
-        return parseKeyFromJson(jsonResponse, JSON_KEY_PID);
+    public Set<String> parsePidsFromJson(JSONObject jsonResponseBody) {
+        return parseKeyFromJson(jsonResponseBody, JSON_KEY_PID);
     }
 
-    public Set<String> parseIdsFromJson(String jsonResponse) {
-        return parseKeyFromJson(jsonResponse, JSON_KEY_ID);
+    public Set<String> parseIdsFromJson(JSONObject jsonResponseBody) {
+        return parseKeyFromJson(jsonResponseBody, JSON_KEY_ID);
     }
 
-    public Set<String> checkXsltsForMerging(String jsonResponse, List<String> pidsMultipleXslts) {
-        JSONObject jsonObject = new JSONObject(jsonResponse);
-        JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
+    public Set<String> checkXsltsForMerging(JSONObject jsonResponseBody, List<String> pidsMultipleXslts) {
+        JSONObject dObject = jsonResponseBody.getJSONObject(JSON_KEY_D);
         JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
 
         Set<String> pidsWithoutCombinedDetermination = new HashSet<>();
@@ -135,9 +131,8 @@ public class JsonApiHandler {
         return pidsWithoutCombinedDetermination;
     }
 
-    public void parseBinaryParametersJson(String jsonResponse) {
-        JSONObject jsonObject = new JSONObject(jsonResponse);
-        JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
+    public void parseBinaryParametersJson(JSONObject jsonResponseBody) {
+        JSONObject dObject = jsonResponseBody.getJSONObject(JSON_KEY_D);
         JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
 
         currentReceiverDetermination.clear();
@@ -159,9 +154,8 @@ public class JsonApiHandler {
         }
     }
 
-    public void parseStringParametersJson(String jsonResponse) {
-        JSONObject jsonObject = new JSONObject(jsonResponse);
-        JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
+    public void parseStringParametersJson(JSONObject jsonResponseBody) {
+        JSONObject dObject = jsonResponseBody.getJSONObject(JSON_KEY_D);
         JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
 
         currentStringParametersList.clear();
@@ -182,9 +176,8 @@ public class JsonApiHandler {
         }
     }
 
-    public void parseStringParameterLandscapeJson(String jsonResponse) {
-        JSONObject jsonObject = new JSONObject(jsonResponse);
-        JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
+    public void parseStringParameterLandscapeJson(JSONObject jsonResponseBody) {
+        JSONObject dObject = jsonResponseBody.getJSONObject(JSON_KEY_D);
         JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
 
         currentLandscapeTenantParameters.clear();
@@ -198,19 +191,8 @@ public class JsonApiHandler {
         }
     }
 
-    public String getUriFromStringParametersJson(String jsonResponse) {
-        JSONObject jsonObject = new JSONObject(jsonResponse);
-        JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
-        JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
-
-        JSONObject resultObject = resultsArray.getJSONObject(0);
-        JSONObject metadataObject = resultObject.getJSONObject(JSON_KEY_METADATA);
-        return metadataObject.getString(JSON_KEY_URI);
-    }
-
-    public boolean isResultsEmpty(String jsonResponse) {
-        JSONObject jsonObject = new JSONObject(jsonResponse);
-        JSONObject dObject = jsonObject.getJSONObject(JSON_KEY_D);
+    public boolean isResultsEmpty(JSONObject jsonResponseBody) {
+        JSONObject dObject = jsonResponseBody.getJSONObject(JSON_KEY_D);
         JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
         return resultsArray.isEmpty();
     }
