@@ -78,7 +78,7 @@ Session specifically about this accelerator tool by focusing on setup and usage 
 
 ## Requirements
 
-The tool is built using OpenJDK 17 by SapMachine, which is required and can be downloaded [here](https://sap.github.io/SapMachine/).
+The tool is built using OpenJDK 17 by SapMachine, which is required and can be downloaded [here](https://sapmachine.io).
 
 ## Download and Installation
 
