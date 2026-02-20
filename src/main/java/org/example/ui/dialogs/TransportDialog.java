@@ -167,7 +167,7 @@ public class TransportDialog extends JDialog {
 
         add(southPanel, BorderLayout.SOUTH);
 
-        setSize(800, 500);
+        setSize(UI_DIALOG_WIDTH, UI_DIALOG_HEIGHT);
         setLocationRelativeTo(mainFrame);
         setVisible(true);
     }

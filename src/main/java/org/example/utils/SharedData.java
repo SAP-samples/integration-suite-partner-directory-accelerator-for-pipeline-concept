@@ -22,8 +22,10 @@ public final class SharedData {
 
     public static final String UI_TITLE = "Partner Directory Accelerator UI (version 1.0.1)"; // todo: change version for new release
     public static final int UI_PADDING = 5;
-    public static final int UI_TEXT_FIELD_COLUMNS = 20;
-    public static final int SEARCH_FIELD_WIDTH = 15;
+    public static final int UI_TEXT_FIELD_COLUMNS = 30;
+    public static final int UI_SEARCH_FIELD_WIDTH = 15;
+    public static final int UI_DIALOG_WIDTH = 800;
+    public static final int UI_DIALOG_HEIGHT = 500;
 
     public static final String STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE = "SAP_Integration_Suite_Landscape";
 

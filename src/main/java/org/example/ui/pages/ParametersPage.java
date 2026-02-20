@@ -1147,7 +1147,7 @@ public class ParametersPage extends JPanel {
 
                 dialog.add(buttonPanel, BorderLayout.SOUTH);
 
-                dialog.setSize(800, 500);
+                dialog.setSize(UI_DIALOG_WIDTH, UI_DIALOG_HEIGHT);
                 dialog.setLocationRelativeTo(mainFrame);
                 dialog.setVisible(true);
             } catch (Exception ex) {

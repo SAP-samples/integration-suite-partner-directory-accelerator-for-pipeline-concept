@@ -32,8 +32,8 @@ public class SearchPanelMigrateTilde extends JPanel {
 
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        oldPidSearchField = new JTextField(SEARCH_FIELD_WIDTH);
-        newPidSearchField = new JTextField(SEARCH_FIELD_WIDTH);
+        oldPidSearchField = new JTextField(UI_SEARCH_FIELD_WIDTH);
+        newPidSearchField = new JTextField(UI_SEARCH_FIELD_WIDTH);
 
         searchButton = new JButton(LABEL_SEARCH);
         resetButton = new JButton(LABEL_RESET);

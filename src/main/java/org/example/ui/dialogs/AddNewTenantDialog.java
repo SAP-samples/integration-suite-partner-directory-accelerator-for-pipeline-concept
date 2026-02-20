@@ -49,7 +49,7 @@ public class AddNewTenantDialog extends JDialog {
         addComponents(gbc);
         setupListeners();
 
-        setSize(600, 500);
+        setSize(UI_DIALOG_WIDTH, UI_DIALOG_HEIGHT);
         setLocationRelativeTo(mainFrame);
     }
 

@@ -18,7 +18,7 @@ public class LandscapeDialog extends JDialog {
     public LandscapeDialog() {
         super(mainFrame, LABEL_MAINTAIN_STRING_PARAMETER + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE, true);
         setLayout(new BorderLayout());
-        setSize(800, 500);
+        setSize(UI_DIALOG_WIDTH, UI_DIALOG_HEIGHT);
         setLocationRelativeTo(mainFrame);
 
         try {

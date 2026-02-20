@@ -29,10 +29,10 @@ public class SearchPanel extends JPanel {
 
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        agencySearchField = new JTextField(SEARCH_FIELD_WIDTH);
-        schemeSearchField = new JTextField(SEARCH_FIELD_WIDTH);
-        idSearchField = new JTextField(SEARCH_FIELD_WIDTH);
-        pidSearchField = new JTextField(SEARCH_FIELD_WIDTH);
+        agencySearchField = new JTextField(UI_SEARCH_FIELD_WIDTH);
+        schemeSearchField = new JTextField(UI_SEARCH_FIELD_WIDTH);
+        idSearchField = new JTextField(UI_SEARCH_FIELD_WIDTH);
+        pidSearchField = new JTextField(UI_SEARCH_FIELD_WIDTH);
 
         searchButton = new JButton(LABEL_SEARCH);
         resetButton = new JButton(LABEL_RESET);

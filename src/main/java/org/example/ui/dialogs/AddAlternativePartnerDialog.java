@@ -57,7 +57,7 @@ public class AddAlternativePartnerDialog extends JDialog {
 
         add(buttonPanel, BorderLayout.SOUTH);
 
-        setSize(800, 500);
+        setSize(UI_DIALOG_WIDTH, UI_DIALOG_HEIGHT);
         setLocationRelativeTo(mainFrame);
         setVisible(true);
     }
