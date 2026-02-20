@@ -370,20 +370,22 @@ public class ParametersPage extends JPanel {
 
         JPanel buttonPanel;
         if (showXsltButtons) {
-            buttonPanel = new JPanel(new GridLayout(2, 1));
+            buttonPanel = new JPanel(new GridLayout(3, 1));
 
             JPanel buttonPanelTop = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             buttonPanelTop.add(getAddRowButton(table, tableModel));
             buttonPanelTop.add(getMoveRowUpButton(table, tableModel));
             buttonPanelTop.add(getMoveRowDownButton(table, tableModel));
             buttonPanelTop.add(getDeleteButton(table, tableModel));
-            buttonPanelTop.add(getMergeXsltButton());
-            buttonPanelTop.add(getGenerateXsltButtonReceiverDetermination(table, buttonGroup, defaultReceiverTextField));
+
+            JPanel buttonPanelMiddle = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            buttonPanelMiddle.add(getGenerateAndSendButtonPanelBinaryParameters(currentReceiverDetermination, getGenerateXsltButtonReceiverDetermination(table, buttonGroup, defaultReceiverTextField)));
 
             JPanel buttonPanelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-            buttonPanelBottom.add(getSendButtonBinaryParameters(currentReceiverDetermination));
+            buttonPanelBottom.add(getMergeXsltButton());
 
             buttonPanel.add(buttonPanelTop);
+            buttonPanel.add(buttonPanelMiddle);
             buttonPanel.add(buttonPanelBottom);
 
         } else {
@@ -461,10 +463,9 @@ public class ParametersPage extends JPanel {
             buttonPanelTop.add(getMoveRowUpButton(table, tableModel));
             buttonPanelTop.add(getMoveRowDownButton(table, tableModel));
             buttonPanelTop.add(getDeleteButton(table, tableModel));
-            buttonPanelTop.add(getGenerateXsltButtonInterfaceDetermination(table, rTextScrollPane, currentInterfaceDetermination));
 
             JPanel buttonPanelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-            buttonPanelBottom.add(getSendButtonBinaryParameters(currentInterfaceDetermination));
+            buttonPanelBottom.add(getGenerateAndSendButtonPanelBinaryParameters(currentInterfaceDetermination, getGenerateXsltButtonInterfaceDetermination(table, rTextScrollPane, currentInterfaceDetermination)));
 
             buttonPanel.add(buttonPanelTop);
             buttonPanel.add(buttonPanelBottom);
@@ -1168,7 +1169,7 @@ public class ParametersPage extends JPanel {
         return mergeButton;
     }
 
-    private JPanel getSendButtonBinaryParameters(BinaryParameter binaryParameter) {
+    private JPanel getGenerateAndSendButtonPanelBinaryParameters(BinaryParameter binaryParameter, JButton generateButton) {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton sendButton = new JButton(LABEL_SEND_XSLT_TO_API);
         JLabel responseLabel = new JLabel();
@@ -1203,10 +1204,12 @@ public class ParametersPage extends JPanel {
             }
         });
         if (determinationType.equals(LABEL_COMBINED_XSLT)) {
+            buttonPanel.add(generateButton);
             buttonPanel.add(sendButton);
             buttonPanel.add(responseLabel);
         } else {
             buttonPanel.add(responseLabel);
+            buttonPanel.add(generateButton);
             buttonPanel.add(sendButton);
         }
 
@@ -1425,8 +1428,7 @@ public class ParametersPage extends JPanel {
         showUpdatedXslt(this.rTextScrollPaneCombinedDetermination, currentReceiverDetermination.getValueNotEmpty());
 
         JPanel panelXsltButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelXsltButtons.add(getGenerateXsltButtonCombinedDetermination(panelReceiverDetermination, panelInterfaceDetermination));
-        panelXsltButtons.add(getSendButtonBinaryParameters(currentReceiverDetermination));
+        panelXsltButtons.add(getGenerateAndSendButtonPanelBinaryParameters(currentReceiverDetermination, getGenerateXsltButtonCombinedDetermination(panelReceiverDetermination, panelInterfaceDetermination)));
         panelXslt.add(panelXsltButtons, BorderLayout.SOUTH);
 
         panelCombinedDetermination.add(panelTables);
