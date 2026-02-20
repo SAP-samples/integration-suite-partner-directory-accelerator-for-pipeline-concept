@@ -18,12 +18,10 @@ import static org.example.ui.components.LabelTimer.showHttpResponseWithTimer;
 import static org.example.utils.SharedData.*;
 
 public class AlternativePartnersPage extends JPanel {
-    private final JFrame parentFrame;
     private final DefaultTableModel tableModel;
     private final JTable table;
 
-    public AlternativePartnersPage(JFrame parentFrame) {
-        this.parentFrame = parentFrame;
+    public AlternativePartnersPage() {
 
         setLayout(new BorderLayout());
         String[] columnNames = {LABEL_AGENCY, LABEL_SCHEME, LABEL_ID_ALTERNATIVE_PARTNERS, LABEL_PID};
@@ -57,7 +55,7 @@ public class AlternativePartnersPage extends JPanel {
                                     && obj.getPid().equals(pid))
                             .findFirst()
                             .orElse(new AlternativePartner(agency, scheme, id, pid));
-                    ParametersPage binaryParameterDetailPage = new ParametersPage(alternativePartner, parentFrame);
+                    ParametersPage binaryParameterDetailPage = new ParametersPage(alternativePartner);
                     panelContainer.add(binaryParameterDetailPage, pid);
                     cardLayout.show(panelContainer, pid);
                 }
@@ -77,7 +75,7 @@ public class AlternativePartnersPage extends JPanel {
 
         // landscape button
         JButton landscapeButton = new JButton("Maintain " + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE);
-        landscapeButton.addActionListener(e -> new LandscapeDialog(parentFrame));
+        landscapeButton.addActionListener(e -> new LandscapeDialog());
         buttonPanel.add(landscapeButton);
 
         // add button
@@ -89,7 +87,7 @@ public class AlternativePartnersPage extends JPanel {
             headerValues.put(LABEL_ID_ALTERNATIVE_PARTNERS, "");
             headerValues.put(LABEL_PID, "");
             headerValues.put(LABEL_SELECT_DETERMINATION_TYPE, "");
-            new AddAlternativePartnerDialog(parentFrame, headerValues, tableModel);
+            new AddAlternativePartnerDialog(headerValues, tableModel);
         });
         buttonPanel.add(addButton);
 
@@ -98,7 +96,7 @@ public class AlternativePartnersPage extends JPanel {
         transportButton.addActionListener(e -> {
             LOGGER.info("Replication Page selected");
             if (tenantCredentialsList.size() <= 1) {
-                JOptionPane.showMessageDialog(parentFrame, LABEL_TRANSPORT_ERROR_ADD_TENANT, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(mainFrame, LABEL_TRANSPORT_ERROR_ADD_TENANT, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
             } else {
                 try {
                     httpRequestHandler.sendGetRequestAlternativePartnersTransport();
@@ -108,7 +106,7 @@ public class AlternativePartnersPage extends JPanel {
                 for (AlternativePartner partner : currentAlternativePartnersList) {
                     partner.setSelected(false);
                 }
-                TransportPage transportPage = new TransportPage(parentFrame);
+                TransportPage transportPage = new TransportPage();
                 panelContainer.add(transportPage, LABEL_TRANSPORT_ID);
                 cardLayout.show(panelContainer, LABEL_TRANSPORT_ID);
             }
@@ -119,21 +117,28 @@ public class AlternativePartnersPage extends JPanel {
 //        JButton migrateDeprecatedEntries = new JButton(LABEL_MIGRATE_DEPRECATED_ENTRIES);
 //        migrateDeprecatedEntries.addActionListener(e -> {
 //            LOGGER.info("Migrate Deprecated Page selected");
-//            MigrateTildePage migrateDeprecatedEntriesPage = new MigrateTildePage(parentFrame);
+//            MigrateTildePage migrateDeprecatedEntriesPage = new MigrateTildePage();
 //            panelContainer.add(migrateDeprecatedEntriesPage, LABEL_MIGRATE_DEPRECATED_ENTRIES_ID);
 //            cardLayout.show(panelContainer, LABEL_MIGRATE_DEPRECATED_ENTRIES_ID);
 //        });
 //        buttonPanel.add(migrateDeprecatedEntries);
 
-//        // migrate button
-//        JButton migrateTildeButton = new JButton(LABEL_MIGRATE_TILDE);
-//        migrateTildeButton.addActionListener(e -> {
-//            LOGGER.info("Migrate Tilde Page selected");
-//            MigrateTildePage migrateTildePage = new MigrateTildePage(parentFrame);
-//            panelContainer.add(migrateTildePage, LABEL_MIGRATE_TILDE_ID);
-//            cardLayout.show(panelContainer, LABEL_MIGRATE_TILDE_ID);
-//        });
-//        buttonPanel.add(migrateTildeButton);
+        // migrate button
+        JButton migrateTildeButton = new JButton(LABEL_MIGRATE_TILDE);
+        migrateTildeButton.addActionListener(e -> {
+            try {
+                LOGGER.info("Migrate Tilde Page selected");
+
+                List<String> uniquePidsWithReceiverDetermination = httpRequestHandler.sendGetRequestsPidsWithTilde();
+
+                MigrateTildePage migrateTildePage = new MigrateTildePage(uniquePidsWithReceiverDetermination);
+                panelContainer.add(migrateTildePage, LABEL_MIGRATE_TILDE_ID);
+                cardLayout.show(panelContainer, LABEL_MIGRATE_TILDE_ID);
+            } catch (Exception ex) {
+                LOGGER.error(ex.getMessage());
+            }
+        });
+        buttonPanel.add(migrateTildeButton);
 
         // merge button
         JButton mergeButton = new JButton(LABEL_MERGE_XSLTS);
@@ -158,7 +163,7 @@ public class AlternativePartnersPage extends JPanel {
                         .filter(partner -> pidsWithoutCombinedDetermination.contains(partner.getPid()))
                         .toList();
 
-                MergeXsltsPage mergeXsltsPage = new MergeXsltsPage(parentFrame, alternativePartnersMultipleXslts);
+                MergeXsltsPage mergeXsltsPage = new MergeXsltsPage(alternativePartnersMultipleXslts);
                 panelContainer.add(mergeXsltsPage, LABEL_MERGE_XSLTS_ID);
                 cardLayout.show(panelContainer, LABEL_MERGE_XSLTS_ID);
                 showHttpResponseWithTimer(httpResponseLabelHeader, httpResponse);

@@ -14,8 +14,8 @@ import static org.example.utils.SharedData.*;
 
 public class AddAlternativePartnerDialog extends JDialog {
 
-    public AddAlternativePartnerDialog(JFrame parent, LinkedHashMap<String, String> headerValues, DefaultTableModel tableModel) {
-        super(parent, LABEL_ADD_ALTERNATIVE_PARTNER, true);
+    public AddAlternativePartnerDialog(LinkedHashMap<String, String> headerValues, DefaultTableModel tableModel) {
+        super(mainFrame, LABEL_ADD_ALTERNATIVE_PARTNER, true);
         setLayout(new BorderLayout());
 
         EditableHeader headerContainer = new EditableHeader(headerValues, false);
@@ -46,7 +46,7 @@ public class AddAlternativePartnerDialog extends JDialog {
 
                 dispose();
 
-                ParametersPage binaryParameterDetailPage = new ParametersPage(alternativePartner, parent);
+                ParametersPage binaryParameterDetailPage = new ParametersPage(alternativePartner);
                 panelContainer.add(binaryParameterDetailPage, pid);
                 cardLayout.show(panelContainer, pid);
             } catch (Exception ex) {
@@ -58,7 +58,7 @@ public class AddAlternativePartnerDialog extends JDialog {
         add(buttonPanel, BorderLayout.SOUTH);
 
         setSize(800, 500);
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(mainFrame);
         setVisible(true);
     }
 }

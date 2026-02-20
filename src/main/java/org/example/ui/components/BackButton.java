@@ -8,17 +8,17 @@ import static org.example.ui.components.LabelTimer.showHttpResponseWithTimer;
 import static org.example.utils.SharedData.*;
 
 public class BackButton extends JButton {
-    public BackButton(JFrame parentFrame) {
+    public BackButton() {
         super(LABEL_BACK);
 
         addActionListener(e -> {
             try {
-                LOGGER.info("Alternative Partner Page selected");
+                LOGGER.info(LOGGER_INFO_ALTERNATIVE_PARTNERS_PAGE);
                 String httpResponse = httpRequestHandler.sendGetRequestAlternativePartners(true);
                 showHttpResponseWithTimer(httpResponseLabelHeader, httpResponse);
 
                 panelContainer.removeAll();
-                panelContainer.add(new AlternativePartnersPage(parentFrame));
+                panelContainer.add(new AlternativePartnersPage());
                 panelContainer.revalidate();
                 panelContainer.repaint();
             } catch (Exception ex) {

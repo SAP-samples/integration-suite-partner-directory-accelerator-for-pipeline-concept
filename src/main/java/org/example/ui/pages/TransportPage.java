@@ -17,7 +17,7 @@ public class TransportPage extends JPanel {
     private final DefaultTableModel tableModel;
     private final JTable table;
 
-    public TransportPage(JFrame parentFrame) {
+    public TransportPage() {
         setLayout(new BorderLayout());
 
         String[] columnNames = {LABEL_TRANSPORT, LABEL_AGENCY, LABEL_SCHEME, LABEL_ID_ALTERNATIVE_PARTNERS, LABEL_PID};
@@ -80,7 +80,7 @@ public class TransportPage extends JPanel {
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        BackButton backButton = new BackButton(parentFrame);
+        BackButton backButton = new BackButton();
         buttonPanel.add(backButton);
 
         JButton deselectAllButton = new JButton(LABEL_BUTTON_DESELECT_ALL);
@@ -101,9 +101,9 @@ public class TransportPage extends JPanel {
                 }
             }
             if (counterSelected > 0) {
-                new TransportDialog(parentFrame, table, counterSelected);
+                new TransportDialog(table, counterSelected);
             } else {
-                JOptionPane.showMessageDialog(parentFrame, LABEL_ERROR_SELECT_AT_LEAST_ONE_ENTRY, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(mainFrame, LABEL_ERROR_SELECT_AT_LEAST_ONE_ENTRY, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
             }
         });
         buttonPanel.add(transportButton);

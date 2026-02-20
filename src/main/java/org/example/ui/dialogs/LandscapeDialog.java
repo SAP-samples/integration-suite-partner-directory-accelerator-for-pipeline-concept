@@ -15,11 +15,11 @@ public class LandscapeDialog extends JDialog {
     private final List<JTextField> valueFields;
     private final List<JButton> deleteButtons;
 
-    public LandscapeDialog(JFrame parent) {
-        super(parent, LABEL_MAINTAIN_STRING_PARAMETER + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE, true);
+    public LandscapeDialog() {
+        super(mainFrame, LABEL_MAINTAIN_STRING_PARAMETER + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE, true);
         setLayout(new BorderLayout());
         setSize(800, 500);
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(mainFrame);
 
         try {
             httpRequestHandler.sendGetRequestStringParameterLandscape();

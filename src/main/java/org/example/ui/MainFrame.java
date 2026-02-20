@@ -1,7 +1,7 @@
 package org.example.ui;
 
 import org.example.api.HttpRequestHandler;
-import org.example.ui.dialogs.ConfigurationDialog;
+import org.example.ui.dialogs.AddNewTenantDialog;
 import org.example.ui.pages.AlternativePartnersPage;
 import org.example.api.JsonApiHandler;
 import org.example.utils.TenantCredentials;
@@ -22,8 +22,8 @@ import static org.example.utils.SharedData.*;
 import static org.example.utils.TenantCredentials.getTenantObjectByCredentials;
 
 public class MainFrame extends JFrame {
-    private ConfigurationDialog dialogAdd;
-    private ConfigurationDialog dialogEdit;
+    private AddNewTenantDialog dialogAdd;
+    private AddNewTenantDialog dialogEdit;
 
     private final JPanel buttonPanel;
     private final Color defaultPanelColor;
@@ -32,6 +32,8 @@ public class MainFrame extends JFrame {
     private TenantCredentials selectedTenant;
 
     public MainFrame(String locationToCredentials) {
+        mainFrame = this;
+
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         setTitle(UI_TITLE);
@@ -90,32 +92,32 @@ public class MainFrame extends JFrame {
 
                 TenantCredentials tenant = getTenantObjectByCredentials(url, tokenUrl, clientId, clientSecret);
 
-                dialogEdit = new ConfigurationDialog(this, LABEL_EDIT_SELECTED_TENANT, tenant);
+                dialogEdit = new AddNewTenantDialog(LABEL_EDIT_SELECTED_TENANT, tenant);
 
                 setSelectedTenant(tenant.getName());
 
                 jsonFileHandler.addTenant(tenant);
             } catch (Exception e) {
                 LOGGER.error(e);
-                dialogEdit = new ConfigurationDialog(this, LABEL_EDIT_SELECTED_TENANT);
+                dialogEdit = new AddNewTenantDialog(LABEL_EDIT_SELECTED_TENANT);
             }
         } else {
             if (!tenantCredentialsList.isEmpty()) {
                 TenantCredentials tenant = tenantCredentialsList.get(0);
-                dialogEdit = new ConfigurationDialog(this, LABEL_EDIT_SELECTED_TENANT, tenant);
+                dialogEdit = new AddNewTenantDialog(LABEL_EDIT_SELECTED_TENANT, tenant);
                 setSelectedTenant(tenant.getName());
             } else {
-                dialogEdit = new ConfigurationDialog(this, LABEL_EDIT_SELECTED_TENANT);
+                dialogEdit = new AddNewTenantDialog(LABEL_EDIT_SELECTED_TENANT);
             }
         }
 
         if (dialogEdit == null) {
-            dialogEdit = new ConfigurationDialog(this, LABEL_EDIT_SELECTED_TENANT);
+            dialogEdit = new AddNewTenantDialog(LABEL_EDIT_SELECTED_TENANT);
         }
 
         addTenantButton.addActionListener(actionEvent -> {
             if (dialogAdd == null) {
-                dialogAdd = new ConfigurationDialog(this, LABEL_ADD_NEW_TENANT);
+                dialogAdd = new AddNewTenantDialog(LABEL_ADD_NEW_TENANT);
             }
             dialogAdd.setEmptyValues();
             dialogAdd.setVisible(true);
@@ -125,13 +127,13 @@ public class MainFrame extends JFrame {
 
         deleteTenantButton.addActionListener(e -> {
             if (tenantCredentialsList.size() < 2) {
-                JOptionPane.showMessageDialog(this, LABEL_LAST_TENANT, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(mainFrame, LABEL_LAST_TENANT, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
             } else {
                 boolean deleteTenant = false;
                 String[] options = {LABEL_DELETE, LABEL_CANCEL};
 
                 int option = JOptionPane.showOptionDialog(
-                        this,
+                        mainFrame,
                         LABEL_SURE_TO_DELETE + currentTenantName + "\"?",
                         LABEL_CONFIRMATION,
                         JOptionPane.DEFAULT_OPTION,
@@ -171,7 +173,7 @@ public class MainFrame extends JFrame {
 
     private void updateDialogLocation() {
         if (dialogEdit != null) {
-            dialogEdit.setLocationRelativeTo(MainFrame.this);
+            dialogEdit.setLocationRelativeTo(mainFrame);
         }
     }
 
@@ -209,7 +211,7 @@ public class MainFrame extends JFrame {
             httpResponse = httpRequestHandler.sendGetRequestAlternativePartners(true);
 
             panelContainer.removeAll();
-            panelContainer.add(new AlternativePartnersPage(this));
+            panelContainer.add(new AlternativePartnersPage());
             panelContainer.revalidate();
             panelContainer.repaint();
 
@@ -260,7 +262,7 @@ public class MainFrame extends JFrame {
         currentAlternativePartnersList.clear();
 
         panelContainer.removeAll();
-        panelContainer.add(new AlternativePartnersPage(this));
+        panelContainer.add(new AlternativePartnersPage());
         panelContainer.revalidate();
         panelContainer.repaint();
 
@@ -270,6 +272,6 @@ public class MainFrame extends JFrame {
             setTitle(UI_TITLE);
         }
 
-        JOptionPane.showMessageDialog(this, LABEL_ERROR_WHEN_CONFIGURING + e.getMessage(), LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(mainFrame, LABEL_ERROR_WHEN_CONFIGURING + e.getMessage(), LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
     }
 }

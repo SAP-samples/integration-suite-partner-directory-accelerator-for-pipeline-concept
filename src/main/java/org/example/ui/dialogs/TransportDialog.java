@@ -2,7 +2,6 @@ package org.example.ui.dialogs;
 
 import org.example.api.HttpRequestHandler;
 import org.example.model.AlternativePartner;
-import org.example.ui.MainFrame;
 import org.example.ui.components.LoadingIcon;
 import org.example.utils.TenantCredentials;
 import org.json.JSONObject;
@@ -20,8 +19,8 @@ public class TransportDialog extends JDialog {
 
     private final LoadingIcon loadingIcon = new LoadingIcon();
 
-    public TransportDialog(JFrame parent, JTable table, int counterSelected) {
-        super(parent, LABEL_TRANSPORT_ALTERNATIVE_PARTNERS, true);
+    public TransportDialog(JTable table, int counterSelected) {
+        super(mainFrame, LABEL_TRANSPORT_ALTERNATIVE_PARTNERS, true);
         setLayout(new BorderLayout());
 
         JPanel centerPanel = new JPanel(new GridBagLayout());
@@ -118,7 +117,7 @@ public class TransportDialog extends JDialog {
                                 .orElse(null);
 
                         if (selectedTenant == null) {
-                            JOptionPane.showMessageDialog(parent, LABEL_ERROR_SELECTED_TENANT_NOT_FOUND, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(mainFrame, LABEL_ERROR_SELECTED_TENANT_NOT_FOUND, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
                         }
 
                         HttpRequestHandler httpTransportHandler = new HttpRequestHandler(selectedTenant);
@@ -128,7 +127,7 @@ public class TransportDialog extends JDialog {
                         // Binary Parameters
                         JSONObject jsonBinaryParametersToTransport = httpRequestHandler.getBinaryParametersToTransport(uniquePidsToTransport);
                         if (jsonBinaryParametersToTransport != null) {
-                            httpTransportHandler.transportBinaryParameters(jsonBinaryParametersToTransport, overwrite, transportErrors);
+                            httpTransportHandler.transportBinaryParameters(jsonBinaryParametersToTransport, overwrite, transportErrors, false, null);
                         }
 
                         // String Parameters
@@ -137,24 +136,24 @@ public class TransportDialog extends JDialog {
                         }
                         JSONObject jsonStringParametersToTransport = httpRequestHandler.getStringParametersToTransport(uniquePidsToTransport);
                         if (jsonStringParametersToTransport != null) {
-                            httpTransportHandler.transportStringParameters(jsonStringParametersToTransport, overwrite, transportErrors);
+                            httpTransportHandler.transportStringParameters(jsonStringParametersToTransport, overwrite, transportErrors, false, null);
                         }
 
-                        ((MainFrame) parent).setSelectedTenant(selectedTenantName);
+                        mainFrame.setSelectedTenant(selectedTenantName);
                         dispose();
 
                         if (transportErrors.isEmpty()) {
                             String logTransport = LABEL_TRANSPORT_FINISHED + LABEL_TRANSPORT_SUCCESSFUL;
-                            JOptionPane.showMessageDialog(parent, logTransport, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(mainFrame, logTransport, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
                             LOGGER.info(logTransport);
                         } else {
                             String logTransport = LABEL_TRANSPORT_FINISHED + LABEL_TRANSPORT_FAILED_1 + transportErrors.size() + LABEL_TRANSPORT_FAILED_2;
-                            JOptionPane.showMessageDialog(parent, logTransport, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(mainFrame, logTransport, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
                             LOGGER.warn(logTransport);
                         }
                     } catch (Exception ex) {
                         LOGGER.error(ex);
-                        JOptionPane.showMessageDialog(parent, LABEL_ERROR_TRANSPORT_TRY_AGAIN, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(mainFrame, LABEL_ERROR_TRANSPORT_TRY_AGAIN, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
                     }
                     return null;
                 }
@@ -169,7 +168,7 @@ public class TransportDialog extends JDialog {
         add(southPanel, BorderLayout.SOUTH);
 
         setSize(800, 500);
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(mainFrame);
         setVisible(true);
     }
 }

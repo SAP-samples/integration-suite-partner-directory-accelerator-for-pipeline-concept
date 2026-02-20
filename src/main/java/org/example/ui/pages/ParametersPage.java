@@ -42,7 +42,6 @@ import static org.example.ui.components.LabelTimer.showHttpResponseWithTimer;
 import static org.example.utils.SharedData.*;
 
 public class ParametersPage extends JPanel {
-    private final JFrame parentFrame;
 
     private final TemplateReceiverDetermination objectReceiverDetermination = new TemplateReceiverDetermination();
     private final TemplateInterfaceDetermination objectInterfaceDetermination = new TemplateInterfaceDetermination();
@@ -60,9 +59,8 @@ public class ParametersPage extends JPanel {
 
     private final EditableHeader editableHeader;
 
-    public ParametersPage(AlternativePartner alternativePartner, JFrame parentFrame) {
+    public ParametersPage(AlternativePartner alternativePartner) {
         pid = alternativePartner.getPid();
-        this.parentFrame = parentFrame;
 
         setLayout(new BorderLayout());
         LinkedHashMap<String, String> headerValues = new LinkedHashMap<>();
@@ -254,7 +252,7 @@ public class ParametersPage extends JPanel {
         add(tabbedPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        BackButton backButton = new BackButton(parentFrame);
+        BackButton backButton = new BackButton();
         buttonPanel.add(backButton);
         add(buttonPanel, BorderLayout.SOUTH);
     }
@@ -1044,7 +1042,7 @@ public class ParametersPage extends JPanel {
 
         mergeButton.addActionListener(e -> {
             try {
-                JDialog dialog = new JDialog(parentFrame, LABEL_PREVIEW_MERGED_XSLT, true);
+                JDialog dialog = new JDialog(mainFrame, LABEL_PREVIEW_MERGED_XSLT, true);
                 dialog.setLayout(new BorderLayout());
 
                 httpRequestHandler.sendGetRequestBinaryParameters(pid);
@@ -1079,7 +1077,7 @@ public class ParametersPage extends JPanel {
                             String[] options = {LABEL_SEND_ANYWAY, LABEL_CANCEL};
 
                             int option = JOptionPane.showOptionDialog(
-                                    parentFrame,
+                                    mainFrame,
                                     colon(LABEL_SHOWN_XSLT_INVALID_SYNTAX) + "\n" + resultXsltValidation + "\n" + LABEL_SEND_ANYWAY_QUESTION,
                                     LABEL_CONFIRMATION,
                                     JOptionPane.DEFAULT_OPTION,
@@ -1129,7 +1127,7 @@ public class ParametersPage extends JPanel {
                             String id = alternativePartnerValues.get(LABEL_ID_ALTERNATIVE_PARTNERS);
                             AlternativePartner alternativePartner = new AlternativePartner(agency, scheme, id, pid);
 
-                            ParametersPage binaryParameterDetailPage = new ParametersPage(alternativePartner, parentFrame);
+                            ParametersPage binaryParameterDetailPage = new ParametersPage(alternativePartner);
                             panelContainer.add(binaryParameterDetailPage, pid);
                             cardLayout.show(panelContainer, pid);
                             dialog.dispose();
@@ -1137,11 +1135,11 @@ public class ParametersPage extends JPanel {
                             if (backupCheckBox.isSelected()) {
                                 successMessage = LABEL_BACKUP_CREATED;
                             }
-                            JOptionPane.showMessageDialog(parentFrame, successMessage + LABEL_XSLTS_MERGED_SUCCESSFULLY, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(mainFrame, successMessage + LABEL_XSLTS_MERGED_SUCCESSFULLY, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
                         }
 
                     } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(parentFrame, colonSpace(LABEL_ERROR_MERGING_XSLT) + ex.getMessage(), LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(mainFrame, colonSpace(LABEL_ERROR_MERGING_XSLT) + ex.getMessage(), LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
                         LOGGER.error(ex);
                     }
                 });
@@ -1150,7 +1148,7 @@ public class ParametersPage extends JPanel {
                 dialog.add(buttonPanel, BorderLayout.SOUTH);
 
                 dialog.setSize(800, 500);
-                dialog.setLocationRelativeTo(parentFrame);
+                dialog.setLocationRelativeTo(mainFrame);
                 dialog.setVisible(true);
             } catch (Exception ex) {
                 String errorMessage = "";
@@ -1183,7 +1181,7 @@ public class ParametersPage extends JPanel {
                     String[] options = {LABEL_SEND_ANYWAY, LABEL_CANCEL};
 
                     int option = JOptionPane.showOptionDialog(
-                            parentFrame,
+                            mainFrame,
                             colon(LABEL_SHOWN_XSLT_INVALID_SYNTAX) + "\n" + resultXsltValidation + "\n" + LABEL_SEND_ANYWAY_QUESTION,
                             LABEL_CONFIRMATION,
                             JOptionPane.DEFAULT_OPTION,
@@ -1235,7 +1233,7 @@ public class ParametersPage extends JPanel {
         } else {
             messageType = JOptionPane.WARNING_MESSAGE;
         }
-        JOptionPane.showMessageDialog(parentFrame, errorMessage, typeOfDialog, messageType);
+        JOptionPane.showMessageDialog(mainFrame, errorMessage, typeOfDialog, messageType);
     }
 
     private JPanel getPanelCombinedDetermination() {

@@ -18,7 +18,7 @@ public class MergeXsltsPage extends JPanel {
     private final JTable table;
     private final List<AlternativePartner> alternativePartnersMultipleXslts;
 
-    public MergeXsltsPage(JFrame parentFrame, List<AlternativePartner> alternativePartners) {
+    public MergeXsltsPage(List<AlternativePartner> alternativePartners) {
         this.alternativePartnersMultipleXslts = alternativePartners;
 
         setLayout(new BorderLayout());
@@ -53,7 +53,7 @@ public class MergeXsltsPage extends JPanel {
                                     && obj.getPid().equals(pid))
                             .findFirst()
                             .orElse(new AlternativePartner(agency, scheme, id, pid));
-                    ParametersPage binaryParameterDetailPage = new ParametersPage(alternativePartner, parentFrame);
+                    ParametersPage binaryParameterDetailPage = new ParametersPage(alternativePartner);
                     panelContainer.add(binaryParameterDetailPage, pid);
                     cardLayout.show(panelContainer, pid);
                 }
@@ -66,7 +66,7 @@ public class MergeXsltsPage extends JPanel {
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        BackButton backButton = new BackButton(parentFrame);
+        BackButton backButton = new BackButton();
         backButton.setText(LABEL_BACK_TO_ALL);
         buttonPanel.add(backButton);
 

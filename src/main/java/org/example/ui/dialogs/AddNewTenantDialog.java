@@ -1,7 +1,6 @@
 package org.example.ui.dialogs;
 
 import org.example.exceptions.TenantNameNotUniqueException;
-import org.example.ui.MainFrame;
 import org.example.utils.TenantCredentials;
 import org.json.JSONObject;
 
@@ -13,7 +12,7 @@ import java.nio.file.Files;
 
 import static org.example.utils.SharedData.*;
 
-public class ConfigurationDialog extends JDialog {
+public class AddNewTenantDialog extends JDialog {
     private final JTextField tenantNameField;
     private final JCheckBox criticalCheckBox;
     private final JTextField urlField;
@@ -26,13 +25,11 @@ public class ConfigurationDialog extends JDialog {
     private final JButton saveButton;
     private final JButton cancelButton;
     private final JButton uploadButton;
-    private final MainFrame mainFrame;
     private final String dialogTitle;
 
-    public ConfigurationDialog(MainFrame parent, String dialogTitle) {
-        super(parent, dialogTitle, true);
+    public AddNewTenantDialog(String dialogTitle) {
+        super(mainFrame, dialogTitle, true);
         this.dialogTitle = dialogTitle;
-        mainFrame = parent;
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
@@ -53,11 +50,11 @@ public class ConfigurationDialog extends JDialog {
         setupListeners();
 
         setSize(600, 500);
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(mainFrame);
     }
 
-    public ConfigurationDialog(MainFrame parent, String dialogTitle, TenantCredentials tenant) {
-        this(parent, dialogTitle);
+    public AddNewTenantDialog(String dialogTitle, TenantCredentials tenant) {
+        this(dialogTitle);
         setInputFieldValues(tenant);
     }
 

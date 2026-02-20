@@ -7,6 +7,7 @@ import org.example.api.JsonApiHandler;
 import org.example.model.AlternativePartner;
 import org.example.model.BinaryParameter;
 import org.example.model.StringParameter;
+import org.example.ui.MainFrame;
 import org.example.ui.pages.AlternativePartnersPage;
 
 import javax.swing.*;
@@ -19,9 +20,10 @@ import java.util.Map;
 public final class SharedData {
     public static AlternativePartnersPage alternativePartnersPage;
 
-    public static final String UI_TITLE = "Partner Directory Accelerator UI (version 1.0.1)";
+    public static final String UI_TITLE = "Partner Directory Accelerator UI (version 1.0.1)"; // todo: change version for new release
     public static final int UI_PADDING = 5;
     public static final int UI_TEXT_FIELD_COLUMNS = 20;
+    public static final int SEARCH_FIELD_WIDTH = 15;
 
     public static final String STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE = "SAP_Integration_Suite_Landscape";
 
@@ -41,6 +43,8 @@ public final class SharedData {
     public static final String LABEL_CLIENT_ID = "Client ID";
     public static final String LABEL_CLIENT_SECRET = "Client Secret";
     public static final String LABEL_COMBINED_XSLT = "Combined XSLT";
+    public static final String LABEL_CONFIRM_MIGRATION_1 = "Confirm migration of ";
+    public static final String LABEL_CONFIRM_MIGRATION_2 = " scenario(s) using old partner ID with tilde to new partner ID.";
     public static final String LABEL_CONFIRMATION = "Confirmation";
     public static final String LABEL_CONDITION = "XPath Condition";
     public static final String LABEL_CONTAINS_SYNTAX_ERRORS = " contains syntax errors.";
@@ -48,13 +52,15 @@ public final class SharedData {
     public static final String LABEL_DEFAULT = "Default";
     public static final String LABEL_DELETE = "Delete";
     public static final String LABEL_DELETE_ENTRY = "Delete this entry";
+    public static final String LABEL_DELETE_OLD_ENTRIES = "Delete entries with old Pid";
     public static final String LABEL_DELETE_ROW = "Delete row";
     public static final String LABEL_DELETE_SELECTED_TENANT = "Delete selected tenant";
     public static final String LABEL_DOES_NOT_EXIST = " does not exist.";
     public static final String LABEL_EDIT_SELECTED_TENANT = "Edit selected tenant";
     public static final String LABEL_ENTRIES = "Entries";
     public static final String LABEL_ERROR = "Error";
-    public static final String LABEL_ERROR_EMPTY_INPUT = "Input field may not be empty.";
+    public static final String LABEL_ERROR_ADD_AT_LEAST_ONE_NEW_PARTNER_ID_TO_MIGRATE = "Add at least one new partner id to migrate.";
+    public static final String LABEL_ERROR_EMPTY_INPUT = "Input field(s) may not be empty. Please provide all values and send again.";
     public static final String LABEL_ERROR_READING_JSON_FILE = "Error when reading JSON file. Make sure the JSON file is in the right format.";
     public static final String LABEL_ERROR_MERGING_XSLT = "Error when merging XSLT";
     public static final String LABEL_ERROR_SELECT_AT_LEAST_ONE_ENTRY = "Select at least one alternative partner to replicate.";
@@ -92,6 +98,8 @@ public final class SharedData {
     public static final String LABEL_MULTIPLE_XSLTS = "Multiple XSLTs";
     public static final String LABEL_OVERWRITE_EXISTING_ENTRIES = "Overwrite existing entries";
     public static final String LABEL_PID = "Partner ID";
+    public static final String LABEL_PID_NEW = "New " + LABEL_PID + " for alternative partner";
+    public static final String LABEL_PID_OLD = "Old " + LABEL_PID + " with tilde";
     public static final String LABEL_PLACEHOLDER_EMPTY_DROPDOWN = "Add new tenant first...";
     public static final String LABEL_POINT_TO_POINT = "Point to Point";
     public static final String LABEL_POINT_TO_POINT_DETERMINATION = "Point to Point Determination";
@@ -122,7 +130,7 @@ public final class SharedData {
     public static final String LABEL_TOKEN_URL = "Token URL";
     public static final String LABEL_TRANSPORT = "Replicate?";
     public static final String LABEL_TRANSPORT_1 = "Replicate ";
-    public static final String LABEL_TRANSPORT_2 = " alternative partners with binary / string parameters to selected tenant.";
+    public static final String LABEL_TRANSPORT_2 = " alternative partner(s) with binary / string parameters to selected tenant.";
     public static final String LABEL_TRANSPORT_ALTERNATIVE_PARTNERS = "Replicate to another Tenant";
     public static final String LABEL_TRANSPORT_ERROR_ADD_TENANT = "Please add at least one more tenant to use the replication feature.";
     public static final String LABEL_TRANSPORT_ID = "replicate";
@@ -143,6 +151,8 @@ public final class SharedData {
     public static final String LABEL_WARNING = "Warning";
     public static final String LABEL_WARNING_DELETE_LAST_ROW = "Cannot delete the last row.";
     public static final String LABEL_XSLTS_MERGED_SUCCESSFULLY = "XSLTs were merged successfully.";
+
+    public static final String LOGGER_INFO_ALTERNATIVE_PARTNERS_PAGE = "Alternative Partners Page selected";
 
     public static final String STRING_PARAMETER_ID_INBOUND_CONVERSION_ENDPOINT = "InboundConversionEndpoint";
     public static final String STRING_PARAMETER_ID_MAX_JMS_RETRIES = "MaxJMSRetries";
@@ -205,7 +215,6 @@ public final class SharedData {
     public static final String JSON_KEY_HEXSCHEME = "Hexscheme";
     public static final String JSON_KEY_ID = "Id";
     public static final String JSON_KEY_IMPORTANT = "important";
-    public static final String JSON_KEY_METADATA = "__metadata";
     public static final String JSON_KEY_NAME = "name";
     public static final String JSON_KEY_OAUTH = "oauth";
     public static final String JSON_KEY_PID = "Pid";
@@ -214,7 +223,6 @@ public final class SharedData {
     public static final String JSON_KEY_TENANTS = "tenants";
     public static final String JSON_KEY_TOKEN_EXPIRATION_DATE_TIME = "token_expiration_datetime";
     public static final String JSON_KEY_TOKEN_URL = "tokenurl";
-    public static final String JSON_KEY_URI = "uri";
     public static final String JSON_KEY_URL = "url";
     public static final String JSON_KEY_VALUE = "Value";
     public static final String JSON_KEY___NEXT = "__next";
@@ -241,6 +249,7 @@ public final class SharedData {
             <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="3.0">
             <!-- Placeholder for XSLT -->
             </xsl:stylesheet>""";
+    public static final String TILDE = "~";
 
     public static final String DATE_TIME_FORMATTER_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
@@ -250,6 +259,7 @@ public final class SharedData {
     public static final Color ORANGE = new Color(255, 153, 0);
     public static final Color RED = new Color(204, 0, 0);
 
+    public static MainFrame mainFrame;
     public static HttpRequestHandler httpRequestHandler;
     public static JsonApiHandler jsonApiHandler;
     public static XsltHandler xsltHandler;
