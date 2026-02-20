@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -205,6 +206,18 @@ public class HttpRequestHandler {
 
     // both BinaryParameters and StringParameters
 
+    public List<String> sendGetRequestsPidsWithTilde() throws Exception {
+        JSONObject pidsFromBinaryParameters = sendGetRequestParametersWithReceiverDetermination(API_BINARY_PARAMETERS);
+        JSONObject pidsFromStringParameters = sendGetRequestParametersWithReceiverDetermination(API_STRING_PARTNERS);
+
+        Set<String> uniquePidsWithReceiverDetermination = jsonApiHandler.getUniquePidsFromEndpoints(pidsFromBinaryParameters, pidsFromStringParameters);
+        uniquePidsWithReceiverDetermination.removeIf(s -> !s.contains(TILDE));
+
+        return uniquePidsWithReceiverDetermination.stream()
+                .sorted()
+                .toList();
+    }
+
     public JSONObject sendGetRequestParametersWithReceiverDetermination(String endpoint) throws Exception {
         return sendGetRequestsAndHandlePagination(endpoint + "?$filter=" + JSON_KEY_ID + "%20eq%20'" + ID_RECEIVER_DETERMINATION + "'&$select=" + JSON_KEY_PID);
     }
@@ -384,7 +397,7 @@ public class HttpRequestHandler {
         return null;
     }
 
-    public void transportBinaryParameters(JSONObject jsonObjectToTransport, boolean overwrite, List<String> transportErrors) {
+    public void transportBinaryParameters(JSONObject jsonObjectToTransport, boolean overwrite, List<String> transportErrors, boolean shouldDeleteOldEntries, HashMap<String, String> oldAndNewPids) {
         try {
             JSONObject dObject = jsonObjectToTransport.getJSONObject(JSON_KEY_D);
             JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
@@ -393,7 +406,15 @@ public class HttpRequestHandler {
             for (int i = 0; i < resultsArray.length(); i++) {
                 try {
                     JSONObject resultObject = resultsArray.getJSONObject(i);
-                    String pid = resultObject.getString(JSON_KEY_PID);
+
+                    String pid;
+                    String oldPid = "";
+                    if (oldAndNewPids != null) { // for migrate tilde
+                        oldPid = resultObject.getString(JSON_KEY_PID);
+                        pid = oldAndNewPids.get(oldPid);
+                    } else { // for transport
+                        pid = resultObject.getString(JSON_KEY_PID);
+                    }
                     String id = resultObject.getString(JSON_KEY_ID);
                     String valueAsString = base64Decoding(resultObject.getString(JSON_KEY_VALUE));
 
@@ -413,6 +434,14 @@ public class HttpRequestHandler {
                         String errorMessage = "Error sending HTTP request for binary parameter (id: " + id + ", pid: " + pid + "): ";
                         LOGGER.error("{}{}", errorMessage, e);
                         transportErrors.add(errorMessage + e.getMessage());
+                    }
+
+                    if (shouldDeleteOldEntries) {
+                        try {
+                            sendDeleteRequestBinaryParameters(oldPid, id);
+                        } catch (Exception e) {
+                            //
+                        }
                     }
                 } catch (Exception e) {
                     String errorMessage = "Error reading JSON for binary parameter at index " + i + ": ";
@@ -442,7 +471,7 @@ public class HttpRequestHandler {
         return null;
     }
 
-    public void transportStringParameters(JSONObject jsonObjectToTransport, boolean overwrite, List<String> transportErrors) {
+    public void transportStringParameters(JSONObject jsonObjectToTransport, boolean overwrite, List<String> transportErrors, boolean shouldDeleteOldEntries, HashMap<String, String> oldAndNewPids) {
         try {
             JSONObject dObject = jsonObjectToTransport.getJSONObject(JSON_KEY_D);
             JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
@@ -451,7 +480,15 @@ public class HttpRequestHandler {
             for (int i = 0; i < resultsArray.length(); i++) {
                 try {
                     JSONObject resultObject = resultsArray.getJSONObject(i);
-                    String pid = resultObject.getString(JSON_KEY_PID);
+
+                    String pid;
+                    String oldPid = "";
+                    if (oldAndNewPids != null) {
+                        oldPid = resultObject.getString(JSON_KEY_PID);
+                        pid = oldAndNewPids.get(oldPid);
+                    } else {
+                        pid = resultObject.getString(JSON_KEY_PID);
+                    }
                     String id = resultObject.getString(JSON_KEY_ID);
                     String value = resultObject.getString(JSON_KEY_VALUE);
 
@@ -467,11 +504,18 @@ public class HttpRequestHandler {
                         if (!(this.latestStatusCode >= 200 && this.latestStatusCode <= 299)) {
                             transportErrors.add(this.latestResponseLabel);
                         }
-
                     } catch (Exception e) {
                         String errorMessage = "Error sending HTTP request for string parameter (id: " + id + ", pid: " + pid + "): ";
                         LOGGER.error("{}{}", errorMessage, e);
                         transportErrors.add(errorMessage + e.getMessage());
+                    }
+
+                    if (shouldDeleteOldEntries) {
+                        try {
+                            sendDeleteRequestStringParameters(oldPid, id);
+                        } catch (Exception e) {
+                            //
+                        }
                     }
                 } catch (Exception e) {
                     String errorMessage = "Error reading JSON for string parameter at index " + i + ": ";

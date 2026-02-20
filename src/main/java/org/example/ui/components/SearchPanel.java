@@ -29,11 +29,11 @@ public class SearchPanel extends JPanel {
 
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        int searchFieldWidth = 15;
-        agencySearchField = new JTextField(searchFieldWidth);
-        schemeSearchField = new JTextField(searchFieldWidth);
-        idSearchField = new JTextField(searchFieldWidth);
-        pidSearchField = new JTextField(searchFieldWidth);
+        agencySearchField = new JTextField(SEARCH_FIELD_WIDTH);
+        schemeSearchField = new JTextField(SEARCH_FIELD_WIDTH);
+        idSearchField = new JTextField(SEARCH_FIELD_WIDTH);
+        pidSearchField = new JTextField(SEARCH_FIELD_WIDTH);
+
         searchButton = new JButton(LABEL_SEARCH);
         resetButton = new JButton(LABEL_RESET);
         entryCountLabel = new JLabel(colonSpace(LABEL_ENTRIES) + originalData.size());
@@ -89,12 +89,11 @@ public class SearchPanel extends JPanel {
     }
 
     public void resetSearch() {
-        refreshTableConsumer.accept(originalData);
         agencySearchField.setText("");
         schemeSearchField.setText("");
         idSearchField.setText("");
         pidSearchField.setText("");
-        updateEntryCountLabel(originalData.size());
+        performSearch();
     }
 
     private void updateEntryCountLabel(int count) {
