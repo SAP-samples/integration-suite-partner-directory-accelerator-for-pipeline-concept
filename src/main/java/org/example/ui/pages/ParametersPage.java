@@ -315,7 +315,7 @@ public class ParametersPage extends JPanel {
         String[] labelRadioButtons = {LABEL_ERROR, LABEL_IGNORE, LABEL_DEFAULT};
         String typeSelected = templateReceiverDetermination.getType();
 
-        JTextField defaultReceiverTextField = new JTextField(templateReceiverDetermination.getDefaultReceiver(), UI_TEXT_FIELD_COLUMNS);
+        JTextField defaultReceiverTextField = new JTextField(templateReceiverDetermination.getDefaultReceiver(), 20);
         keyPanel.addNewComponent(COMPONENT_RECEIVER_DEFAULT, defaultReceiverTextField);
 
         JPanel jPanelRadioButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));

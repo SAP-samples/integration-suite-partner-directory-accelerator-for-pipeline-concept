@@ -113,65 +113,15 @@ public class AlternativePartnersPage extends JPanel {
         });
         buttonPanel.add(transportButton);
 
-//        // migrate deprecated entries
-//        JButton migrateDeprecatedEntries = new JButton(LABEL_MIGRATE_DEPRECATED_ENTRIES);
-//        migrateDeprecatedEntries.addActionListener(e -> {
-//            LOGGER.info("Migrate Deprecated Page selected");
-//            MigrateTildePage migrateDeprecatedEntriesPage = new MigrateTildePage();
-//            panelContainer.add(migrateDeprecatedEntriesPage, LABEL_MIGRATE_DEPRECATED_ENTRIES_ID);
-//            cardLayout.show(panelContainer, LABEL_MIGRATE_DEPRECATED_ENTRIES_ID);
-//        });
-//        buttonPanel.add(migrateDeprecatedEntries);
-
-        // migrate button
-        JButton migrateTildeButton = new JButton(LABEL_MIGRATE_TILDE);
-        migrateTildeButton.addActionListener(e -> {
-            try {
-                LOGGER.info("Migrate Tilde Page selected");
-
-                List<String> uniquePidsWithReceiverDetermination = httpRequestHandler.sendGetRequestsPidsWithTilde();
-
-                MigrateTildePage migrateTildePage = new MigrateTildePage(uniquePidsWithReceiverDetermination);
-                panelContainer.add(migrateTildePage, LABEL_MIGRATE_TILDE_ID);
-                cardLayout.show(panelContainer, LABEL_MIGRATE_TILDE_ID);
-            } catch (Exception ex) {
-                LOGGER.error(ex.getMessage());
-            }
+        // migrate deprecated entries
+        JButton migrateDeprecatedEntries = new JButton(LABEL_MIGRATE_DEPRECATED_ENTRIES);
+        migrateDeprecatedEntries.addActionListener(e -> {
+            LOGGER.info("Migrate Deprecated Page selected");
+            MigrateDeprecatedEntriesPage migrateDeprecatedEntriesPage = new MigrateDeprecatedEntriesPage();
+            panelContainer.add(migrateDeprecatedEntriesPage, LABEL_MIGRATE_DEPRECATED_ENTRIES_ID);
+            cardLayout.show(panelContainer, LABEL_MIGRATE_DEPRECATED_ENTRIES_ID);
         });
-        buttonPanel.add(migrateTildeButton);
-
-        // merge button
-        JButton mergeButton = new JButton(LABEL_MERGE_XSLTS);
-        mergeButton.addActionListener(e -> {
-            LOGGER.info("Merge Page selected");
-
-            try {
-                String httpResponse = httpRequestHandler.sendGetRequestAlternativePartners(false);
-                Set<String> pidsWithInterfaceDetermination = httpRequestHandler.sendGetRequestBinaryParametersIdsInterfaceDetermination();
-
-                List<AlternativePartner> alternativePartnersMultipleXslts = currentAlternativePartnersList.stream()
-                        .filter(partner -> pidsWithInterfaceDetermination.contains(partner.getPid()))
-                        .toList();
-
-                List<String> pidsMultipleXslts = alternativePartnersMultipleXslts.stream()
-                        .map(AlternativePartner::getPid)
-                        .toList();
-
-                Set<String> pidsWithoutCombinedDetermination = httpRequestHandler.sendGetRequestBinaryParametersXsltsReceiverDetermination(pidsMultipleXslts);
-
-                alternativePartnersMultipleXslts = alternativePartnersMultipleXslts.stream()
-                        .filter(partner -> pidsWithoutCombinedDetermination.contains(partner.getPid()))
-                        .toList();
-
-                MergeXsltsPage mergeXsltsPage = new MergeXsltsPage(alternativePartnersMultipleXslts);
-                panelContainer.add(mergeXsltsPage, LABEL_MERGE_XSLTS_ID);
-                cardLayout.show(panelContainer, LABEL_MERGE_XSLTS_ID);
-                showHttpResponseWithTimer(httpResponseLabelHeader, httpResponse);
-            } catch (Exception ex) {
-                LOGGER.error(ex.getMessage());
-            }
-        });
-        buttonPanel.add(mergeButton);
+        buttonPanel.add(migrateDeprecatedEntries);
 
         return buttonPanel;
     }
