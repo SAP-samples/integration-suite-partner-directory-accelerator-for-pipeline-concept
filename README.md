@@ -182,7 +182,7 @@ For demonstration purposes, in the screenshot, a trial tenant is shown as sample
 
 #### Add New Alternative Partner
 
-![Add New Alternative Partner Image](images/AddAlternativePartnerDialogNew.png)
+![Add New Alternative Partner Image](images/AddAlternativePartnerDialog.png)
 
 At the bottom of the page, the "Add new Alternative Partner" button allows you to create a new alternative partner. Insert the required values: **Sender System** (named "agency" for alternative partner), **Sender Interface** (named "id" for alternative partner), and **Partner ID** (also known as PID). The only function of the **Sender Type (Default/XI)** option buttons is to adjust this form to the style of Alternative Partner entry. The value for "**Scheme**" is fixed to "SenderInterface" for default scenarios (non-SAP senders and IDoc). For [XI inbound scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#partner-id) the Scheme field changes to **Interface Name**, while the Interface Name field changes to **Namespace**, as described in the linked documentation.  
 
