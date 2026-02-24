@@ -15,6 +15,9 @@ public class LandscapeDialog extends JDialog {
     private final List<JTextField> valueFields;
     private final List<JButton> deleteButtons;
 
+    int inputFieldColumns = 20;
+    int dimensionWidth = 100;
+
     public LandscapeDialog() {
         super(mainFrame, LABEL_MAINTAIN_STRING_PARAMETER + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE, true);
         setLayout(new BorderLayout());
@@ -37,11 +40,11 @@ public class LandscapeDialog extends JDialog {
         add(scrollPane, BorderLayout.CENTER);
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
         gbc.anchor = GridBagConstraints.WEST;
 
         JLabel idLabel = new JLabel(colon(LABEL_ID + (" (tenant ID)")));
-        idLabel.setPreferredSize(new Dimension(100, idLabel.getPreferredSize().height));
+        idLabel.setPreferredSize(new Dimension(dimensionWidth, idLabel.getPreferredSize().height));
         gbc.gridx = 0;
         gbc.gridy = 0;
         mainPanel.add(idLabel, gbc);
@@ -88,17 +91,17 @@ public class LandscapeDialog extends JDialog {
 
     private void addRow(String initialId, String initialValue) {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
         gbc.anchor = GridBagConstraints.WEST;
 
-        JTextField idField = new JTextField(20);
-        idField.setPreferredSize(new Dimension(100, idField.getPreferredSize().height));
+        JTextField idField = new JTextField(inputFieldColumns);
+        idField.setPreferredSize(new Dimension(dimensionWidth, idField.getPreferredSize().height));
         if (initialId != null) {
             idField.setText(initialId);
         }
 
-        JTextField valueField = new JTextField(20);
-        valueField.setPreferredSize(new Dimension(100, valueField.getPreferredSize().height));
+        JTextField valueField = new JTextField(inputFieldColumns);
+        valueField.setPreferredSize(new Dimension(dimensionWidth, valueField.getPreferredSize().height));
         if (initialValue != null) {
             valueField.setText(initialValue);
         }
