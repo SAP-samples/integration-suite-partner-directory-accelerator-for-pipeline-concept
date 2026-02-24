@@ -36,7 +36,7 @@ public class MainFrame extends JFrame {
 
         setTitle(UI_TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(screenSize.width-100, screenSize.height-100);
+setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
         setLocation(50, 50);
 
         jsonApiHandler = new JsonApiHandler();
