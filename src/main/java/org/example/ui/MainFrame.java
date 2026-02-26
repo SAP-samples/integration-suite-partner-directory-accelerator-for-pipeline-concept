@@ -34,12 +34,9 @@ public class MainFrame extends JFrame {
     public MainFrame(String locationToCredentials) {
         mainFrame = this;
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
         setTitle(UI_TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(screenSize.width, screenSize.height);
-        setLocation(0, 0);
+        setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
         jsonApiHandler = new JsonApiHandler();
         xsltHandler = new XsltHandler();

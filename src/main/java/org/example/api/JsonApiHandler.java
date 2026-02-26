@@ -180,6 +180,19 @@ public class JsonApiHandler {
         JSONObject dObject = jsonResponseBody.getJSONObject(JSON_KEY_D);
         JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
 
+        // sort array by created date of the PD entry (I think it's the best way to affect the sort order of the list by the user)
+        // we need to convert the JSONArray first into a normal array, sort it and convert it back.
+        ArrayList<JSONObject> jsonList = new ArrayList<>();
+        for (int i = 0; i < resultsArray.length(); i++) {
+            jsonList.add(resultsArray.getJSONObject(i));
+        }
+        jsonList.sort((obj1, obj2) -> {
+            String time1 = obj1.getString(JSON_KEY_CREATED_TIME);
+            String time2 = obj2.getString(JSON_KEY_CREATED_TIME);
+            return time1.compareTo(time2);
+        });
+        resultsArray = new JSONArray(jsonList);
+
         currentLandscapeTenantParameters.clear();
 
         for (int i = 0; i < resultsArray.length(); i++) {
