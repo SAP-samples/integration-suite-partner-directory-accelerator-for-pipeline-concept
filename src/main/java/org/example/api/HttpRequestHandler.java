@@ -155,8 +155,7 @@ public class HttpRequestHandler {
         }
         Set<String> uniquePids = jsonApiHandler.getUniquePidsFromEndpoints(pidsFromBinaryParameters, pidsFromStringParameters);
 
-        String endpoint = API_ALTERNATIVE_PARTNERS + "?$orderby=" + JSON_KEY_AGENCY;
-        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
+        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(API_ALTERNATIVE_PARTNERS);
         jsonApiHandler.parseAlternativePartnersJson(jsonResponseBody, false, uniquePids);
         return this.latestResponseLabel;
     }
@@ -187,13 +186,13 @@ public class HttpRequestHandler {
         return sendPostRequest(API_ALTERNATIVE_PARTNERS, jsonBody, isResponseLogged);
     }
 
-    private void sendPutRequestAlternativePartners(String agency, String scheme, String id, String pid, boolean isResponseLogged) throws Exception {
+    private void sendPutRequestAlternativePartners(String agency, String scheme, String id, String pid) throws Exception {
         String hexAgency = convertStringToHexstring(agency);
         String hexScheme = convertStringToHexstring(scheme);
         String hexId = convertStringToHexstring(id);
         String endpoint = API_ALTERNATIVE_PARTNERS + "(" + JSON_KEY_HEXAGENCY + "='" + hexAgency + "'," + JSON_KEY_HEXSCHEME + "='" + hexScheme + "'," + JSON_KEY_HEXID + "='" + hexId + "')";
         String jsonBody = createRequestBodyPutAlternativePartners(pid);
-        sendPutRequest(endpoint, jsonBody, isResponseLogged);
+        sendPutRequest(endpoint, jsonBody, false);
     }
 
     public String sendDeleteRequestAlternativePartners(String agency, String scheme, String id) throws Exception {
@@ -243,7 +242,7 @@ public class HttpRequestHandler {
     }
 
     public Set<String> sendGetRequestBinaryParametersXsltsReceiverDetermination(List<String> pidsMultipleXslts) throws Exception {
-        String endpoint = API_BINARY_PARAMETERS + "?$filter=" + JSON_KEY_ID + "%20eq%20'" + ID_RECEIVER_DETERMINATION + "'%20and%20startswith(" + JSON_KEY_CONTENT_TYPE + ",%20'" + JSON_VALUE_XSL + "')&$select=" + JSON_KEY_PID + ",%20" + JSON_KEY_VALUE + "&$orderby=LastModifiedTime";
+        String endpoint = API_BINARY_PARAMETERS + "?$filter=" + JSON_KEY_ID + "%20eq%20'" + ID_RECEIVER_DETERMINATION + "'%20and%20startswith(" + JSON_KEY_CONTENT_TYPE + ",%20'" + JSON_VALUE_XSL + "')&$select=" + JSON_KEY_PID + ",%20" + JSON_KEY_VALUE;
         JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
         return jsonApiHandler.checkXsltsForMerging(jsonResponseBody, pidsMultipleXslts);
     }
@@ -258,14 +257,12 @@ public class HttpRequestHandler {
         sendPostRequest(API_BINARY_PARAMETERS, jsonBody, isResponseLogged);
     }
 
-    public String sendPutRequestBinaryParameters(String pid, String id, String valueAsString, boolean isResponseLogged) throws Exception {
+    public void sendPutRequestBinaryParameters(String pid, String id, String valueAsString, boolean isResponseLogged) throws Exception {
         String endpoint = API_BINARY_PARAMETERS + "(" + JSON_KEY_PID + "='" + pid + "'," + JSON_KEY_ID + "='" + id + "')";
         String valueEncoded = base64Encoding(valueAsString);
         String jsonBody = createRequestBodyPutBinaryParameters(valueEncoded);
 
         sendPutRequest(endpoint, jsonBody, isResponseLogged);
-
-        return latestResponseLabel;
     }
 
     public String sendPutPostRequestBinaryParameters(String pid, String id, String valueAsString) throws Exception {
@@ -353,8 +350,7 @@ public class HttpRequestHandler {
 
         sendGetRequestStringParameterLandscape();
 
-        String endpoint = API_ALTERNATIVE_PARTNERS + "?$orderby=" + JSON_KEY_AGENCY;
-        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
+        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(API_ALTERNATIVE_PARTNERS);
         jsonApiHandler.parseAlternativePartnersJson(jsonResponseBody, true, uniquePids);
     }
 
@@ -369,7 +365,7 @@ public class HttpRequestHandler {
                 sendPostRequestAlternativePartners(agency, scheme, id, pid, false);
 
                 if (this.latestStatusCode == 400 && overwrite) {
-                    sendPutRequestAlternativePartners(agency, scheme, id, pid, false);
+                    sendPutRequestAlternativePartners(agency, scheme, id, pid);
                 }
                 logLatestResponse();
 
@@ -646,7 +642,7 @@ public class HttpRequestHandler {
         return returnString;
     }
 
-    private String sendPutRequest(String endpoint, String jsonBody, boolean isResponseLogged) throws Exception {
+    private void sendPutRequest(String endpoint, String jsonBody, boolean isResponseLogged) throws Exception {
         requestTokenIfExpired();
         HttpRequest httpRequest = requestBuilder
                 .uri(URI.create(this.url + endpoint))
@@ -654,9 +650,9 @@ public class HttpRequestHandler {
                 .build();
         HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
         if (isResponseLogged) {
-            return setResponseAndLog(httpResponse, httpRequest.method());
+            setResponseAndLog(httpResponse, httpRequest.method());
         } else {
-            return setResponseAttributes(httpResponse, httpRequest.method());
+            setResponseAttributes(httpResponse, httpRequest.method());
         }
     }
 

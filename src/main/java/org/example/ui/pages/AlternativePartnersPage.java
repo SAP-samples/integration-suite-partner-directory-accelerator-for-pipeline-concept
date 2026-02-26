@@ -7,6 +7,7 @@ import org.example.ui.dialogs.LandscapeDialog;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -36,6 +37,11 @@ public class AlternativePartnersPage extends JPanel {
         table.getTableHeader().setReorderingAllowed(false);
         table.setAutoCreateRowSorter(true);
         table.setGridColor(Color.BLACK);
+
+        // Set the default sort key to column index 3 (PID column) in ascending order (UI sorting differs from OData sorting)
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+        table.setRowSorter(sorter);
+        sorter.setSortKeys(List.of(new RowSorter.SortKey(3, SortOrder.ASCENDING)));
 
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
@@ -80,6 +86,7 @@ public class AlternativePartnersPage extends JPanel {
         JButton addButton = new JButton(LABEL_ADD_ALTERNATIVE_PARTNER);
         addButton.addActionListener(e -> {
             LinkedHashMap<String, String> headerValues = new LinkedHashMap<>();
+            headerValues.put(LABEL_SENDER_TYPE, "");
             headerValues.put(LABEL_AGENCY, "");
             headerValues.put(LABEL_SCHEME, "");
             headerValues.put(LABEL_ID_ALTERNATIVE_PARTNERS, "");
