@@ -23,7 +23,6 @@ public class XsltHandler {
 
     public String handleXslt(String typeOfDetermination, TemplateObjects object) throws IOException, TemplateException {
         Map<String, Object> content = new HashMap<>();
-        object.setParams();
         content.put("content", object);
 
         StringWriter stringWriter = new StringWriter();

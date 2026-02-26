@@ -3,17 +3,68 @@ package org.example.templates;
 import org.example.exceptions.XsltNotExistsException;
 import org.example.exceptions.XsltSyntaxException;
 
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.example.utils.SharedData.*;
 
 public class TemplateCombinedDetermination implements TemplateObjects {
     public TemplateReceiverDetermination receiverDetermination = new TemplateReceiverDetermination();
     public Map<String, TemplateInterfaceDetermination> mapInterfaceDeterminations = new LinkedHashMap<>();
-    private Set<String> params = new HashSet<>();
+
+    // namespaces
+
+    public Map<String, String> getNamespaces() {
+        HashMap<String, String> namespaces = new HashMap<>(receiverDetermination.getNamespaces());
+
+        for (TemplateInterfaceDetermination templateInterfaceDetermination : mapInterfaceDeterminations.values()) {
+            namespaces.putAll(templateInterfaceDetermination.getNamespaces());
+        }
+
+        return namespaces;
+    }
+
+    public void setNamespaces(Map<String, String> namespaces) {
+        receiverDetermination.setNamespaces(namespaces);
+
+        for (TemplateInterfaceDetermination templateInterfaceDetermination : mapInterfaceDeterminations.values()) {
+            templateInterfaceDetermination.setNamespaces(namespaces);
+        }
+    }
+
+    public String getNamespacesAsString() {
+        Map<String, String> namespaces = new HashMap<>(receiverDetermination.getNamespaces());
+        for (String receiverName : this.receiverDetermination.getCurrentReceiverNames()) {
+            namespaces.putAll(this.mapInterfaceDeterminations.get(receiverName).getNamespaces());
+        }
+
+        StringBuilder namespacesString = new StringBuilder();
+        for (String key : namespaces.keySet()) {
+            namespacesString.append(" xmlns:").append(key).append("=\"").append(namespaces.get(key)).append("\"");
+        }
+        return namespacesString.toString();
+    }
+
+    // params
+
+    public Set<String> getParams() {
+        Set<String> params = new HashSet<>(receiverDetermination.getParams());
+
+        for (TemplateInterfaceDetermination templateInterfaceDetermination : mapInterfaceDeterminations.values()) {
+            params.addAll(templateInterfaceDetermination.getParams());
+        }
+
+        return params;
+    }
+
+    public void setParams() {
+        receiverDetermination.setParams();
+
+        for (TemplateInterfaceDetermination templateInterfaceDetermination : mapInterfaceDeterminations.values()) {
+            templateInterfaceDetermination.setParams();
+        }
+    }
+
+    // receiver determination
 
     public TemplateReceiverDetermination getReceiverDetermination() {
         return receiverDetermination;
@@ -23,6 +74,8 @@ public class TemplateCombinedDetermination implements TemplateObjects {
         this.receiverDetermination = receiverDetermination;
     }
 
+    // interface determinations
+
     public Map<String, TemplateInterfaceDetermination> getMapInterfaceDeterminations() {
         return mapInterfaceDeterminations;
     }
@@ -31,21 +84,7 @@ public class TemplateCombinedDetermination implements TemplateObjects {
         this.mapInterfaceDeterminations = mapInterfaceDeterminations;
     }
 
-    public Set<String> getParams() {
-        return params;
-    }
-
-    public void setParams() {
-        params.clear();
-
-        receiverDetermination.setParams();
-        params.addAll(receiverDetermination.getParams());
-
-        for (TemplateInterfaceDetermination templateInterfaceDetermination : mapInterfaceDeterminations.values()) {
-            templateInterfaceDetermination.setParams();
-            params.addAll(templateInterfaceDetermination.getParams());
-        }
-    }
+    // helper methods
 
     public void clear() {
         receiverDetermination.clear();
@@ -86,5 +125,7 @@ public class TemplateCombinedDetermination implements TemplateObjects {
                 throw new XsltSyntaxException(receiverName, true);
             }
         }
+
+        this.setParams();
     }
 }

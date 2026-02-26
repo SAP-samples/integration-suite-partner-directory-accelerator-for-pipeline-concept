@@ -20,7 +20,7 @@ import java.util.Map;
 public final class SharedData {
     public static AlternativePartnersPage alternativePartnersPage;
 
-    public static final String UI_TITLE = "Partner Directory Accelerator UI (version 1.0.1)"; // todo: change version for new release
+    public static final String UI_TITLE = "Partner Directory Accelerator UI (version 1.0.1 dev)"; // todo: change version for new release
     public static final int UI_PADDING = 5;
     public static final int UI_TEXT_FIELD_COLUMNS = 30;
     public static final int UI_SEARCH_FIELD_WIDTH = 15;
@@ -87,17 +87,18 @@ public final class SharedData {
     public static final String LABEL_INTERFACE_DETERMINATION = "Interface Determination";
     public static final String LABEL_LANDSCAPE_STAGES = "Landscape Stages";
     public static final String LABEL_LAST_TENANT = "Last tenant cannot be deleted. You can still edit this tenant.";
+    public static final String LABEL_MAINTAIN_NAMESPACES = "Maintain Namespaces";
     public static final String LABEL_MAINTAIN_LANDSCAPE_FIRST = "To setup landscape stages for a scenario, first maintain String Parameter \"" + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE + "\" (on bottom of Alternative Partners Page).";
     public static final String LABEL_MAINTAIN_STRING_PARAMETER = "Maintain String Parameter ";
     public static final String LABEL_MERGE_XSLTS = "Merge XSLTs";
-    public static final String LABEL_MERGE_XSLTS_ID = "mergeXslts";
     public static final String LABEL_MIGRATE_DEPRECATED_ENTRIES = "Migrate deprecated entries";
     public static final String LABEL_MIGRATE_DEPRECATED_ENTRIES_ID = "migrateDeprecatedEntries";
     public static final String LABEL_MIGRATE_TILDE = "Migrate Pids with tilde";
-    public static final String LABEL_MIGRATE_TILDE_ID = "migrateTilde";
     public static final String LABEL_MOVE_ROW_DOWN = "Move row down";
     public static final String LABEL_MOVE_ROW_UP = "Move row up";
     public static final String LABEL_MULTIPLE_XSLTS = "Multiple XSLTs";
+    public static final String LABEL_NAMESPACE_PREFIX = "Namespace Prefix";
+    public static final String LABEL_NAMESPACE_URI = "Namespace URI";
     public static final String LABEL_OVERWRITE_EXISTING_ENTRIES = "Overwrite existing entries";
     public static final String LABEL_PID = "Partner ID";
     public static final String LABEL_PID_NEW = "New " + LABEL_PID + " for alternative partner";

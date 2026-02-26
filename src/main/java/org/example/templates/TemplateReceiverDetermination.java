@@ -1,34 +1,70 @@
 package org.example.templates;
 
+import net.sf.saxon.s9api.Processor;
+import net.sf.saxon.s9api.XPathCompiler;
+import net.sf.saxon.s9api.XPathSelector;
+import net.sf.saxon.s9api.XdmItem;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.example.utils.SharedData.*;
 
 public class TemplateReceiverDetermination implements TemplateObjects {
+    private Map<String, String> namespaces = new HashMap<>();
+    private final Set<String> params = new HashSet<>(); // e.g. dc_country like in <xsl:if test="$dc_country = 'DE'"> and <xsl:param name="dc_country"/>
     private String type;
     private String defaultReceiver;
     private final Map<String, List<String>> hashMapConditionReceiver = new LinkedHashMap<>(); // XPath condition with receiver system(s)
-    private Set<String> params = new HashSet<>(); // e.g. dc_country like in <xsl:if test="$dc_country = 'DE'"> and <xsl:param name="dc_country"/>
+
+    // namespaces
+
+    public Map<String, String> getNamespaces() {
+        return namespaces;
+    }
+
+    public void setNamespaces(Map<String, String> namespaces) {
+        this.namespaces = new HashMap<>(namespaces);
+    }
+
+    public String getNamespacesAsString() {
+        StringBuilder namespacesString = new StringBuilder();
+        for (String key : namespaces.keySet()) {
+            namespacesString.append(" xmlns:").append(key).append("=\"").append(namespaces.get(key)).append("\"");
+        }
+        return namespacesString.toString();
+    }
+
+    // params
+
+    public Set<String> getParams() {
+        return params;
+    }
+
+    public void setParams() {
+        params.clear();
+
+        Pattern pattern = Pattern.compile("\\$(\\w+)(?=\\s|=)"); // extract params from conditions
+
+        for (String condition : hashMapConditionReceiver.keySet()) {
+            Matcher matcher = pattern.matcher(condition);
+            while (matcher.find()) {
+                params.add(matcher.group(1));
+            }
+
+        }
+    }
+
+    // type
 
     public String getType() {
         return type;
@@ -44,6 +80,8 @@ public class TemplateReceiverDetermination implements TemplateObjects {
         }
     }
 
+    // default receiver
+
     public String getDefaultReceiver() {
         return defaultReceiver;
     }
@@ -51,6 +89,8 @@ public class TemplateReceiverDetermination implements TemplateObjects {
     public void setDefaultReceiver(String defaultReceiver) {
         this.defaultReceiver = defaultReceiver;
     }
+
+    // conditions and receivers
 
     public Map<String, List<String>> getHashMapConditionReceiver() {
         return hashMapConditionReceiver;
@@ -80,24 +120,6 @@ public class TemplateReceiverDetermination implements TemplateObjects {
         return result.toArray(new String[0][]);
     }
 
-    public void setParams() {
-        params.clear();
-
-        Pattern pattern = Pattern.compile("\\$(\\w+)(?=\\s|=)");
-
-        for (String condition : hashMapConditionReceiver.keySet()) {
-            Matcher matcher = pattern.matcher(condition);
-            while (matcher.find()) {
-                params.add(matcher.group(1));
-            }
-
-        }
-    }
-
-    public Set<String> getParams() {
-        return params;
-    }
-
     public List<String> getCurrentReceiverNames() {
         Set<String> receiverNames = new HashSet<>();
         String[][] dataToInsert = this.getHashMapConditionReceiverForTable();
@@ -114,40 +136,68 @@ public class TemplateReceiverDetermination implements TemplateObjects {
         return sortedReceiverNames;
     }
 
+    // helper methods
+
     public void clear() {
+        this.namespaces.clear();
+        this.params.clear();
         this.type = null;
         this.defaultReceiver = null;
         this.hashMapConditionReceiver.clear();
-        this.params.clear();
     }
 
     public void xsltToObjectReceiverDetermination(String xslt) throws Exception {
         this.clear();
 
+        Processor processor = new Processor(false);
+
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(new InputSource(new StringReader(xslt)));
-        XPath xPath = XPathFactory.newInstance().newXPath();
 
-        // not found
-        XPathExpression expression = xPath.compile("//ReceiverNotDetermined/Type/text()");
-        String type = (String) expression.evaluate(document, XPathConstants.STRING);
+        XPathCompiler xpath = processor.newXPathCompiler();
+
+        // namespaces
+        Element root = document.getDocumentElement();
+        NamedNodeMap attributes = root.getAttributes();
+        for (int i = 0; i < attributes.getLength(); i++) {
+            Node attr = attributes.item(i);
+            if (attr.getNodeName().startsWith("xmlns:") &&
+                    !attr.getNodeValue().equals("http://www.w3.org/1999/XSL/Transform")) {
+                String prefix = attr.getNodeName().substring(6);
+                xpath.declareNamespace(prefix, attr.getNodeValue());
+                this.namespaces.put(prefix, attr.getNodeValue());
+            }
+        }
+
+        // type
+        XPathSelector selector = xpath.compile("//ReceiverNotDetermined/Type/text()").load();
+        selector.setContextItem(processor.newDocumentBuilder().wrap(document));
+        XdmItem typeItem = selector.evaluateSingle();
+        String type = (typeItem == null) ? "" : typeItem.getStringValue();
         this.setType(type);
-        if (type.equals("Default")) {
-            expression = xPath.compile("//ReceiverNotDetermined/DefaultReceiver/Service/text()");
-            String defaultReceiver = (String) expression
-                    .evaluate(document, XPathConstants.STRING);
+
+        // default receiver
+        if (this.type.equals(LABEL_DEFAULT)) {
+            selector = xpath.compile("//ReceiverNotDetermined/DefaultReceiver/Service/text()").load();
+            selector.setContextItem(processor.newDocumentBuilder().wrap(document));
+            XdmItem defaultReceiverItem = selector.evaluateSingle();
+            String defaultReceiver = (defaultReceiverItem == null) ? "" : defaultReceiverItem.getStringValue();
             this.setDefaultReceiver(defaultReceiver);
         }
 
-        // receivers
-        XPathExpression expr = xPath.compile("//Receiver/Service/text()");
-        NodeList nodeList = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node node = nodeList.item(i);
-            String receiverName = node.getNodeValue();
-            expr = xPath.compile("//*[@test]/Receiver/Service[text()='" + node.getNodeValue() + "']/parent::Receiver/../@test");
-            String condition = (String) expr.evaluate(document, XPathConstants.STRING);
+        // conditions and receivers
+        selector = xpath.compile("//Receiver/Service/text()").load();
+        selector.setContextItem(processor.newDocumentBuilder().wrap(document));
+        for (XdmItem item : selector) {
+            String receiverName = item.getStringValue();
+
+            XPathSelector conditionSelector = xpath.compile("//*[@test]/Receiver/Service[text()='" + receiverName + "']/parent::Receiver/../@test").load();
+            conditionSelector.setContextItem(processor.newDocumentBuilder().wrap(document));
+            XdmItem conditionItem = conditionSelector.evaluateSingle();
+            String condition = (conditionItem == null) ? "" : conditionItem.getStringValue();
+
             this.setHashMapConditionReceiver(condition, receiverName);
         }
     }

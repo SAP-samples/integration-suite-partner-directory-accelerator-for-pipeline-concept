@@ -25,6 +25,9 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.example.model.BinaryParameter;
 import org.example.model.StringParameter;
@@ -379,7 +382,10 @@ public class ParametersPage extends JPanel {
             buttonPanelTop.add(getDeleteButton(table, tableModel));
 
             JPanel buttonPanelMiddle = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-            buttonPanelMiddle.add(getGenerateAndSendButtonPanelBinaryParameters(currentReceiverDetermination, getGenerateXsltButtonReceiverDetermination(table, buttonGroup, defaultReceiverTextField)));
+            Map<String, String> mapNamespaces = new HashMap<>(templateReceiverDetermination.getNamespaces());
+            JButton namespacesButton = getMaintainNamespacesButton(mapNamespaces, new ArrayList<>(Collections.singleton(table)));
+            JButton generateButton = getGenerateXsltButtonReceiverDetermination(table, buttonGroup, defaultReceiverTextField, mapNamespaces);
+            buttonPanelMiddle.add(getGenerateAndSendButtonPanelBinaryParameters(currentReceiverDetermination, namespacesButton, generateButton));
 
             JPanel buttonPanelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             buttonPanelBottom.add(getMergeXsltButton());
@@ -465,7 +471,10 @@ public class ParametersPage extends JPanel {
             buttonPanelTop.add(getDeleteButton(table, tableModel));
 
             JPanel buttonPanelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-            buttonPanelBottom.add(getGenerateAndSendButtonPanelBinaryParameters(currentInterfaceDetermination, getGenerateXsltButtonInterfaceDetermination(table, rTextScrollPane, currentInterfaceDetermination)));
+            Map<String, String> mapNamespaces = new HashMap<>(templateInterfaceDetermination.getNamespaces());
+            JButton namespaceButton = getMaintainNamespacesButton(mapNamespaces, new ArrayList<>(Collections.singleton(table)));
+            JButton generateButton = getGenerateXsltButtonInterfaceDetermination(table, rTextScrollPane, currentInterfaceDetermination, mapNamespaces);
+            buttonPanelBottom.add(getGenerateAndSendButtonPanelBinaryParameters(currentInterfaceDetermination, namespaceButton, generateButton));
 
             buttonPanel.add(buttonPanelTop);
             buttonPanel.add(buttonPanelBottom);
@@ -892,7 +901,7 @@ public class ParametersPage extends JPanel {
         return sendButton;
     }
 
-    private JButton getGenerateXsltButtonCombinedDetermination(KeyPanel receiverPanel, KeyPanel interfacePanel) {
+    private JButton getGenerateXsltButtonCombinedDetermination(KeyPanel receiverPanel, KeyPanel interfacePanel, Map<String, String> namespaces, List<JTable> tablesForNamespaces) {
         ButtonGroup buttonGroupReceiverNotFound = (ButtonGroup) receiverPanel.getComponent(COMPONENT_RECEIVER_NOT_FOUND);
         JTable tableReceiver = (JTable) receiverPanel.getComponent(COMPONENT_RECEIVER_TABLE);
         JTextField textFieldDefaultReceiver = (JTextField) receiverPanel.getComponent(COMPONENT_RECEIVER_DEFAULT);
@@ -902,6 +911,9 @@ public class ParametersPage extends JPanel {
         JButton generateXsltButton = new JButton(LABEL_GENERATE_XSLT);
         generateXsltButton.addActionListener(e -> {
             objectCombinedDetermination.clear();
+
+            getNamespacePrefixesFromTablesAndUpdateNamespacesMap(tablesForNamespaces, namespaces);
+            objectCombinedDetermination.setNamespaces(namespaces);
 
             // receiver determination
             if (tableReceiver.isEditing()) {
@@ -951,6 +963,8 @@ public class ParametersPage extends JPanel {
                     }
                 }
 
+                objectCombinedDetermination.setParams();
+
                 String xslt = xsltHandler.handleXslt(ID_COMBINED_DETERMINATION, objectCombinedDetermination);
                 showUpdatedXslt(this.rTextScrollPaneCombinedDetermination, xslt);
                 currentReceiverDetermination.setValue(xslt);
@@ -963,7 +977,7 @@ public class ParametersPage extends JPanel {
         return generateXsltButton;
     }
 
-    private JButton getGenerateXsltButtonReceiverDetermination(JTable table, ButtonGroup buttonGroup, JTextField jTextField) {
+    private JButton getGenerateXsltButtonReceiverDetermination(JTable table, ButtonGroup buttonGroup, JTextField jTextField, Map<String, String> mapNamespaces) {
         JButton generateXsltButton = new JButton(LABEL_GENERATE_XSLT);
         generateXsltButton.addActionListener(e -> {
             if (table.isEditing()) {
@@ -982,6 +996,9 @@ public class ParametersPage extends JPanel {
 
                 objectReceiverDetermination.clear();
 
+                getNamespacePrefixesFromTablesAndUpdateNamespacesMap(new ArrayList<>(Collections.singleton(table)), mapNamespaces);
+                objectReceiverDetermination.setNamespaces(mapNamespaces);
+
                 String defaultBehavior = getSelectedButtonText(buttonGroup);
                 objectReceiverDetermination.setType(defaultBehavior);
                 objectReceiverDetermination.setDefaultReceiver(jTextField.getText());
@@ -990,6 +1007,8 @@ public class ParametersPage extends JPanel {
                     String receiverComponent = (String) table.getValueAt(i, 1);
                     objectReceiverDetermination.setHashMapConditionReceiver(condition, receiverComponent);
                 }
+
+                objectReceiverDetermination.setParams();
 
                 String xslt = xsltHandler.handleXslt(ID_RECEIVER_DETERMINATION, objectReceiverDetermination);
                 showUpdatedXslt(this.rTextScrollPaneReceiverDetermination, xslt);
@@ -1002,7 +1021,7 @@ public class ParametersPage extends JPanel {
         return generateXsltButton;
     }
 
-    private JButton getGenerateXsltButtonInterfaceDetermination(JTable table, RTextScrollPane rTextScrollPane, BinaryParameter currentInterfaceDetermination) {
+    private JButton getGenerateXsltButtonInterfaceDetermination(JTable table, RTextScrollPane rTextScrollPane, BinaryParameter currentInterfaceDetermination, Map<String, String> namespaces) {
         JButton generateXsltButton = new JButton(LABEL_GENERATE_XSLT);
         generateXsltButton.addActionListener(e -> {
             if (table.isEditing()) {
@@ -1017,11 +1036,16 @@ public class ParametersPage extends JPanel {
 
                 objectInterfaceDetermination.clear();
 
+                getNamespacePrefixesFromTablesAndUpdateNamespacesMap(new ArrayList<>(Collections.singleton(table)), namespaces);
+                objectInterfaceDetermination.setNamespaces(namespaces);
+
                 for (int i = 0; i < table.getRowCount(); i++) {
                     String condition = (String) table.getValueAt(i, 0);
                     String combined = (String) table.getValueAt(i, 1);
                     objectInterfaceDetermination.setHashMapConditionService(condition, combined);
                 }
+
+                objectInterfaceDetermination.setParams();
 
                 String xslt = xsltHandler.handleXslt(ID_INTERFACE_DETERMINATION, objectInterfaceDetermination);
                 showUpdatedXslt(rTextScrollPane, xslt);
@@ -1038,6 +1062,106 @@ public class ParametersPage extends JPanel {
         return generateXsltButton;
     }
 
+    private JButton getMaintainNamespacesButton(Map<String, String> namespacesSaved, List<JTable> tables) {
+        JButton namespacesButton = new JButton(LABEL_MAINTAIN_NAMESPACES);
+
+        namespacesButton.addActionListener(e -> {
+            Map<String, String> namespacesTemp = new HashMap<>();
+
+            if (namespacesSaved != null) {
+                namespacesTemp.putAll(namespacesSaved);
+            }
+
+            Set<String> namespacePrefixes = getNamespacePrefixesFromTablesAndUpdateNamespacesMap(tables, namespacesTemp);
+
+            JDialog dialog = new JDialog(mainFrame, LABEL_MAINTAIN_NAMESPACES, true);
+            dialog.setLayout(new BorderLayout());
+            dialog.setSize(UI_DIALOG_WIDTH, UI_DIALOG_HEIGHT);
+            dialog.setLocationRelativeTo(mainFrame);
+
+            JPanel namespacesPanel = new JPanel(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(UI_PADDING, 5 * UI_PADDING, UI_PADDING, 5 * UI_PADDING);
+            gbc.anchor = GridBagConstraints.WEST;
+
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            JLabel topLabelNamespacePrefix = new JLabel(colon(LABEL_NAMESPACE_PREFIX));
+            namespacesPanel.add(topLabelNamespacePrefix, gbc);
+
+            gbc.gridx = 1;
+            JLabel topLabelNamespaceUri = new JLabel(colon(LABEL_NAMESPACE_URI));
+            namespacesPanel.add(topLabelNamespaceUri, gbc);
+
+            Map<JLabel, JTextField> mapLabelField = new HashMap<>();
+            gbc.gridx = 0;
+
+            for (String prefix : namespacePrefixes) {
+                gbc.gridy++;
+                JLabel labelNamespacePrefix = new JLabel(prefix);
+                namespacesPanel.add(labelNamespacePrefix, gbc);
+
+                gbc.gridx = 1;
+                JTextField inputFieldNamespaceUri = new JTextField(namespacesTemp.getOrDefault(prefix, ""), UI_TEXT_FIELD_COLUMNS);
+                namespacesPanel.add(inputFieldNamespaceUri, gbc);
+
+                mapLabelField.put(labelNamespacePrefix, inputFieldNamespaceUri);
+
+                gbc.gridx = 0;
+            }
+
+            dialog.add(namespacesPanel, BorderLayout.CENTER);
+
+            JPanel buttonPanel = new JPanel(new FlowLayout());
+
+            JButton cancelButton = new JButton(LABEL_CANCEL);
+            cancelButton.addActionListener(e1 -> dialog.dispose());
+            buttonPanel.add(cancelButton);
+
+            JButton saveButton = new JButton(LABEL_SAVE);
+            saveButton.addActionListener(e1 -> {
+                namespacesSaved.clear();
+                for (Map.Entry<JLabel, JTextField> entry : mapLabelField.entrySet()) {
+                    namespacesSaved.put(entry.getKey().getText(), entry.getValue().getText());
+                }
+                dialog.dispose();
+            });
+            buttonPanel.add(saveButton);
+
+            dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+            dialog.setVisible(true);
+        });
+
+        return namespacesButton;
+    }
+
+    private Set<String> getNamespacePrefixesFromTablesAndUpdateNamespacesMap(List<JTable> tables, Map<String, String> namespacesMap) {
+        Set<String> namespacePrefixes = new HashSet<>();
+
+        for (JTable table : tables) {
+            if (table.isEditing()) {
+                table.getCellEditor().stopCellEditing();
+            }
+
+            DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+            for (int row = 0; row < tableModel.getRowCount(); row++) {
+                String xPathCondition = (String) tableModel.getValueAt(row, 0);
+
+                Pattern pattern = Pattern.compile("([a-zA-Z0-9_\\-]+):");
+                Matcher matcher = pattern.matcher(xPathCondition);
+
+                while (matcher.find()) {
+                    namespacePrefixes.add(matcher.group(1));
+                }
+            }
+        }
+
+        namespacesMap.keySet().removeIf(namespacePrefixTemp -> !namespacePrefixes.contains(namespacePrefixTemp)); // changes the original namespacesMap so doesn't need to be returned
+
+        return namespacePrefixes.stream().sorted().collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
     private JButton getMergeXsltButton() {
         JButton mergeButton = new JButton(LABEL_MERGE_XSLTS);
 
@@ -1045,6 +1169,7 @@ public class ParametersPage extends JPanel {
             try {
                 JDialog dialog = new JDialog(mainFrame, LABEL_PREVIEW_MERGED_XSLT, true);
                 dialog.setLayout(new BorderLayout());
+                dialog.setLocationRelativeTo(mainFrame);
 
                 httpRequestHandler.sendGetRequestBinaryParameters(pid);
                 objectCombinedDetermination.xsltsToObjectCombinedDetermination(currentReceiverDetermination.getValueNotEmpty());
@@ -1169,10 +1294,12 @@ public class ParametersPage extends JPanel {
         return mergeButton;
     }
 
-    private JPanel getGenerateAndSendButtonPanelBinaryParameters(BinaryParameter binaryParameter, JButton generateButton) {
+    private JPanel getGenerateAndSendButtonPanelBinaryParameters(BinaryParameter binaryParameter, JButton namespacesButton, JButton generateButton) {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton sendButton = new JButton(LABEL_SEND_XSLT_TO_API);
+
         JLabel responseLabel = new JLabel();
+
+        JButton sendButton = new JButton(LABEL_SEND_XSLT_TO_API);
         sendButton.addActionListener(e -> {
             try {
                 boolean sendToApi = true;
@@ -1203,12 +1330,15 @@ public class ParametersPage extends JPanel {
                 LOGGER.error(ex);
             }
         });
+
         if (determinationType.equals(LABEL_COMBINED_XSLT)) {
+            buttonPanel.add(namespacesButton);
             buttonPanel.add(generateButton);
             buttonPanel.add(sendButton);
             buttonPanel.add(responseLabel);
         } else {
             buttonPanel.add(responseLabel);
+            buttonPanel.add(namespacesButton);
             buttonPanel.add(generateButton);
             buttonPanel.add(sendButton);
         }
@@ -1428,7 +1558,17 @@ public class ParametersPage extends JPanel {
         showUpdatedXslt(this.rTextScrollPaneCombinedDetermination, currentReceiverDetermination.getValueNotEmpty());
 
         JPanel panelXsltButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelXsltButtons.add(getGenerateAndSendButtonPanelBinaryParameters(currentReceiverDetermination, getGenerateXsltButtonCombinedDetermination(panelReceiverDetermination, panelInterfaceDetermination)));
+
+        List<JTable> tablesForNamespaces = new ArrayList<>();
+        tablesForNamespaces.add(receiverTable);
+        for (String receiverName : tablesInterfaceDeterminations.keySet()) {
+            tablesForNamespaces.add(tablesInterfaceDeterminations.get(receiverName));
+        }
+
+        Map<String, String> mapNamespaces = new HashMap<>(objectCombinedDetermination.getNamespaces());
+        JButton namespaceButton = getMaintainNamespacesButton(mapNamespaces, tablesForNamespaces);
+        JButton generateButton = getGenerateXsltButtonCombinedDetermination(panelReceiverDetermination, panelInterfaceDetermination, mapNamespaces, tablesForNamespaces);
+        panelXsltButtons.add(getGenerateAndSendButtonPanelBinaryParameters(currentReceiverDetermination, namespaceButton, generateButton));
         panelXslt.add(panelXsltButtons, BorderLayout.SOUTH);
 
         panelCombinedDetermination.add(panelTables);
