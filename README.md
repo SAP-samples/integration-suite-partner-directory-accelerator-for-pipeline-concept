@@ -50,7 +50,7 @@ Before using this tool, please make yourself familiar with the Pipeline Concept.
         - [Dialog for Replication to another Tenant](#dialog-for-replication-to-another-tenant)
 * [Troubleshooting](#troubleshooting)
     + [Error when configuring API: (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target](#error-when-configuring-api-certificate_unknown-pkix-path-building-failed-sunsecurityprovidercertpathsuncertpathbuilderexception-unable-to-find-valid-certification-path-to-requested-target)
-    + [Error when configuring API: JSONObject["d"] not found / <br/> Error when configuring API: A JSONObject text must begin with '{' at 1 [character 2 line 1] / <br/> Error when configuring API: URI with undefined scheme](#error-when-configuring-api-jsonobjectd-not-found---error-when-configuring-api-a-jsonobject-text-must-begin-with--at-1-character-2-line-1---error-when-configuring-api-uri-with-undefined-scheme)
+    + [Error when configuring API: JSONObject["d"] not found / <br/> Error when configuring API: A JSONObject text must begin with '{' at 1 [character 2 line 1] / <br/> Error when configuring API: URI with undefined scheme / <br/> Error when configuring API: null](#error-when-configuring-api-jsonobjectd-not-found---error-when-configuring-api-a-jsonobject-text-must-begin-with--at-1-character-2-line-1---error-when-configuring-api-uri-with-undefined-scheme---error-when-configuring-api-null)
     + [Error when generating XSLT from input data. If "Default" is selected as the behavior when no receiver is found, the Default Receiver System must be specified in the corresponding input field.](#error-when-generating-xslt-from-input-data-if-default-is-selected-as-the-behavior-when-no-receiver-is-found-the-default-receiver-system-must-be-specified-in-the-corresponding-input-field)
     + [Error when generating XSLT from input data. Table which is missing data: [name of table]](#error-when-generating-xslt-from-input-data-table-which-is-missing-data-name-of-table)
     + [Error when generating XSLT from input data. Make sure that all tables and the receiver not found section are filled properly.](#error-when-generating-xslt-from-input-data-make-sure-that-all-tables-and-the-receiver-not-found-section-are-filled-properly)
@@ -78,7 +78,7 @@ Session specifically about this accelerator tool by focusing on setup and usage 
 
 ## Requirements
 
-The tool is built using OpenJDK 17 by SapMachine, which is required and can be downloaded [here](https://sap.github.io/SapMachine/).
+The tool is built using OpenJDK 17 by SapMachine, which is required and can be downloaded [here](https://sapmachine.io).
 
 ## Download and Installation
 
