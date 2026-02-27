@@ -1,15 +1,14 @@
 package org.example.model;
 
+import net.sf.saxon.s9api.Processor;
+import net.sf.saxon.s9api.XPathCompiler;
+import net.sf.saxon.s9api.XPathSelector;
+import net.sf.saxon.s9api.XdmValue;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
 import java.io.StringReader;
 import java.util.Arrays;
 
@@ -73,21 +72,28 @@ public class AlternativePartner {
             this.setDeterminationType(LABEL_POINT_TO_POINT);
         } else {
             try {
-                String xslt = currentReceiverDetermination.getValue();
+                String xslt = currentReceiverDetermination.getValueNotEmpty();
+
+                Processor processor = new Processor(false);
+
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                factory.setNamespaceAware(true);
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document document = builder.parse(new InputSource(new StringReader(xslt)));
-                XPath xPath = XPathFactory.newInstance().newXPath();
 
-                XPathExpression expression = xPath.compile("//Receiver/Interfaces");
-                NodeList nodeListInterfaces = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
+                XPathCompiler xpath = processor.newXPathCompiler();
 
-                expression = xPath.compile("//Receiver");
-                NodeList nodeListReceivers = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
+                XPathSelector interfacesSelector = xpath.compile("//Receiver/Interfaces").load();
+                interfacesSelector.setContextItem(processor.newDocumentBuilder().wrap(document));
+                XdmValue interfacesResult = interfacesSelector.evaluate();
 
-                if (nodeListInterfaces.getLength() > 0) {
+                XPathSelector receiversSelector = xpath.compile("//Receiver").load();
+                receiversSelector.setContextItem(processor.newDocumentBuilder().wrap(document));
+                XdmValue receiversResult = receiversSelector.evaluate();
+
+                if (!interfacesResult.isEmpty()) {
                     this.setDeterminationType(LABEL_COMBINED_XSLT);
-                } else if (nodeListReceivers.getLength() > 0) {
+                } else if (!receiversResult.isEmpty()) {
                     this.setDeterminationType(LABEL_MULTIPLE_XSLTS);
                 }
             } catch (Exception e) {

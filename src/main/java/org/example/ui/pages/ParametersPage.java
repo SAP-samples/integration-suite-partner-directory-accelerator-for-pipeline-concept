@@ -1396,23 +1396,24 @@ public class ParametersPage extends JPanel {
         Set<String> setReceiverNames = new LinkedHashSet<>(objectCombinedDetermination.mapInterfaceDeterminations.keySet());
 
         for (String receiverName : setReceiverNames) {
+            JPanel cardPanel = new JPanel(getGridLayout());
+
+            BinaryParameter binaryParameter = currentInterfaceDeterminationsList.computeIfAbsent(receiverName, key -> new BinaryParameter(pid, ID_INTERFACE_DETERMINATION_ + key, JSON_VALUE_XSL, currentReceiverDetermination.getValue()));
+
+            String xsltInterface = binaryParameter.getValueNotEmpty();
+
             try {
-                BinaryParameter binaryParameter = currentInterfaceDeterminationsList.computeIfAbsent(receiverName, key -> new BinaryParameter(pid, ID_INTERFACE_DETERMINATION_ + key, JSON_VALUE_XSL, currentReceiverDetermination.getValue()));
-
-                String xsltInterface = binaryParameter.getValueNotEmpty();
                 objectCombinedDetermination.mapInterfaceDeterminations.get(receiverName).xsltToObjectInterfaceDetermination(xsltInterface, receiverName);
-
-                JPanel cardPanel = new JPanel(getGridLayout());
-
-                KeyPanel paneLabelInterfaceDetermination = showTableInterfaceDetermination(objectCombinedDetermination.mapInterfaceDeterminations.get(receiverName), null, binaryParameter, false);
-                tablesInterfaceDeterminations.put(receiverName, (JTable) paneLabelInterfaceDetermination.getComponent(COMPONENT_INTERFACE_TABLE));
-                cardPanel.add(paneLabelInterfaceDetermination);
-
-                cardsInterfaceDetermination.add(cardPanel, receiverName);
-                cardsInterfaceDetermination.addNewComponent(receiverName, cardPanel);
             } catch (Exception ex) {
                 LOGGER.error(ex);
             }
+
+            KeyPanel paneLabelInterfaceDetermination = showTableInterfaceDetermination(objectCombinedDetermination.mapInterfaceDeterminations.get(receiverName), null, binaryParameter, false);
+            tablesInterfaceDeterminations.put(receiverName, (JTable) paneLabelInterfaceDetermination.getComponent(COMPONENT_INTERFACE_TABLE));
+            cardPanel.add(paneLabelInterfaceDetermination);
+
+            cardsInterfaceDetermination.add(cardPanel, receiverName);
+            cardsInterfaceDetermination.addNewComponent(receiverName, cardPanel);
         }
 
         panelInterfaceDetermination.addNewComponent(COMPONENT_INTERFACE_TABLE, tablesInterfaceDeterminations);
@@ -1589,13 +1590,13 @@ public class ParametersPage extends JPanel {
 
         try {
             objectReceiverDetermination.xsltToObjectReceiverDetermination(xsltReceiver);
-
-            cardPanel.add(showTableReceiverDetermination(objectReceiverDetermination, true));
-            cardPanel.add(rTextScrollPaneReceiverDetermination);
-            showUpdatedXslt(rTextScrollPaneReceiverDetermination, xsltReceiver);
         } catch (Exception e) {
             LOGGER.error(e);
         }
+
+        cardPanel.add(showTableReceiverDetermination(objectReceiverDetermination, true));
+        cardPanel.add(rTextScrollPaneReceiverDetermination);
+        showUpdatedXslt(rTextScrollPaneReceiverDetermination, xsltReceiver);
 
         cards.add(cardPanel);
         cardLayout.show(cards, LABEL_RECEIVER_DETERMINATION);
@@ -1614,26 +1615,25 @@ public class ParametersPage extends JPanel {
         Set<String> listReceiverNames = currentReceiverDetermination.getSetReceiverNames();
 
         for (String id : listReceiverNames) {
+            JPanel cardPanel = new JPanel(getGridLayout());
+            RTextScrollPane rTextScrollPane = initializeRSyntaxTextArea();
+
+            BinaryParameter binaryParameter = currentInterfaceDeterminationsList.computeIfAbsent(id, key -> new BinaryParameter(pid, ID_INTERFACE_DETERMINATION_ + key, "", ""));
+
+            String currentValue = binaryParameter.getValue();
+            String xsltInterface = !currentValue.isEmpty() ? currentValue : XSLT_NOT_NULL;
+
             try {
-                BinaryParameter binaryParameter = currentInterfaceDeterminationsList.computeIfAbsent(id, key -> new BinaryParameter(pid, ID_INTERFACE_DETERMINATION_ + key, "", ""));
-
-                String currentValue = binaryParameter.getValue();
-                String xsltInterface = !currentValue.isEmpty() ? currentValue : XSLT_NOT_NULL;
                 objectInterfaceDetermination.xsltToObjectInterfaceDetermination(xsltInterface);
-
-                JPanel cardPanel = new JPanel(getGridLayout());
-
-                RTextScrollPane rTextScrollPane = initializeRSyntaxTextArea();
-
-                cardPanel.add(showTableInterfaceDetermination(objectInterfaceDetermination, rTextScrollPane, binaryParameter, true));
-
-                showUpdatedXslt(rTextScrollPane, xsltInterface);
-                cardPanel.add(rTextScrollPane);
-
-                cards.add(cardPanel, id);
             } catch (Exception ex) {
                 LOGGER.error(ex);
             }
+
+            cardPanel.add(showTableInterfaceDetermination(objectInterfaceDetermination, rTextScrollPane, binaryParameter, true));
+            showUpdatedXslt(rTextScrollPane, xsltInterface);
+
+            cardPanel.add(rTextScrollPane);
+            cards.add(cardPanel, id);
         }
 
         JPanel panelRadioButtons = showDropdownInterfaceDetermination(cards, cardLayout, listReceiverNames);
