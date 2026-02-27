@@ -1,11 +1,14 @@
 package org.example.ui.components;
 
 import org.example.model.AlternativePartner;
+import org.example.ui.pages.ParametersPage;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import javax.swing.event.DocumentEvent;
@@ -75,8 +78,7 @@ public class EditableHeader extends JPanel {
                     });
                 }
                 valueComponent = panelRadioButtons;
-            }
-            else if (!isExistingEntry && key.equals(LABEL_SELECT_DETERMINATION_TYPE)) {
+            } else if (!isExistingEntry && key.equals(LABEL_SELECT_DETERMINATION_TYPE)) {
                 ButtonGroup buttonGroup = new ButtonGroup();
                 JPanel panelRadioButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
@@ -169,8 +171,6 @@ public class EditableHeader extends JPanel {
                         removeAlternativePartnerFromList(new AlternativePartner(originalHeaderValues.get(LABEL_AGENCY), originalHeaderValues.get(LABEL_SCHEME), originalHeaderValues.get(LABEL_ID_ALTERNATIVE_PARTNERS), originalHeaderValues.get(LABEL_PID)));
                         addAlternativePartnerToList(new AlternativePartner(currentHeaderValues.get(LABEL_AGENCY), currentHeaderValues.get(LABEL_SCHEME), currentHeaderValues.get(LABEL_ID_ALTERNATIVE_PARTNERS), currentHeaderValues.get(LABEL_PID)));
                         alternativePartnersPage.refreshTableData(currentAlternativePartnersList);
-
-                        // currentReceiverDetermination.updateCurrentBinaryParameter(currentHeaderValues.get(LABEL_PID), currentHeaderValues.get(LABEL_ID_BINARY_PARAMETERS), currentHeaderValues.get(LABEL_CONTENT_TYPE), currentHeaderValues.get(LABEL_VALUE));
                     }
                 } catch (Exception ex) {
                     LOGGER.error(ex);
@@ -196,6 +196,122 @@ public class EditableHeader extends JPanel {
 
             add(sendButton);
             add(cancelButton);
+
+            gbc.gridx = 2;
+            gbc.gridy = 3;
+            JButton changePidButton = new JButton(LABEL_CHANGE_PID);
+            changePidButton.addActionListener(e -> {
+                String oldPid = currentHeaderValues.get(LABEL_PID);
+
+                JDialog dialog = new JDialog(mainFrame, LABEL_CHANGE_PID, true);
+                dialog.setLayout(new BorderLayout());
+                dialog.setSize(UI_DIALOG_WIDTH, UI_DIALOG_HEIGHT);
+                dialog.setLocationRelativeTo(mainFrame);
+
+                JPanel enterNewPidPanel = new JPanel(new GridBagLayout());
+                GridBagConstraints c = new GridBagConstraints();
+                c.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
+                JLabel newPidLabel = new JLabel(colon(LABEL_ENTER_NEW_PID));
+                enterNewPidPanel.add(newPidLabel, c);
+                JTextField newPidTextField = new JTextField(oldPid, UI_TEXT_FIELD_COLUMNS);
+                enterNewPidPanel.add(newPidTextField, c);
+                dialog.add(enterNewPidPanel, BorderLayout.CENTER);
+
+                JPanel buttonPanel = new JPanel(new FlowLayout());
+                JButton cancelButton = new JButton(LABEL_CANCEL);
+                cancelButton.addActionListener(e1 -> dialog.dispose());
+                buttonPanel.add(cancelButton);
+                LoadingIcon loadingIcon = new LoadingIcon();
+
+                JButton saveButton = new JButton(LABEL_CONFIRM_CHANGE_PID);
+                saveButton.addActionListener(e1 -> {
+                    String newPid = newPidTextField.getText();
+                    boolean newPidExists = true;
+
+                    try {
+                        newPidExists = httpRequestHandler.sendGetRequestAlternativePartnerCheckIfPidExists(newPid);
+                    } catch (Exception ex) {
+                        LOGGER.error(ex);
+                    }
+
+                    if (newPidExists) {
+                        JOptionPane.showMessageDialog(mainFrame, LABEL_ERROR_NEW_PID_ALREADY_EXISTS, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        loadingIcon.startTimer();
+
+                        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                            @Override
+                            protected Void doInBackground() {
+
+                                LOGGER.info("Start to change pid of scenario from {} to {}", oldPid, newPid);
+
+                                HashMap<String, String> oldAndNewPids = new HashMap<>();
+                                oldAndNewPids.put(oldPid, newPid);
+                                List<String> oldPids = new ArrayList<>(oldAndNewPids.keySet());
+
+                                String agency = currentHeaderValues.get(LABEL_AGENCY);
+                                String scheme = currentHeaderValues.get(LABEL_SCHEME);
+                                String id = currentHeaderValues.get(LABEL_ID_ALTERNATIVE_PARTNERS);
+
+                                List<String> changePidErrors = new ArrayList<>();
+
+                                // Alternative Partner
+                                JSONObject jsonAlternativePartnersToTransport = httpRequestHandler.getAlternativePartnersToTransport(oldPid);
+                                if (jsonAlternativePartnersToTransport != null) {
+                                    httpRequestHandler.transportAlternativePartnerPutOnly(jsonAlternativePartnersToTransport, newPid, changePidErrors);
+                                }
+
+                                // Binary Parameters
+                                JSONObject jsonBinaryParametersToTransport = httpRequestHandler.getBinaryParametersToTransport(oldPids);
+                                if (jsonBinaryParametersToTransport != null) {
+                                    httpRequestHandler.transportBinaryParameters(jsonBinaryParametersToTransport, false, changePidErrors, true, oldAndNewPids);
+                                }
+
+                                // String Parameters
+                                JSONObject jsonStringParametersToTransport = httpRequestHandler.getStringParametersToTransport(oldPids);
+                                if (jsonStringParametersToTransport != null) {
+                                    httpRequestHandler.transportStringParameters(jsonStringParametersToTransport, false, changePidErrors, true, oldAndNewPids);
+                                }
+
+                                // repaint UI
+                                AlternativePartner alternativePartner = currentAlternativePartnersList.stream()
+                                        .filter(obj -> obj.getAgency().equals(agency)
+                                                && obj.getScheme().equals(scheme)
+                                                && obj.getId().equals(id)
+                                                && obj.getPid().equals(oldPid))
+                                        .findFirst()
+                                        .orElse(new AlternativePartner(agency, scheme, id, oldPid));
+                                alternativePartner.setPid(newPid);
+                                ParametersPage binaryParameterDetailPage = new ParametersPage(alternativePartner);
+                                panelContainer.add(binaryParameterDetailPage, newPid);
+                                cardLayout.show(panelContainer, newPid);
+
+                                dialog.dispose();
+
+                                if (changePidErrors.isEmpty()) {
+                                    String logTransport = LABEL_CHANGE_PID_FINISHED + LABEL_CHANGE_PID_SUCCESSFUL;
+                                    JOptionPane.showMessageDialog(mainFrame, logTransport, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
+                                    LOGGER.info(logTransport);
+                                } else {
+                                    String logTransport = LABEL_CHANGE_PID_FINISHED + LABEL_CHANGE_PID_FAILED_1 + changePidErrors.size() + LABEL_CHANGE_PID_FAILED_2;
+                                    JOptionPane.showMessageDialog(mainFrame, logTransport, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
+                                    LOGGER.warn(logTransport);
+                                }
+
+                                return null;
+                            }
+                        };
+                        worker.execute();
+                    }
+                });
+                buttonPanel.add(saveButton);
+                buttonPanel.add(loadingIcon);
+
+                dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+                dialog.setVisible(true);
+            });
+            add(changePidButton, gbc);
         }
 
     }

@@ -66,6 +66,8 @@ public class MigrateTildeDialog extends JDialog {
                         }
                     }
 
+                    LOGGER.info("Start migration of {} scenarios using old Pid with tilde.", counterSelected);
+
                     httpRequestHandler.transportAlternativePartners(alternativePartnersToMigrate, false, migrationErrors);
 
                     List<String> oldPids = new ArrayList<>(oldAndNewPids.keySet());
@@ -88,11 +90,11 @@ public class MigrateTildeDialog extends JDialog {
                     mainFrame.getAndShowLatestAlternativePartners();
 
                     if (migrationErrors.isEmpty()) {
-                        String logTransport = LABEL_TRANSPORT_FINISHED + LABEL_TRANSPORT_SUCCESSFUL;
+                        String logTransport = LABEL_MIGRATE_TILDE_FINISHED + LABEL_MIGRATE_TILDE_SUCCESSFUL;
                         JOptionPane.showMessageDialog(mainFrame, logTransport, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
                         LOGGER.info(logTransport);
                     } else {
-                        String logTransport = LABEL_TRANSPORT_FINISHED + LABEL_TRANSPORT_FAILED_1 + migrationErrors.size() + LABEL_TRANSPORT_FAILED_2;
+                        String logTransport = LABEL_MIGRATE_TILDE_FINISHED + LABEL_MIGRATE_TILDE_FAILED_1 + migrationErrors.size() + LABEL_MIGRATE_TILDE_FAILED_2;
                         JOptionPane.showMessageDialog(mainFrame, logTransport, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
                         LOGGER.warn(logTransport);
                     }

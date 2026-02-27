@@ -20,7 +20,7 @@ public class AlternativePartner {
     private final String agency;
     private final String scheme;
     private final String id;
-    private final String pid;
+    private String pid;
     private String determinationType;
 
     public AlternativePartner(String agency, String scheme, String id, String pid, String determinationType) {
@@ -60,6 +60,10 @@ public class AlternativePartner {
 
     public String getPid() {
         return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
     }
 
     public String getDeterminationType() {

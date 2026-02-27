@@ -177,6 +177,13 @@ public class HttpRequestHandler {
         jsonApiHandler.parseAlternativePartnersJsonLandscape(jsonResponseBody);
     }
 
+    public boolean sendGetRequestAlternativePartnerCheckIfPidExists(String oldPid) throws Exception {
+        String endpoint = API_ALTERNATIVE_PARTNERS + "?$filter=" + JSON_KEY_PID + "%20eq%20'" + oldPid + "'";
+        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
+        boolean isResultEmpty = jsonApiHandler.isResultsEmpty(jsonResponseBody);
+        return !isResultEmpty;
+    }
+
     public String sendPostRequestAlternativePartners(String agency, String scheme, String id, String pid) throws Exception {
         return sendPostRequestAlternativePartners(agency, scheme, id, pid, true);
     }
@@ -186,13 +193,13 @@ public class HttpRequestHandler {
         return sendPostRequest(API_ALTERNATIVE_PARTNERS, jsonBody, isResponseLogged);
     }
 
-    private void sendPutRequestAlternativePartners(String agency, String scheme, String id, String pid) throws Exception {
+    public void sendPutRequestAlternativePartners(String agency, String scheme, String id, String pid, boolean isResponseLogged) throws Exception {
         String hexAgency = convertStringToHexstring(agency);
         String hexScheme = convertStringToHexstring(scheme);
         String hexId = convertStringToHexstring(id);
         String endpoint = API_ALTERNATIVE_PARTNERS + "(" + JSON_KEY_HEXAGENCY + "='" + hexAgency + "'," + JSON_KEY_HEXSCHEME + "='" + hexScheme + "'," + JSON_KEY_HEXID + "='" + hexId + "')";
         String jsonBody = createRequestBodyPutAlternativePartners(pid);
-        sendPutRequest(endpoint, jsonBody, false);
+        sendPutRequest(endpoint, jsonBody, isResponseLogged);
     }
 
     public String sendDeleteRequestAlternativePartners(String agency, String scheme, String id) throws Exception {
@@ -343,7 +350,7 @@ public class HttpRequestHandler {
 
     // Transport methods
 
-    public void sendGetRequestAlternativePartnersTransport() throws Exception {
+    public void sendGetRequestAlternativePartnersTableTransport() throws Exception {
         JSONObject pidsFromBinaryParameters = sendGetRequestParametersWithReceiverDetermination(API_BINARY_PARAMETERS);
         JSONObject pidsFromStringParameters = sendGetRequestParametersWithReceiverDetermination(API_STRING_PARTNERS);
         Set<String> uniquePids = jsonApiHandler.getUniquePidsFromEndpoints(pidsFromBinaryParameters, pidsFromStringParameters);
@@ -352,6 +359,17 @@ public class HttpRequestHandler {
 
         JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(API_ALTERNATIVE_PARTNERS);
         jsonApiHandler.parseAlternativePartnersJson(jsonResponseBody, true, uniquePids);
+    }
+
+    public JSONObject getAlternativePartnersToTransport(String oldPid) {
+        try {
+            String endpoint = API_ALTERNATIVE_PARTNERS + "?$filter=" + JSON_KEY_PID + "%20eq%20'" + oldPid + "'";
+            return sendGetRequestsAndHandlePagination(endpoint);
+        } catch (Exception e) {
+            LOGGER.error(e);
+        }
+
+        return null;
     }
 
     public void transportAlternativePartners(List<AlternativePartner> alternativePartnersToTransport, boolean overwrite, List<String> transportErrors) {
@@ -365,7 +383,7 @@ public class HttpRequestHandler {
                 sendPostRequestAlternativePartners(agency, scheme, id, pid, false);
 
                 if (this.latestStatusCode == 400 && overwrite) {
-                    sendPutRequestAlternativePartners(agency, scheme, id, pid);
+                    sendPutRequestAlternativePartners(agency, scheme, id, pid, false);
                 }
                 logLatestResponse();
 
@@ -374,6 +392,31 @@ public class HttpRequestHandler {
                 }
             } catch (Exception e) {
                 String errorMessage = "Error sending HTTP request for alternative partner (agency: " + agency + ", scheme: " + scheme + ", id: " + id + ", pid: " + pid + "): ";
+                LOGGER.error("{}{}", errorMessage, e);
+                transportErrors.add(errorMessage + e.getMessage());
+            }
+        }
+    }
+
+    public void transportAlternativePartnerPutOnly(JSONObject jsonObjectToTransport, String newPid, List<String> transportErrors) { //for change Pid
+        JSONObject dObject = jsonObjectToTransport.getJSONObject(JSON_KEY_D);
+        JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
+        LOGGER.info(LABEL_TRANSPORT_FOUND_X + "{}" + " alternative partners to replicate.", resultsArray.length());
+
+        for (int i = 0; i < resultsArray.length(); i++) {
+            JSONObject resultObject = resultsArray.getJSONObject(i);
+            String agency = resultObject.getString(JSON_KEY_AGENCY);
+            String scheme = resultObject.getString(JSON_KEY_SCHEME);
+            String id = resultObject.getString(JSON_KEY_ID);
+
+            try {
+                sendPutRequestAlternativePartners(agency, scheme, id, newPid, true);
+
+                if (!(this.latestStatusCode >= 200 && this.latestStatusCode <= 299)) {
+                    transportErrors.add(this.latestResponseLabel);
+                }
+            } catch (Exception e) {
+                String errorMessage = "Error sending HTTP request for alternative partner (agency: " + agency + ", scheme: " + scheme + ", id: " + id + ", pid: " + newPid + "): ";
                 LOGGER.error("{}{}", errorMessage, e);
                 transportErrors.add(errorMessage + e.getMessage());
             }

@@ -104,7 +104,7 @@ public class AlternativePartnersPage extends JPanel {
                 JOptionPane.showMessageDialog(mainFrame, LABEL_TRANSPORT_ERROR_ADD_TENANT, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
             } else {
                 try {
-                    httpRequestHandler.sendGetRequestAlternativePartnersTransport();
+                    httpRequestHandler.sendGetRequestAlternativePartnersTableTransport();
                 } catch (Exception exception) {
                     //
                 }
