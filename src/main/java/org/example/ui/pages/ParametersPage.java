@@ -383,7 +383,7 @@ public class ParametersPage extends JPanel {
 
             JPanel buttonPanelMiddle = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             Map<String, String> mapNamespaces = new HashMap<>(templateReceiverDetermination.getNamespaces());
-            JButton namespacesButton = getMaintainNamespacesButton(mapNamespaces, new ArrayList<>(Collections.singleton(table)));
+            JButton namespacesButton = getMaintainNamespacesButton(mapNamespaces, table, null);
             JButton generateButton = getGenerateXsltButtonReceiverDetermination(table, buttonGroup, defaultReceiverTextField, mapNamespaces);
             buttonPanelMiddle.add(getGenerateAndSendButtonPanelBinaryParameters(currentReceiverDetermination, namespacesButton, generateButton));
 
@@ -472,7 +472,7 @@ public class ParametersPage extends JPanel {
 
             JPanel buttonPanelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             Map<String, String> mapNamespaces = new HashMap<>(templateInterfaceDetermination.getNamespaces());
-            JButton namespaceButton = getMaintainNamespacesButton(mapNamespaces, new ArrayList<>(Collections.singleton(table)));
+            JButton namespaceButton = getMaintainNamespacesButton(mapNamespaces, table, null);
             JButton generateButton = getGenerateXsltButtonInterfaceDetermination(table, rTextScrollPane, currentInterfaceDetermination, mapNamespaces);
             buttonPanelBottom.add(getGenerateAndSendButtonPanelBinaryParameters(currentInterfaceDetermination, namespaceButton, generateButton));
 
@@ -901,7 +901,7 @@ public class ParametersPage extends JPanel {
         return sendButton;
     }
 
-    private JButton getGenerateXsltButtonCombinedDetermination(KeyPanel receiverPanel, KeyPanel interfacePanel, Map<String, String> namespaces, List<JTable> tablesForNamespaces) {
+    private JButton getGenerateXsltButtonCombinedDetermination(KeyPanel receiverPanel, KeyPanel interfacePanel, Map<String, String> namespaces, Map<String, JTable> tablesForNamespaces) {
         ButtonGroup buttonGroupReceiverNotFound = (ButtonGroup) receiverPanel.getComponent(COMPONENT_RECEIVER_NOT_FOUND);
         JTable tableReceiver = (JTable) receiverPanel.getComponent(COMPONENT_RECEIVER_TABLE);
         JTextField textFieldDefaultReceiver = (JTextField) receiverPanel.getComponent(COMPONENT_RECEIVER_DEFAULT);
@@ -912,7 +912,7 @@ public class ParametersPage extends JPanel {
         generateXsltButton.addActionListener(e -> {
             objectCombinedDetermination.clear();
 
-            getNamespacePrefixesFromTablesAndUpdateNamespacesMap(tablesForNamespaces, namespaces);
+            getNamespacePrefixesFromTablesAndUpdateNamespacesMap(namespaces, tableReceiver, tablesForNamespaces);
             objectCombinedDetermination.setNamespaces(namespaces);
 
             // receiver determination
@@ -996,7 +996,7 @@ public class ParametersPage extends JPanel {
 
                 objectReceiverDetermination.clear();
 
-                getNamespacePrefixesFromTablesAndUpdateNamespacesMap(new ArrayList<>(Collections.singleton(table)), mapNamespaces);
+                getNamespacePrefixesFromTablesAndUpdateNamespacesMap(mapNamespaces, table, null);
                 objectReceiverDetermination.setNamespaces(mapNamespaces);
 
                 String defaultBehavior = getSelectedButtonText(buttonGroup);
@@ -1036,7 +1036,7 @@ public class ParametersPage extends JPanel {
 
                 objectInterfaceDetermination.clear();
 
-                getNamespacePrefixesFromTablesAndUpdateNamespacesMap(new ArrayList<>(Collections.singleton(table)), namespaces);
+                getNamespacePrefixesFromTablesAndUpdateNamespacesMap(namespaces, table, null);
                 objectInterfaceDetermination.setNamespaces(namespaces);
 
                 for (int i = 0; i < table.getRowCount(); i++) {
@@ -1062,7 +1062,7 @@ public class ParametersPage extends JPanel {
         return generateXsltButton;
     }
 
-    private JButton getMaintainNamespacesButton(Map<String, String> namespacesSaved, List<JTable> tables) {
+    private JButton getMaintainNamespacesButton(Map<String, String> namespacesSaved, JTable tableReceiverDetermination, Map<String, JTable> tablesInterfaceDeterminations) {
         JButton namespacesButton = new JButton(LABEL_MAINTAIN_NAMESPACES);
 
         namespacesButton.addActionListener(e -> {
@@ -1072,7 +1072,7 @@ public class ParametersPage extends JPanel {
                 namespacesTemp.putAll(namespacesSaved);
             }
 
-            Set<String> namespacePrefixes = getNamespacePrefixesFromTablesAndUpdateNamespacesMap(tables, namespacesTemp);
+            Set<String> namespacePrefixes = getNamespacePrefixesFromTablesAndUpdateNamespacesMap(namespacesTemp, tableReceiverDetermination, tablesInterfaceDeterminations);
 
             JDialog dialog = new JDialog(mainFrame, LABEL_MAINTAIN_NAMESPACES, true);
             dialog.setLayout(new BorderLayout());
@@ -1136,8 +1136,20 @@ public class ParametersPage extends JPanel {
         return namespacesButton;
     }
 
-    private Set<String> getNamespacePrefixesFromTablesAndUpdateNamespacesMap(List<JTable> tables, Map<String, String> namespacesMap) {
+    private Set<String> getNamespacePrefixesFromTablesAndUpdateNamespacesMap(Map<String, String> namespacesMap, JTable tableReceiverDetermination, Map<String, JTable> tablesInterfaceDeterminations) {
         Set<String> namespacePrefixes = new HashSet<>();
+
+        List<JTable> tables = new ArrayList<>();
+        if (tableReceiverDetermination != null) {
+            tables.add(tableReceiverDetermination);
+        }
+        if (tablesInterfaceDeterminations != null) {
+            for (String key : tablesInterfaceDeterminations.keySet()) {
+                if (tablesInterfaceDeterminations.get(key) != null) {
+                    tables.add(tablesInterfaceDeterminations.get(key));
+                }
+            }
+        }
 
         for (JTable table : tables) {
             if (table.isEditing()) {
@@ -1430,7 +1442,11 @@ public class ParametersPage extends JPanel {
         JTable receiverTable = (JTable) panelReceiverDetermination.getComponent(COMPONENT_RECEIVER_TABLE);
 
         class UpdateHandler {
+            Set<String> setReceiverNamesOld;
+
             void updateReceivers() {
+                setReceiverNamesOld = new HashSet<>(setReceiverNames);
+
                 setReceiverNames.clear();
 
                 String defaultReceiver = defaultReceiverTextField.getText();
@@ -1445,6 +1461,34 @@ public class ParametersPage extends JPanel {
                     }
                 }
 
+                String receiverNameChangedOld = null;
+                String receiverNameChangedNew = null;
+
+                // find changed receiver name
+                Set<String> setReceiverNamesOldCopy = new HashSet<>(setReceiverNamesOld);
+                setReceiverNamesOldCopy.removeAll(setReceiverNames);
+                if (setReceiverNamesOldCopy.size() == 1) {
+                    receiverNameChangedOld = setReceiverNamesOldCopy.iterator().next();
+                }
+                Set<String> originalCopy = new HashSet<>(setReceiverNames);
+                originalCopy.removeAll(setReceiverNamesOld);
+                if (originalCopy.size() == 1) {
+                    receiverNameChangedNew = originalCopy.iterator().next();
+                }
+
+                JPanel oldCardPanel = null;
+                if (receiverNameChangedNew != null && receiverNameChangedOld != null) { // if receiver name has changed
+                    oldCardPanel = (JPanel) cardsInterfaceDetermination.getComponent(receiverNameChangedOld);
+                    cardsInterfaceDetermination.remove(oldCardPanel);
+                    cardsInterfaceDetermination.removeComponent(receiverNameChangedOld);
+
+                    objectCombinedDetermination.mapInterfaceDeterminations.put(receiverNameChangedNew, objectCombinedDetermination.mapInterfaceDeterminations.get(receiverNameChangedOld));
+                    objectCombinedDetermination.mapInterfaceDeterminations.remove(receiverNameChangedOld);
+
+                    JTable oldReceiverTable = tablesInterfaceDeterminations.remove(receiverNameChangedOld);
+                    tablesInterfaceDeterminations.put(receiverNameChangedNew, oldReceiverTable);
+                }
+
                 Set<String> cardNamesInterfaceDetermination = cardsInterfaceDetermination.getAllKeys();
 
                 for (String receiverName : setReceiverNames) {
@@ -1453,18 +1497,23 @@ public class ParametersPage extends JPanel {
 
                         String xsltInterface = binaryParameter.getValueNotEmpty();
 
-                        try {
-                            objectCombinedDetermination.mapInterfaceDeterminations.put(receiverName, new TemplateInterfaceDetermination());
-                            objectCombinedDetermination.mapInterfaceDeterminations.get(receiverName).xsltToObjectInterfaceDetermination(xsltInterface, receiverName);
-                        } catch (Exception ex) {
-                            LOGGER.error(ex);
+                        JPanel cardPanel;
+                        if (receiverNameChangedNew != null && receiverNameChangedOld != null && receiverNameChangedNew.equals(receiverName)) {
+                            cardPanel = oldCardPanel;
+                        } else {
+                            try {
+                                objectCombinedDetermination.mapInterfaceDeterminations.put(receiverName, new TemplateInterfaceDetermination());
+                                objectCombinedDetermination.mapInterfaceDeterminations.get(receiverName).xsltToObjectInterfaceDetermination(xsltInterface, receiverName);
+                            } catch (Exception ex) {
+                                LOGGER.error(ex);
+                            }
+
+                            cardPanel = new JPanel(getGridLayout());
+
+                            KeyPanel paneLabelInterfaceDetermination = showTableInterfaceDetermination(objectCombinedDetermination.mapInterfaceDeterminations.get(receiverName), null, binaryParameter, false);
+                            tablesInterfaceDeterminations.put(receiverName, (JTable) paneLabelInterfaceDetermination.getComponent(COMPONENT_INTERFACE_TABLE));
+                            cardPanel.add(paneLabelInterfaceDetermination);
                         }
-
-                        JPanel cardPanel = new JPanel(getGridLayout());
-
-                        KeyPanel paneLabelInterfaceDetermination = showTableInterfaceDetermination(objectCombinedDetermination.mapInterfaceDeterminations.get(receiverName), null, binaryParameter, false);
-                        tablesInterfaceDeterminations.put(receiverName, (JTable) paneLabelInterfaceDetermination.getComponent(COMPONENT_INTERFACE_TABLE));
-                        cardPanel.add(paneLabelInterfaceDetermination);
 
                         cardsInterfaceDetermination.addNewComponent(receiverName, cardPanel);
                         cardsInterfaceDetermination.add(cardPanel, receiverName);
@@ -1560,15 +1609,9 @@ public class ParametersPage extends JPanel {
 
         JPanel panelXsltButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        List<JTable> tablesForNamespaces = new ArrayList<>();
-        tablesForNamespaces.add(receiverTable);
-        for (String receiverName : tablesInterfaceDeterminations.keySet()) {
-            tablesForNamespaces.add(tablesInterfaceDeterminations.get(receiverName));
-        }
-
         Map<String, String> mapNamespaces = new HashMap<>(objectCombinedDetermination.getNamespaces());
-        JButton namespaceButton = getMaintainNamespacesButton(mapNamespaces, tablesForNamespaces);
-        JButton generateButton = getGenerateXsltButtonCombinedDetermination(panelReceiverDetermination, panelInterfaceDetermination, mapNamespaces, tablesForNamespaces);
+        JButton namespaceButton = getMaintainNamespacesButton(mapNamespaces, receiverTable, tablesInterfaceDeterminations);
+        JButton generateButton = getGenerateXsltButtonCombinedDetermination(panelReceiverDetermination, panelInterfaceDetermination, mapNamespaces, tablesInterfaceDeterminations);
         panelXsltButtons.add(getGenerateAndSendButtonPanelBinaryParameters(currentReceiverDetermination, namespaceButton, generateButton));
         panelXslt.add(panelXsltButtons, BorderLayout.SOUTH);
 

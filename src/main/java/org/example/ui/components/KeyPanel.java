@@ -25,4 +25,8 @@ public class KeyPanel extends JPanel {
     public Object getComponent(String key) {
         return this.objectMap.get(key);
     }
+
+    public void removeComponent(String key) {
+        this.objectMap.remove(key);
+    }
 }

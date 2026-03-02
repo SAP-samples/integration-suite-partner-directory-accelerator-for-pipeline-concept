@@ -1,14 +1,17 @@
 package org.example.model;
 
-import net.sf.saxon.s9api.Processor;
-import net.sf.saxon.s9api.XPathCompiler;
-import net.sf.saxon.s9api.XPathSelector;
-import net.sf.saxon.s9api.XdmValue;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+import java.awt.*;
 import java.io.StringReader;
 import java.util.Arrays;
 
@@ -72,32 +75,25 @@ public class AlternativePartner {
             this.setDeterminationType(LABEL_POINT_TO_POINT);
         } else {
             try {
-                String xslt = currentReceiverDetermination.getValueNotEmpty();
-
-                Processor processor = new Processor(false);
-
+                String xslt = currentReceiverDetermination.getValue();
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                factory.setNamespaceAware(true);
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document document = builder.parse(new InputSource(new StringReader(xslt)));
+                XPath xPath = XPathFactory.newInstance().newXPath();
 
-                XPathCompiler xpath = processor.newXPathCompiler();
+                XPathExpression expression = xPath.compile("//Receiver/Interfaces");
+                NodeList nodeListInterfaces = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
 
-                XPathSelector interfacesSelector = xpath.compile("//Receiver/Interfaces").load();
-                interfacesSelector.setContextItem(processor.newDocumentBuilder().wrap(document));
-                XdmValue interfacesResult = interfacesSelector.evaluate();
+                expression = xPath.compile("//Receiver");
+                NodeList nodeListReceivers = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
 
-                XPathSelector receiversSelector = xpath.compile("//Receiver").load();
-                receiversSelector.setContextItem(processor.newDocumentBuilder().wrap(document));
-                XdmValue receiversResult = receiversSelector.evaluate();
-
-                if (!interfacesResult.isEmpty()) {
+                if (nodeListInterfaces.getLength() > 0) {
                     this.setDeterminationType(LABEL_COMBINED_XSLT);
-                } else if (!receiversResult.isEmpty()) {
+                } else if (nodeListReceivers.getLength() > 0) {
                     this.setDeterminationType(LABEL_MULTIPLE_XSLTS);
                 }
             } catch (Exception e) {
-                this.setDeterminationType(LABEL_COMBINED_XSLT);
+                //
             }
         }
         return this.determinationType;

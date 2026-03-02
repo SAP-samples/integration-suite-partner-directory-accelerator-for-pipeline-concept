@@ -33,15 +33,20 @@ public class TemplateCombinedDetermination implements TemplateObjects {
 
     public String getNamespacesAsString() {
         Map<String, String> namespaces = new HashMap<>(receiverDetermination.getNamespaces());
-        for (String receiverName : this.receiverDetermination.getCurrentReceiverNames()) {
-            namespaces.putAll(this.mapInterfaceDeterminations.get(receiverName).getNamespaces());
-        }
 
-        StringBuilder namespacesString = new StringBuilder();
-        for (String key : namespaces.keySet()) {
-            namespacesString.append(" xmlns:").append(key).append("=\"").append(namespaces.get(key)).append("\"");
+        if (namespaces.isEmpty()) {
+            return "";
+        } else {
+            for (String receiverName : this.receiverDetermination.getCurrentReceiverNames()) {
+                namespaces.putAll(this.mapInterfaceDeterminations.get(receiverName).getNamespaces());
+            }
+
+            StringBuilder namespacesString = new StringBuilder();
+            for (String key : namespaces.keySet()) {
+                namespacesString.append(" xmlns:").append(key).append("=\"").append(namespaces.get(key)).append("\"");
+            }
+            return namespacesString.toString();
         }
-        return namespacesString.toString();
     }
 
     // params

@@ -38,10 +38,15 @@ public class TemplateReceiverDetermination implements TemplateObjects {
 
     public String getNamespacesAsString() {
         StringBuilder namespacesString = new StringBuilder();
-        for (String key : namespaces.keySet()) {
-            namespacesString.append(" xmlns:").append(key).append("=\"").append(namespaces.get(key)).append("\"");
+
+        if (namespaces.isEmpty()) {
+            return "";
+        } else {
+            for (String key : namespaces.keySet()) {
+                namespacesString.append(" xmlns:").append(key).append("=\"").append(namespaces.get(key)).append("\"");
+            }
+            return namespacesString.toString();
         }
-        return namespacesString.toString();
     }
 
     // params
