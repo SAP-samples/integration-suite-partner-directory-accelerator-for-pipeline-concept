@@ -35,6 +35,7 @@ import org.example.templates.TemplateInterfaceDetermination;
 import org.example.templates.TemplateReceiverDetermination;
 import org.example.templates.TemplateCombinedDetermination;
 import org.example.ui.components.*;
+import org.example.ui.dialogs.SetTypeOfDeterminationDialog;
 import org.example.utils.XsltSyntaxValidator;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -91,7 +92,17 @@ public class ParametersPage extends JPanel {
             httpRequestHandler.sendGetRequestBinaryParameters(pid);
             httpRequestHandler.sendGetRequestStringParameters(pid);
 
-            determinationType = alternativePartner.getDeterminationType();
+
+            if (alternativePartner.determineTypeOfDetermination() == null) {
+                new SetTypeOfDeterminationDialog(alternativePartner);
+            }
+            if (alternativePartner.getDeterminationType() == null) {
+                determinationType = LABEL_COMBINED_XSLT;
+                alternativePartner.setDeterminationType(determinationType);
+            } else {
+                determinationType = alternativePartner.getDeterminationType();
+            }
+
             LOGGER.info("Type of Receiver / Interface Determination: {}", determinationType);
 
             AtomicReference<Set<String>> listReceiverNames = new AtomicReference<>();

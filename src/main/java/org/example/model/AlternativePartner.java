@@ -4,14 +4,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
-import java.awt.*;
 import java.io.StringReader;
 import java.util.Arrays;
 
@@ -68,7 +66,7 @@ public class AlternativePartner {
         this.pid = pid;
     }
 
-    public String getDeterminationType() {
+    public String determineTypeOfDetermination() {
         if (this.determinationType != null) {
             return this.determinationType;
         } else if (currentStringParametersList.containsKey(ID_RECEIVER_DETERMINATION)) {
@@ -93,10 +91,14 @@ public class AlternativePartner {
                     this.setDeterminationType(LABEL_MULTIPLE_XSLTS);
                 }
             } catch (Exception e) {
-                //
+                // no default determination type here
             }
         }
         return this.determinationType;
+    }
+
+    public String getDeterminationType() {
+        return determinationType;
     }
 
     public void setDeterminationType(String determinationType) {

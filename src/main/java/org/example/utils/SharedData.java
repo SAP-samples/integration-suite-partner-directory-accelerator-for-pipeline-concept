@@ -58,6 +58,7 @@ public final class SharedData {
     public static final String LABEL_CONTAINS_SYNTAX_ERRORS = " contains syntax errors.";
     public static final String LABEL_CRITICAL = "Critical";
     public static final String LABEL_DEFAULT = "Default";
+    public static final String LABEL_DEFAULT_COMBINED_DETERMINATION = "Use default (combined determination)";
     public static final String LABEL_DELETE = "Delete";
     public static final String LABEL_DELETE_ENTRY = "Delete this entry";
     public static final String LABEL_DELETE_OLD_ENTRIES = "Delete entries with old Pid";
@@ -128,6 +129,7 @@ public final class SharedData {
     public static final String LABEL_RELOAD = "Reload data from API";
     public static final String LABEL_RESET = "Reset";
     public static final String LABEL_SAVE = "Save";
+    public static final String LABEL_SAVE_SELECTION = LABEL_SAVE + " selection";
     public static final String LABEL_SCHEME = "Scheme";
     public static final String LABEL_SCHEME_XI = "Sender Interface";
     public static final String LABEL_SELECT_TENANT_TO_TRANSPORT = "Select tenant to replicate";
