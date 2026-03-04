@@ -6,11 +6,11 @@
 
 ## Description
 
-This tool supports the [Pipeline Concept](https://community.sap.com/t5/technology-blogs-by-sap/introducing-the-new-pipeline-concept-in-cloud-integration/ba-p/13639651), which helps customers to migrate from their on-premise Process Integration / Process Orchestration systems to the cloud-based SAP Integration Suite. The Pipeline Concept relies on the [Partner Directory](https://help.sap.com/docs/cloud-integration/sap-cloud-integration/partner-directory-api), which contains configuration on message processing behavior, and dynamically reads the Partner Directory content at runtime.
+This tool supports the [Pipeline for Cloud Integration (formerly Pipeline Concept)](https://community.sap.com/t5/technology-blogs-by-sap/introducing-the-new-pipeline-concept-in-cloud-integration/ba-p/13639651), which helps customers to migrate from their on-premise Process Integration / Process Orchestration systems to the cloud-based SAP Integration Suite. The Pipeline Concept relies on the [Partner Directory](https://help.sap.com/docs/cloud-integration/sap-cloud-integration/partner-directory-api), which contains configuration on message processing behavior, and dynamically reads the Partner Directory content at runtime.
 
 The purpose of this tool is to simplify the interaction with the Partner Directory for the Pipeline Concept by providing a UI. To do so, access to a tenant's API needs to be configured, so you can read, create and update Partner Directory entries which are used for the Pipeline Concept (other Partner Directory entries are not shown here). Key features are the XSLT generation and maintenance from a tabular input format, as well as the replication of Partner Directory content in different tenants of a landscape.
 
-Before using this tool, please make yourself familiar with the Pipeline Concept. An introduction to the Pipeline Concept can be found in this [SAP Community blog](https://community.sap.com/t5/technology-blogs-by-sap/introducing-the-new-pipeline-concept-in-cloud-integration/ba-p/13639651). Being used for the Pipeline Concept, the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept) provides further information on the Partner Directory. The tool is written in Java 17 and uses the Partner Directory API to provide a Java Swing UI for simple user interaction with the Partner Directory content. More information about this API is available on the [Business Accelerator Hub](https://hub.sap.com/api/PartnerDirectory/overview).
+Before using this tool, please make yourself familiar with the Pipeline Concept. An introduction to the Pipeline Concept can be found in this [SAP Community blog](https://community.sap.com/t5/integration-blog-posts/how-to-get-started-with-pipeline-for-cloud-integration/ba-p/14325267). Being used for the Pipeline Concept, the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept) provides further information on the Partner Directory. The tool is written in Java 17 and uses the Partner Directory API to provide a Java Swing UI for simple user interaction with the Partner Directory content. More information about this API is available on the [Business Accelerator Hub](https://hub.sap.com/api/PartnerDirectory/overview).
 
 ## Table of Content
 
@@ -35,12 +35,11 @@ Before using this tool, please make yourself familiar with the Pipeline Concept.
         - [Maintain SAP_Integration_Suite_Landscape](#maintain-sap_integration_suite_landscape)
         - [Add New Alternative Partner](#add-new-alternative-partner)
         - [Replication to another Tenant](#replication-to-another-tenant)
+        - [Migrate deprecated entries](#migrate-deprecated-entries)
     + [Parameters Page](#parameters-page)
         - [Headers for Alternative Partner](#headers-for-alternative-partner)
         - [Option 1: Combined XSLT](#option-1-combined-xslt)
         - [Option 2: Multiple XSLTs](#option-2-multiple-xslts)
-            * [Receiver Determination](#receiver-determination)
-            * [Interface Determination](#interface-determination)
         - [Option 3: Point to Point](#option-3-point-to-point)
         - [String Parameters](#string-parameters)
         - [Landscape Stages](#landscape-stages)
@@ -48,6 +47,9 @@ Before using this tool, please make yourself familiar with the Pipeline Concept.
         - [Replication Table](#replication-table)
         - [(De)Select all shown entries](#deselect-all-shown-entries)
         - [Dialog for Replication to another Tenant](#dialog-for-replication-to-another-tenant)
+    + [Migrate deprecated entries Page](#migrate-deprecated-entries-page)
+        - [Migrate Pids with tilde Page](#migrate-pids-with-tilde-page)
+        - [Merge XSLTs Page](#merge-xslts-page)
 * [Troubleshooting](#troubleshooting)
     + [Error when configuring API: (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target](#error-when-configuring-api-certificate_unknown-pkix-path-building-failed-sunsecurityprovidercertpathsuncertpathbuilderexception-unable-to-find-valid-certification-path-to-requested-target)
     + [Error when configuring API: JSONObject["d"] not found / <br/> Error when configuring API: A JSONObject text must begin with '{' at 1 [character 2 line 1] / <br/> Error when configuring API: URI with undefined scheme / <br/> Error when configuring API: null](#error-when-configuring-api-jsonobjectd-not-found---error-when-configuring-api-a-jsonobject-text-must-begin-with--at-1-character-2-line-1---error-when-configuring-api-uri-with-undefined-scheme---error-when-configuring-api-null)
@@ -55,6 +57,7 @@ Before using this tool, please make yourself familiar with the Pipeline Concept.
     + [Error when generating XSLT from input data. Table which is missing data: [name of table]](#error-when-generating-xslt-from-input-data-table-which-is-missing-data-name-of-table)
     + [Error when generating XSLT from input data. Make sure that all tables and the receiver not found section are filled properly.](#error-when-generating-xslt-from-input-data-make-sure-that-all-tables-and-the-receiver-not-found-section-are-filled-properly)
     + [The generated XSLT might contain invalid syntax: (...) / <br/> The shown XSLT might contain invalid syntax:  (...) Do you want to send the shown XSLT to the API anyway?](#the-generated-xslt-might-contain-invalid-syntax----the-shown-xslt-might-contain-invalid-syntax---do-you-want-to-send-the-shown-xslt-to-the-api-anyway)
+    + [Error when merging XSLT.](#error-when-merging-xslt)
 * [Known Issues](#known-issues)
 * [Development](#development)
     + [XSLT Handling](#xslt-handling)
@@ -65,7 +68,7 @@ Before using this tool, please make yourself familiar with the Pipeline Concept.
 
 ## Events
 
-As part of Devtoberfest 2025, two sessions took place which are related to this tool. These session are available on YouTube and can serve as an introduction:
+As part of Devtoberfest 2025, two sessions took place which are related to this tool. These sessions are available on YouTube and can serve as an introduction:
 
 [🔴 Accelerate your move to the cloud via Pipeline for Cloud Integration](https://www.youtube.com/watch?v=LFfW8rnm4fU) \
 By Alexander Bundschuh \
@@ -84,7 +87,7 @@ The tool is built using OpenJDK 17 by SapMachine, which is required and can be d
 
 Please download the latest version of the tool from the [releases section](../../releases/latest).
 
-The runnable file is called [`PartnerDirectoryAcceleratorUI-1.0-SNAPSHOT-jar-with-dependencies.jar`](PartnerDirectoryAcceleratorUI-1.0-SNAPSHOT-jar-with-dependencies.jar). Additionally, there is a start script called [`start.bat`](start.bat) / [`start.sh`](start.sh).
+The runnable file is called [`PartnerDirectoryAcceleratorUI-1.0-SNAPSHOT-jar-with-dependencies.jar`](PartnerDirectoryAcceleratorUI-1.0-SNAPSHOT-jar-with-dependencies.jar). Additionally, there is a start script called [`start.bat`](start.bat) / [`start.sh`](start.sh). Download these files to your local device, locate them in the same folder and open this folder in the terminal.
 
 Depending on your operating system, run one of the following commands from the terminal or command prompt:
 
@@ -109,7 +112,7 @@ Then, check the [notification settings of your GitHub account](https://github.co
 
 ## Usage of the Tool
 
-To ensure you always see the latest data, this tool sends HTTP requests each time a new page is displayed or another tab is selected. Therefore, depending on your network connection, you might need to be a bit patient...
+To ensure you always see the latest data, this tool sends HTTP requests each time a new page is displayed or another tab is selected. Therefore, depending on your network connection and the number of Partner Directory entries in your tenant, you might need to be a bit patient...
 
 The following images show the tool with sample scenarios available in a [GitHub repository by Alexander Bundschuh](https://github.com/peasantsboot/ProcessIntegrationPipelineSampleScenarios).
 
@@ -117,7 +120,7 @@ The following images show the tool with sample scenarios available in a [GitHub 
 
 #### Tenant dropdown menu
 
-In this tool, credentials to different tenants can be added. The idea is to easily allow switching between multiple tenants. If you haven't added a tenant before, the dropdown menu shows the label "Add new tenant first...", which is explained [in the next section](#add-new-tenant).
+In this tool, credentials to different tenants can be added. The idea is to easily allow switching between multiple tenants, e.g. DEV, QA, and PROD tenant of your landscape. If you haven't added a tenant before, the dropdown menu shows the label "Add new tenant first...", which is explained [in the next section](#add-new-tenant).
 
 To provide this support of multiple tenants, a file called `tenants.json` is created when starting the tool, which is located in the same directory as the `.jar` file. **This file is automatically generated and contains sensitive data. Please do not share this file and please do not change the content of this file.**
 
@@ -163,21 +166,23 @@ Once the API is configured, a table with all alternative partners is shown.
 
 #### Search option
 
-It is possible to search entries within the [alternative partners table](#alternative-partners-table). There is one search field present for each column. If values in multiple search fields are present, the table just shows entries which match all the search values. Searching is case-insensitive.
+It is possible to search for entries within the [alternative partners table](#alternative-partners-table). There is one search field present for each column. If search terms in multiple fields are present, the table just shows entries which match all the search values. Searching is case-insensitive.
+
+Next to the buttons "Search" and "Reset", there is a label showing the number of entries which are currently shown in the table below. If you add any search terms, the number of entries is automatically updated.
 
 #### Alternative Partners Table
 
-Since the tool is developed to support the Pipeline Concept, so in the table, only these alternative partners are shown which are related to the Pipeline, by using filter criteria: all alternative partners are shown where the scheme equals "SenderInterface". Additionally, to support [XI inbound scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#partner-id), alternative partners are displayed for which a receiver determination is maintained as a binary parameter or string parameter.
+Since the tool is developed to support the Pipeline Concept, in the table, only these alternative partners are shown which are related to the Pipeline, by using filter criteria: all alternative partners are shown where the scheme equals "SenderInterface". Additionally, to support [XI inbound scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#partner-id), alternative partners are displayed for which a receiver determination is maintained as a binary parameter or string parameter.
 
-You can sort the entries of the table by clicking on the name of the column you want to sort by.
+You can sort the entries of the table by clicking on the name of the column you want to sort by. By default, the table is sort by Partner ID.
 
-To edit an alternative partner and interact with the binary parameters and string parameters with the same Partner ID, click on a row of the table to navigate to its [parameters page](#parameters-page).
+To edit an alternative partner and interact with the binary parameters and string parameters of the same Partner ID, click on a row of the table to navigate to its [Parameters Page](#parameters-page).
 
 #### Maintain SAP_Integration_Suite_Landscape
 
 ![Maintain SAP_Integration_Suite_Landscape](images/LandscapeDialog.png)
 
-With the [string parameter SAP_Integration_Suite_Landscape](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/landscape-stages#prerequisite:-map-tenant-name-to-landscape-stage), you can map a tenant name to a stage ID. Depending on the number of stages in your landscape, you can add more lines to create new entries. Additionally, you can change or delete existing entries.
+With the [string parameter SAP_Integration_Suite_Landscape](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/landscape-stages#prerequisite:-map-tenant-name-to-landscape-stage), you can map a tenant ID to a stage ID. Depending on the number of stages in your landscape, you can add more lines to create new entries. Additionally, you can change or delete existing entries. These existing entries are ordered by their time created.
 
 For demonstration purposes, in the screenshot, a trial tenant is shown as sample DEV tenant.
 
@@ -185,28 +190,30 @@ For demonstration purposes, in the screenshot, a trial tenant is shown as sample
 
 ![Add New Alternative Partner Image](images/AddAlternativePartnerDialog.png)
 
-At the bottom of the page, the "Add new Alternative Partner" button allows you to create a new alternative partner. Insert the required values: **Sender System** (named "agency" for alternative partner), **Sender Interface** (named "id" for alternative partner), and **Partner ID** (also known as PID). The only function of the **Sender Type (Default/XI)** option buttons is to adjust this form to the style of Alternative Partner entry. The value for "**Scheme**" is fixed to "SenderInterface" for default scenarios (non-SAP senders and IDoc). For [XI inbound scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#partner-id) the Scheme field changes to **Interface Name**, while the Interface Name field changes to **Namespace**, as described in the linked documentation.  
+At the bottom of the page, the "Add new Alternative Partner" button allows you to create a new alternative partner. Insert the required values: **Sender System** (named "Agency" for alternative partner), **Sender Interface** (named "Id" for alternative partner), and **Partner ID** (also known as Pid). The only function of the **Sender Type (Default/XI)** option buttons is to adjust this form to the style of Alternative Partner entry. The value for "**Scheme**" is fixed to "SenderInterface" for default scenarios (non-SAP senders and IDoc). For [XI inbound scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#partner-id), the Scheme field changes to **Interface Name**, while the Interface Name field changes to **Namespace**, as described in the linked documentation.  
 
 Additionally, decide for a type of receiver / interface determination:
 * **[Option 1: Combined XSLT](#option-1-combined-xslt)** is the default and allows you to have receiver and interface determinations combined in one single XSLT mapping, as released in version 1.0.8 of the Pipeline Concept.
 * **[Option 2: Multiple XSLTs](#option-2-multiple-xslts)** results in one XSLT as receiver determination and additionally one XSLT as interface determination per receiver.
 * **[Option 3: Point to Point](#option-3-point-to-point)** uses string parameters to define exactly one receiver and one interface, which came with version 1.0.6 of the Pipeline Concept.
 
-> Please note that if you choose a type of receiver / interface determination but do not create any determination while the tool is running, this information will not be preserved upon restarting the tool. This is because the tool does not have a data store for the type of receiver / interface determination to retain information across multiple sessions.
-
-By sending the data to the API, a new alternative partner is created and shown as last entry in the [alternative partners table](#alternative-partners-table). Please note that after creating a new alternative partner, it is not possible to change the Partner ID (PID) in this UI tool (see [known issues](#known-issues). By clicking on your newly created entry in the table, you can also add binary parameters, string parameters, and alternative partners for landscape stages.
+By sending the data to the API, a new alternative partner is created and its [Parameters Page](#parameters-page) is shown, so you can add binary parameters, string parameters, and alternative partners for landscape stages.
 
 #### Replication to another Tenant
 
-By clicking the "Replication to another Tenant" button, the view is switched to the [Replication page](#replication-page).
+By clicking the "Replication to another Tenant" button, the view is switched to the [Replication Page](#replication-page).
+
+### Migrate deprecated entries
+
+Since the introduction of the Pipeline, some entries in the Partner Directory are no longer recommended for use. To change them to the latest recommendations, click on the button "Migrate deprecated entries" to open the [Migrate deprecated entries Page](#migrate-deprecated-entries-page) and to specify which entries should be migrated.
 
 ### Parameters Page
 
-On the parameters page, you can create and update all binary parameters and string parameters having the same Partner ID as the selected one. It is also possible to update the selected alternative partner. Only these binary parameters are shown for which the "ContentType" equals "xsl".
+On the parameters page, you can create and update all binary parameters and string parameters having the same Partner ID as the selected one. It is also possible to update the selected alternative partner. Only these binary parameters are shown for which the "ContentType" starts with "xsl".
 
 #### Headers for Alternative Partner
 
-On the upper part of the page, you can update the values for Sender System (named "agency" for alternative partner) and Sender Interface (named "id" for alternative partner). Both Scheme and Partner ID are constant after creation. Once a value is changed, buttons to send and discard the changes on the alternative partner are shown.
+On the upper part of the page, you can update the values for Sender System (named "agency" for alternative partner) and Sender Interface (named "id" for alternative partner). Once a value is changed, buttons to send and discard the changes on the alternative partner are shown. For the Pid, there is a dedicated button to change it. This is because the Pid is a key for both binary and string parameters, so "changing" it actually means to delete and newly create these all existing parameters of your scenario.
 
 #### Option 1: Combined XSLT
 
@@ -218,9 +225,17 @@ For the receiver determination, it consists of two parts: the processing if no r
 
 For each receiver specified in the receiver determination, an interface determination should be present. First, select the receiver for which you want to see the interface determination. The dropdown menu contain all receiver systems present in the receiver determination. In the table, conditions and resulting receiver interfaces can be specified. It is possible to add new rows, move a selected row up or down, and delete a selected row.
 
+##### Maintain Namespaces
+
+The "Maintain Namespaces" button allow you to set the namespace URI for each namespace prefix which occurs in one of the tables as part of a XPath conditions. If no namespace exists, the dialog is empty. When generating, all these namespaces maintained are added on top of your XSLT.
+
+##### Generate resulting XSLT
+
 By clicking the "Generate resulting XSLT" button, the information from the table on the left-hand side is read to generate an XSLT based on this data and show it on the right-hand side. Now, the newly generated XSLT can be sent to the API.
 
 If you get an invalid syntax warning, please refer to the [troubleshooting section](#the-generated-xslt-might-contain-invalid-syntax----the-shown-xslt-might-contain-invalid-syntax---do-you-want-to-send-the-shown-xslt-to-the-api-anyway).
+
+##### Send shown XSLT to API
 
 > Please note that by clicking the "Send shown XSLT to API" button, always the XSLT mapping shown on the right-hand side is sent to the API. In case this differs from the data in the tables, the data in the tables is not considered.
 
@@ -236,11 +251,25 @@ If no receiver is found, the options "Error", "Ignore", and "Default" are availa
 
 In the table, conditions and resulting receiver systems can be specified. It is possible to add new rows, move a selected row up or down, and delete a selected row.
 
+###### Maintain Namespaces
+
+The "Maintain Namespaces" button allow you to set the namespace URI for each namespace prefix which occurs in one of the table above as part of a XPath conditions. If no namespace exists, the dialog is empty. When generating, all these namespaces maintained are added on top of your XSLT.
+
+###### Generate resulting XSLT
+
 By clicking the "Generate resulting XSLT" button, all information from the left-hand side, including the radio buttons and the table, are read to generate an XSLT based on this data and show it on the right-hand side. Now, the newly generated XSLT can be sent to the API.
 
 If you get an invalid syntax warning, please refer to the [troubleshooting section](#the-generated-xslt-might-contain-invalid-syntax----the-shown-xslt-might-contain-invalid-syntax---do-you-want-to-send-the-shown-xslt-to-the-api-anyway).
 
+###### Send shown XSLT to API
+
 > Please note that by clicking the "Send shown XSLT to API" button, always the receiver determination shown on the right-hand side is sent to the API. In case this differs from the data in the table, the data in the table is not considered.
+
+###### Merge XSLTs
+
+![Merge XSLTs Dialog](images/MergeXsltsDialog.png)
+
+In case you rather want to use combined XSLTs instead, there is a button called "Merge XSLTs". To use this feature, for each receiver existing in the receiver determination, an interface determination needs to exist as binary parameter and all these XSLTs may not contain any syntax errors. Note that for merging, always the XSLTs are considered which are currently given back by the API, local changes in the tables are not taken into account, so make sure to send them first before merging. Click on the "Merge XSLTs" button to see a preview of your combined XSLT based on the latest data. In case of any errors during merging, please refer to the [troubleshooting section](#error-when-merging-xslt). If the combined XSLT contains syntax errors, a warning will be shown. You can change the XSLT before or after, but not during merging. Before sending the merged XSLT to the API, decide if you want to save the XSLT files from both receiver and interface determination as local files, as sending the combined XSLT means to delete the multiple XSLTs. Once sent, the new XSLT is shown in the view for [Option 1: Combined XSLT](#option-1-combined-xslt).
 
 ##### Interface Determination
 
@@ -252,9 +281,17 @@ First, select the receiver for which you want to see the interface determination
 
 In the table, conditions and resulting receiver interfaces can be specified. It is possible to add new rows, move a selected row up or down, and delete a selected row.
 
+###### Maintain Namespaces
+
+The "Maintain Namespaces" button allow you to set the namespace URI for each namespace prefix which occurs in one of the table above as part of a XPath conditions. If no namespace exists, the dialog is empty. When generating, all these namespaces maintained are added on top of your XSLT.
+
+###### Generate resulting XSLT
+
 By clicking the "Generate resulting XSLT" button, the information from the table on the left-hand side is read to generate an XSLT based on this data and show it on the right-hand side. Now, the newly generated XSLT can be sent to the API.
 
 If you get an invalid syntax warning, please refer to the [troubleshooting section](#the-generated-xslt-might-contain-invalid-syntax----the-shown-xslt-might-contain-invalid-syntax---do-you-want-to-send-the-shown-xslt-to-the-api-anyway).
+
+###### Send shown XSLT to API
 
 > Please note that by clicking the "Send shown XSLT to API" button, always the interface determination shown on the right-hand side is sent to the API. In case this differs from the data in the table, the data in the table is not considered.
 
@@ -270,7 +307,7 @@ By clicking the "Send changes to API" button, existing string parameters startin
 
 ![String Parameters Image](images/ParametersPageStringParameters.png)
 
-In the "String Parameters" tab, the string parameters can be added, updated, and deleted by entering the desired value in the input field of the corresponding ID.
+In the "String Parameters" tab, string parameters can be added, updated, and deleted by entering the desired value in the input field of the corresponding ID.
 
 The string parameters relevant to the Pipeline Concept are listed in the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#message-processing-behavior).
 
@@ -312,7 +349,7 @@ The buttons "Deselect all shown entries" and "Select all shown entries" on the b
 
 #### Dialog for Replication to another Tenant
 
-![Replication Page Dialog](images/ReplicationDialog.png)
+![Replication Dialog]( images/ReplicationDialog.png)
 
 Once you have selected all alternative partners to replicate, you can click on "Replicate to another Tenant". By using the dropdown menu, you need to select your target tenant from the list of tenants you previously added.
 
@@ -320,7 +357,31 @@ You can decide to overwrite entries which already exist in the target tenant. If
 
 If you select "Include SAP_Integration_Suite_Landscape", all string parameters having the Pid "SAP_Integration_Suite_Landscape" are included in the replication.
 
-The button "Replicate x alternative partners with binary / string parameters to selected tenant" starts the replication to the selected tenant. Depending (among others) on the number of replicated entries and your network connection, this can take some time. During replication, you can see details in the logs. Once finished, the view is switched to the [alternative partners page](#alternative-partners-page) of the target tenant.
+The button "Replicate x alternative partners with binary / string parameters to selected tenant" starts the replication to the selected tenant. Depending (among others) on the number of replicated entries and your network connection, this can take some time. During replication, you can see details in the logs. Once finished, the view is switched to the [Alternative Partners Page](#alternative-partners-page) of the target tenant.
+
+### Migrate deprecated entries Page
+
+As the Pipeline has already been introduced in 2024, there are meanwhile some Partner Directory entries which are not recommended anymore. There are two options for which the migration of old Partner Directory entries is supported: migration of old Pids which use tilde instead of alternative partners and merging of multiple XSLTs into one combined XSLT. You can switch between these two pages using the radio buttons on top of the screen. If you want to migrate both, start by migrating the tilde Pids.
+
+#### Migrate Pids with tilde Page
+
+![Migrate Pids with tilde Page](images/MigrateTildePage.png)
+
+This table will show all Partner IDs which contain a tilde if there is a receiver determination as binary or string parameter maintained for this Pid. As usual, there is a search option, and you can sort the table by clicking on the name of the column. In the left column, the old Pid is read-only.
+
+For each tilde scenario which you would like to migrate to a new Pid using an alternative partner, maintain a new Pid in the right column. Make sure that the new Pid is unique in the Partner Directory of your tenant. If you added all new Pids which you would like to migrate, click on "Migrate Pids with tilde" on the bottom. You can choose if you want to delete the old Partner Directory entries (alternative partners, binary and string parameters) using tilde during migration, which effects all scenarios for which a new Pid is maintained.
+
+After confirming, depending on the number of scenarios you would like to migrate, this might take a while. In that time, tool will create the new entries (alternative partners, binary and string parameters) and deletes the old ones depending on your choice. Once completed, a pop-up shows if there were errors during migration or if everything worked smoothly. The [Alternative Partners Page](#alternative-partners-page) will be shown, including all your newly migrated scenarios.
+
+During migration, scheme of the new alternative partner is set to "SenderInterface" as constant. In case of [XI inbound scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#partner-id), you need to manually change the alternative partner later.
+
+#### Merge XSLTs Page
+
+![Merge XSLTs Page](images/MergeXsltsPage.png)
+
+This page shows a list of scenarios for which an alternative partner exists and for which binary parameters exist for both receiver determination and interface determination. With these criteria, scenarios using [Option 2: Multiple XSLTs](#option-2-multiple-xslts) should be shown. Note that scenarios using [special cases](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/special-cases#pipeline-bypass-options) might be shown here although there are not supported to be merged automatically.
+
+From the table, you can click on a row to end up on its [Parameters Page](#parameters-page), which should be [Option 2: Multiple XSLTs](#option-2-multiple-xslts). On the bottom, there is a "Merge XSLTs" button, see [above](#merge-xslts). In case of any errors during merging, please refer to the [troubleshooting section](#error-when-merging-xslt).
 
 ## Troubleshooting
 
@@ -348,16 +409,25 @@ This error occurs in general if data is missing for generating the XSLT and no m
 
 When generating an XSLT or trying to send it to the API, a syntax validation check is performed in the background using the [Saxon XSLT Processor](https://www.saxonica.com/welcome/welcome.xml). If the syntax check passes, the XSLT is directly shown / sent to the API. If the syntax check fails, a dialog with details is shown. The recommendation is to review and edit the input data and regenerate the XSLT with valid syntax.
 
+If you decide to send an XSLT with syntax errors to the API, please be aware that afterward, it might not be possible to fetch the XSLT content into the tabular format which you can edit. Instead, it might be required to edit / delete the XSLT with syntax errors outside the tool.
+
 > Please note that the results of this syntax check may differ from those obtained when processing the XSLT files within SAP Integration Suite itself. The syntax validation performed by this tool is intended to be a useful aid, but it does not guarantee absolute correctness or compatibility with SAP Integration Suite. Therefore, it is recommended to thoroughly test your XSLT files in the actual SAP Integration Suite environment to ensure proper functionality.
+
+### Error when merging XSLT.
+
+Please note that the merge XSLT feature only works under the following prerequisites:
+1) The scenario doesn't use tilde (so migrating tilde must be done before).
+2) XSLT exists for receiver determination.
+3) For each receiver in the receiver determination, an XSLT for interface determination exists.
+4) The XSLTs do not contain any syntax errors.
 
 ## Known Issues
 
 Currently, there are some limits which the tool is not capable of:
 
-* **Deletion** of existing alternative partners and binary parameters is not possible (see [issue #7](../../issues/7)). String parameters can be deleted. To delete existing entries, the [Partner Directory API](https://hub.sap.com/api/PartnerDirectory/overview) or the [Partner Directory UI](https://help.sap.com/docs/integration-suite/sap-integration-suite/managing-partner-directory-entries?version=CLOUD) can be used.
+* **Deletion** of existing alternative partners and binary parameters is not possible (see [issue #7](../../issues/7)). String parameters can be deleted (if they are not used as point to point receiver and interface determination). To delete other existing entries, the [Partner Directory API](https://hub.sap.com/api/PartnerDirectory/overview) or the [Partner Directory UI](https://help.sap.com/docs/integration-suite/sap-integration-suite/managing-partner-directory-entries?version=CLOUD) can be used.
 * The string parameter "ReceiverSpecificQueue" can currently not be [replicated](#replication-page).
-* The [special case "Bypass Receiver Determination"](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/special-cases#pipeline-bypass-options) (which uses a string parameter for receiver determination and an XSLT for interface determination) is currently not supported.
-* Partner IDs cannot be changed (see [issue #9](../../issues/9)).
+* The [special case "Bypass Receiver Determination"](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/special-cases#pipeline-bypass-options) (which uses a string parameter for receiver determination and an XSLT for interface determination) is not supported.
 * For the community extension [Process Integration Pipeline Extension - Restart via Data Store](https://community.sap.com/t5/integration-blog-posts/process-integration-pipeline-extension-restart-via-data-store/ba-p/14153116), the restart job profiles are currently not supported. In contrast, the scenario-specific restart configuration settings (string parameters RetryDataStore, restartMode, and MaxDataStoreRetries) are supported.
 
 To find or to report an issue, please refer to section [How to obtain support](#how-to-obtain-support).

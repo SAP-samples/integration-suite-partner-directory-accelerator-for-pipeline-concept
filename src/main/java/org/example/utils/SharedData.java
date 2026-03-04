@@ -20,7 +20,7 @@ import java.util.Map;
 public final class SharedData {
     public static AlternativePartnersPage alternativePartnersPage;
 
-    public static final String UI_TITLE = "Partner Directory Accelerator UI (version 1.0.1 dev)"; // todo: change version for new release
+    public static final String UI_TITLE = "Partner Directory Accelerator UI (version 1.0.2)";
     public static final int UI_PADDING = 5;
     public static final int UI_TEXT_FIELD_COLUMNS = 30;
     public static final int UI_SEARCH_FIELD_WIDTH = 15;
