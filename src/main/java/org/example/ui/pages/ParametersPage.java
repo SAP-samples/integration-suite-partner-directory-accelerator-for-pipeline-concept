@@ -874,8 +874,8 @@ public class ParametersPage extends JPanel {
                 String stringParameterPid;
                 if (stringParameterIdMap.startsWith(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE)) {
                     String receiverName = stringParameterIdMap.replace(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE, "");
-                    stringParameterId = STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE;
-                    stringParameterPid = receiverName;
+                    stringParameterId = STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + receiverName;
+                    stringParameterPid = pid;
                 } else {
                     stringParameterId = stringParameterIdMap;
                     stringParameterPid = pid;
