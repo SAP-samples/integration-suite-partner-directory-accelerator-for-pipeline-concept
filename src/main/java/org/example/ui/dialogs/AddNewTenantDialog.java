@@ -13,8 +13,21 @@ import java.nio.file.Files;
 import static org.example.utils.SharedData.*;
 
 public class AddNewTenantDialog extends JDialog {
+    private static final HeaderColorOption[] HEADER_COLOR_OPTIONS = {
+            new HeaderColorOption(TENANT_HEADER_COLOR_LABELS[0], TENANT_HEADER_COLOR_HEX_VALUES[0]),
+            new HeaderColorOption(TENANT_HEADER_COLOR_LABELS[1], TENANT_HEADER_COLOR_HEX_VALUES[1]),
+            new HeaderColorOption(TENANT_HEADER_COLOR_LABELS[2], TENANT_HEADER_COLOR_HEX_VALUES[2]),
+            new HeaderColorOption(TENANT_HEADER_COLOR_LABELS[3], TENANT_HEADER_COLOR_HEX_VALUES[3]),
+            new HeaderColorOption(TENANT_HEADER_COLOR_LABELS[4], TENANT_HEADER_COLOR_HEX_VALUES[4]),
+            new HeaderColorOption(TENANT_HEADER_COLOR_LABELS[5], TENANT_HEADER_COLOR_HEX_VALUES[5]),
+            new HeaderColorOption(TENANT_HEADER_COLOR_LABELS[6], TENANT_HEADER_COLOR_HEX_VALUES[6]),
+            new HeaderColorOption(TENANT_HEADER_COLOR_LABELS[7], TENANT_HEADER_COLOR_HEX_VALUES[7]),
+            new HeaderColorOption(TENANT_HEADER_COLOR_LABELS[8], TENANT_HEADER_COLOR_HEX_VALUES[8]),
+            new HeaderColorOption(TENANT_HEADER_COLOR_LABELS[9], TENANT_HEADER_COLOR_HEX_VALUES[9])
+    };
+
     private final JTextField tenantNameField;
-    private final JCheckBox criticalCheckBox;
+    private final JComboBox<HeaderColorOption> headerColorDropdown;
     private final JTextField urlField;
     private final JTextField tokenUrlField;
     private final JTextField clientIdField;
@@ -35,7 +48,8 @@ public class AddNewTenantDialog extends JDialog {
         gbc.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
 
         tenantNameField = new JTextField(UI_TEXT_FIELD_COLUMNS);
-        criticalCheckBox = new JCheckBox();
+        headerColorDropdown = new JComboBox<>(HEADER_COLOR_OPTIONS);
+        headerColorDropdown.setRenderer(new HeaderColorRenderer());
         urlField = new JTextField(UI_TEXT_FIELD_COLUMNS);
         tokenUrlField = new JTextField(UI_TEXT_FIELD_COLUMNS);
         clientIdField = new JTextField(UI_TEXT_FIELD_COLUMNS);
@@ -68,12 +82,12 @@ public class AddNewTenantDialog extends JDialog {
         gbc.gridx = 1;
         add(tenantNameField, gbc);
 
-        // Critical Checkbox
+        // Header Color Palette
         gbc.gridx = 0;
         gbc.gridy = 1;
-        add(new JLabel(colon(LABEL_CRITICAL)), gbc);
+        add(new JLabel(colon(LABEL_HEADER_COLOR)), gbc);
         gbc.gridx = 1;
-        add(criticalCheckBox, gbc);
+        add(headerColorDropdown, gbc);
 
         // URL
         gbc.gridx = 0;
@@ -125,7 +139,7 @@ public class AddNewTenantDialog extends JDialog {
 
         saveButton.addActionListener(e -> {
             if (areFieldsValid()) {
-                TenantCredentials newTenant = new TenantCredentials(tenantNameField.getText().trim(), criticalCheckBox.isSelected(), urlField.getText().trim(), tokenUrlField.getText().trim(), clientIdField.getText().trim(), new String(clientSecretField.getPassword()).trim(), null, null);
+                TenantCredentials newTenant = new TenantCredentials(tenantNameField.getText().trim(), urlField.getText().trim(), tokenUrlField.getText().trim(), clientIdField.getText().trim(), new String(clientSecretField.getPassword()).trim(), null, null, getSelectedHeaderColorHex());
 
                 try {
                     if (dialogTitle.equals(LABEL_EDIT_SELECTED_TENANT)) { // edit tenant
@@ -182,22 +196,90 @@ public class AddNewTenantDialog extends JDialog {
     }
 
     public void setInputFieldValues(TenantCredentials tenant) {
-        setInputFieldValues(tenant.getName(), tenant.isCritical(), tenant.getUrl(), tenant.getTokenurl(), tenant.getClientid(), tenant.getClientsecret());
+        setInputFieldValues(tenant.getName(), tenant.getHeaderColorHex(), tenant.getUrl(), tenant.getTokenurl(), tenant.getClientid(), tenant.getClientsecret());
         tenantValues = tenant;
     }
 
     public void setEmptyValues() {
-        setInputFieldValues(null, false, null, null, null, null);
+        setInputFieldValues(null, DEFAULT_TENANT_HEADER_COLOR_HEX, null, null, null, null);
         tenantValues = null;
     }
 
-    public void setInputFieldValues(String name, boolean isCritical, String url, String tokenurl, String clientId, String clientSecret) {
+    public void setInputFieldValues(String name, String headerColorHex, String url, String tokenurl, String clientId, String clientSecret) {
         tenantNameField.setText(name);
-        criticalCheckBox.setSelected(isCritical);
+        setSelectedHeaderColor(headerColorHex);
         urlField.setText(url);
         tokenUrlField.setText(tokenurl);
         clientIdField.setText(clientId);
         clientSecretField.setText(clientSecret);
+    }
+
+    private String getSelectedHeaderColorHex() {
+        HeaderColorOption selectedOption = (HeaderColorOption) headerColorDropdown.getSelectedItem();
+        if (selectedOption == null) {
+            return DEFAULT_TENANT_HEADER_COLOR_HEX;
+        }
+        return selectedOption.hex();
+    }
+
+    private void setSelectedHeaderColor(String headerColorHex) {
+        String targetHex = headerColorHex == null || headerColorHex.isBlank() ? DEFAULT_TENANT_HEADER_COLOR_HEX : headerColorHex;
+        for (HeaderColorOption colorOption : HEADER_COLOR_OPTIONS) {
+            if (colorOption.hex().equalsIgnoreCase(targetHex)) {
+                headerColorDropdown.setSelectedItem(colorOption);
+                return;
+            }
+        }
+        headerColorDropdown.setSelectedIndex(0);
+    }
+
+    private static class HeaderColorRenderer extends JPanel implements ListCellRenderer<HeaderColorOption> {
+        private final JLabel colorPreview = new JLabel("  ");
+        private final JLabel colorValue = new JLabel();
+
+        private HeaderColorRenderer() {
+            setLayout(new FlowLayout(FlowLayout.LEFT, 6, 2));
+            setOpaque(true);
+
+            colorPreview.setOpaque(true);
+            colorPreview.setPreferredSize(new Dimension(12, 12));
+            colorPreview.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+
+            add(colorPreview);
+            add(colorValue);
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList<? extends HeaderColorOption> list, HeaderColorOption value, int index, boolean isSelected, boolean cellHasFocus) {
+            HeaderColorOption option = value == null ? HEADER_COLOR_OPTIONS[0] : value;
+            colorValue.setText(option.label());
+
+            try {
+                colorPreview.setBackground(resolvePreviewColor(option.hex()));
+            } catch (NumberFormatException e) {
+                colorPreview.setBackground(Color.LIGHT_GRAY);
+            }
+
+            if (isSelected) {
+                setBackground(list.getSelectionBackground());
+                colorValue.setForeground(list.getSelectionForeground());
+            } else {
+                setBackground(list.getBackground());
+                colorValue.setForeground(list.getForeground());
+            }
+
+            return this;
+        }
+
+        private Color resolvePreviewColor(String colorValue) {
+            if (DEFAULT_TENANT_HEADER_COLOR_HEX.equalsIgnoreCase(colorValue)) {
+                return UIManager.getColor("Panel.background");
+            }
+            return Color.decode(colorValue);
+        }
+    }
+
+    private record HeaderColorOption(String label, String hex) {
     }
 
     private boolean areFieldsValid() {

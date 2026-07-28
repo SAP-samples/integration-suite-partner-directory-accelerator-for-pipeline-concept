@@ -182,11 +182,7 @@ public class MainFrame extends JFrame {
                     .findFirst()
                     .orElse(null);
             if (selectedTenant != null) {
-                if (selectedTenant.isCritical()) {
-                    buttonPanel.setBackground(Color.RED);
-                } else {
-                    buttonPanel.setBackground(defaultPanelColor);
-                }
+                applyTenantHeaderColor(selectedTenant);
 
                 try {
                     LOGGER.info("Tenant \"{}\" selected with URL {}", selectedTenant.getName(), selectedTenant.getUrl());
@@ -199,6 +195,20 @@ public class MainFrame extends JFrame {
                 currentTenantName = selectedTenantName;
                 dialogEdit.setInputFieldValues(selectedTenant);
             }
+        }
+    }
+
+    private void applyTenantHeaderColor(TenantCredentials tenant) {
+        try {
+            String tenantColor = tenant.getHeaderColorHex();
+            if (tenantColor == null || tenantColor.isBlank() || DEFAULT_TENANT_HEADER_COLOR_HEX.equalsIgnoreCase(tenantColor)) {
+                buttonPanel.setBackground(defaultPanelColor);
+                return;
+            }
+            buttonPanel.setBackground(Color.decode(tenantColor));
+        } catch (Exception e) {
+            // Keep the UI stable if a malformed value is stored.
+            buttonPanel.setBackground(defaultPanelColor);
         }
     }
 
