@@ -125,6 +125,7 @@ public final class SharedData {
     public static final String LABEL_RECEIVER_DETERMINATION = "Receiver Determination";
     public static final String LABEL_RECEIVER_INTERFACE = "Receiver Interface";
     public static final String LABEL_RECEIVER_INTERFACE_DETERMINATION = "Receiver and Interface Determination";
+    public static final String LABEL_RECEIVER_INTERFACE_NAME = "Receiver Interface Name";
     public static final String LABEL_RECEIVER_NOT_FOUND = "If no receiver is found, proceed as follows";
     public static final String LABEL_RELOAD = "Reload data from API";
     public static final String LABEL_RESET = "Reset";

@@ -6,6 +6,7 @@
     <xsl:template match="/">
         <ns0:Interfaces xmlns:ns0='http://sap.com/xi/XI/System'>
 <#assign i = 1>
+<#assign nameIndex = 0>
 <#list content.hashMapConditionService?keys as interfaceCondition>
 <#if interfaceCondition!="">
             <xsl:if test="${interfaceCondition?no_esc}">
@@ -13,7 +14,11 @@
                 <Interface>
                     <Index>${i}</Index>
                     <Service>${interfaceName?no_esc}</Service>
+<#if nameIndex < content.receiverInterfaceNames?size && content.receiverInterfaceNames[nameIndex]?has_content>
+                    <Name>${content.receiverInterfaceNames[nameIndex]?no_esc}</Name>
+</#if>
                 </Interface>
+<#assign nameIndex = nameIndex + 1>
 <#assign i = i + 1>
 </#list>
             </xsl:if>
@@ -22,7 +27,11 @@
             <Interface>
                 <Index>${i}</Index>
                 <Service>${interfaceName?no_esc}</Service>
+<#if nameIndex < content.receiverInterfaceNames?size && content.receiverInterfaceNames[nameIndex]?has_content>
+                <Name>${content.receiverInterfaceNames[nameIndex]?no_esc}</Name>
+</#if>
             </Interface>
+<#assign nameIndex = nameIndex + 1>
 <#assign i = i + 1>
 </#list>
 </#if>
