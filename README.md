@@ -36,6 +36,8 @@ Before using this tool, please make yourself familiar with the Pipeline Concept.
         - [Add New Alternative Partner](#add-new-alternative-partner)
         - [Replication to another Tenant](#replication-to-another-tenant)
         - [Migrate deprecated entries](#migrate-deprecated-entries)
+        - [Export to local files](#export-to-local-files)
+        - [Import from local files](#import-from-local-files)
     + [Parameters Page](#parameters-page)
         - [Headers for Alternative Partner](#headers-for-alternative-partner)
         - [Option 1: Combined XSLT](#option-1-combined-xslt)
@@ -50,6 +52,10 @@ Before using this tool, please make yourself familiar with the Pipeline Concept.
     + [Migrate deprecated entries Page](#migrate-deprecated-entries-page)
         - [Migrate Pids with tilde Page](#migrate-pids-with-tilde-page)
         - [Merge XSLTs Page](#merge-xslts-page)
+    + [Export Page](#export-page)
+        - [Export Table](#export-table)
+        - [Dialog for Export](#dialog-for-export)
+    + [Dialog for Import](#dialog-for-import)
 * [Troubleshooting](#troubleshooting)
     + [Error when configuring API: (certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target](#error-when-configuring-api-certificate_unknown-pkix-path-building-failed-sunsecurityprovidercertpathsuncertpathbuilderexception-unable-to-find-valid-certification-path-to-requested-target)
     + [Error when configuring API: JSONObject["d"] not found / <br/> Error when configuring API: A JSONObject text must begin with '{' at 1 [character 2 line 1] / <br/> Error when configuring API: URI with undefined scheme / <br/> Error when configuring API: null](#error-when-configuring-api-jsonobjectd-not-found---error-when-configuring-api-a-jsonobject-text-must-begin-with--at-1-character-2-line-1---error-when-configuring-api-uri-with-undefined-scheme---error-when-configuring-api-null)
@@ -206,6 +212,14 @@ By clicking the "Replication to another Tenant" button, the view is switched to 
 ### Migrate deprecated entries
 
 Since the introduction of the Pipeline, some entries in the Partner Directory are no longer recommended for use. To change them to the latest recommendations, click on the button "Migrate deprecated entries" to open the [Migrate deprecated entries Page](#migrate-deprecated-entries-page) and to specify which entries should be migrated.
+
+#### Export to local files
+
+By clicking the "Export selected entries" button, the view is switched to the [Export Page](#export-page).
+
+#### Import from local files
+
+By clicking the "Import from local files" button, a file chooser dialog opens. You can select one or multiple JSON files to import. The file chooser opens in the `export` folder next to the `tenants.json` file by default (if it exists), so you can quickly navigate to a previously created export. Once you confirm the selection, the [Import dialog](#import) is shown.
 
 ### Parameters Page
 
@@ -382,6 +396,41 @@ During migration, scheme of the new alternative partner is set to "SenderInterfa
 This page shows a list of scenarios for which an alternative partner exists and for which binary parameters exist for both receiver determination and interface determination. With these criteria, scenarios using [Option 2: Multiple XSLTs](#option-2-multiple-xslts) should be shown. Note that scenarios using [special cases](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/special-cases#pipeline-bypass-options) might be shown here although there are not supported to be merged automatically.
 
 From the table, you can click on a row to end up on its [Parameters Page](#parameters-page), which should be [Option 2: Multiple XSLTs](#option-2-multiple-xslts). On the bottom, there is a "Merge XSLTs" button, see [above](#merge-xslts). In case of any errors during merging, please refer to the [troubleshooting section](#error-when-merging-xslt).
+
+### Export Page
+
+The export page allows you to save Partner Directory entries as local JSON files, for example to create a backup or to transfer entries between tenants without a direct API connection. The exported files are stored in the `export` folder next to the `tenants.json` file, in a subfolder named after the current tenant and the export timestamp (e.g. `export/MyTenant_20260729_143022/`). This makes it easy to identify and manage multiple exports over time.
+
+#### Export Table
+
+The export table shows the same alternative partners as the [Alternative Partners Table](#alternative-partners-table), extended by a checkbox column. By clicking a checkbox in a row, the alternative partner is selected for export.
+
+The buttons "Deselect all shown entries" and "Select all shown entries" on the bottom allow to (de)select multiple alternative partners at once. This can be used in combination with the [search option](#search-option) to filter for specific entries and select all of them at once.
+
+#### Dialog for Export
+
+Once you have selected the entries to export, click "Export selected entries". A dialog appears confirming the number of entries to be exported.
+
+If all alternative partners are selected, two additional checkboxes are shown, allowing you to decide whether binary parameters and string parameters should be included in the export. Both are checked by default. If only a subset of alternative partners is selected, the binary and string parameters for the corresponding Partner IDs are always included in the export.
+
+Clicking "Export selected entries" in the dialog starts the export. The following files are written to the output folder, depending on the selection:
+* `AlternativePartners.response.json`: The selected alternative partners with their full API metadata.
+* `BinaryParameters.response.json`: The binary parameters (XSLT files) for the exported Partner IDs.
+* `StringParameters.response.json`: The string parameters for the exported Partner IDs.
+
+Once finished, a success message shows the full path to the output folder.
+
+### Dialog for Import
+
+The import dialog allows you to load previously exported Partner Directory entries from local JSON files back into your tenant. This can be used to restore entries from a backup or to import entries from another tenant without a direct API connection.
+
+When the file chooser is opened, you can select one or multiple JSON files at once. The tool detects the resource type of each file automatically — first by checking whether the filename contains a known resource name (`AlternativePartners`, `BinaryParameters`, or `StringParameters`), and, if that is not the case, by inspecting the JSON content itself (using the `__metadata.type` field or the structure of the entries). This means that plain API exports with arbitrary file names are supported as well.
+
+The dialog shows all detected files grouped by resource type with a checkmark (✓). If none of the selected files could be identified as a supported resource, the import button is disabled.
+
+You can decide to overwrite entries which already exist in the target tenant. If the checkbox is not checked, only HTTP Post requests are sent to create new entries. If the combination of keys of an entry already exists, the request will fail. In contrast, if the checkbox is checked, an HTTP Post request is sent first. If the entry already exists, an additional HTTP Put request is sent to overwrite it. This is the same behavior as for [replication](#dialog-for-replication-to-another-tenant).
+
+After clicking "Import", the entries are imported in the background. Once finished, the data is automatically reloaded from the API and the alternative partners table is refreshed so that newly imported entries are visible immediately. A success message is shown if all entries were imported without errors, or a warning message with the number of failed requests if any errors occurred.
 
 ## Troubleshooting
 
