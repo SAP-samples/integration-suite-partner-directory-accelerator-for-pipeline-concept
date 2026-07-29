@@ -20,7 +20,7 @@ import java.util.Map;
 public final class SharedData {
     public static AlternativePartnersPage alternativePartnersPage;
 
-    public static final String UI_TITLE = "Partner Directory Accelerator UI (version 1.0.2)"; // todo: change version before release
+    public static final String UI_TITLE = "Partner Directory Accelerator UI (version 1.0.2 dev)"; // todo: change version before release
     public static final int UI_PADDING = 5;
     public static final int UI_TEXT_FIELD_COLUMNS = 30;
     public static final int UI_SEARCH_FIELD_WIDTH = 15;
@@ -29,7 +29,7 @@ public final class SharedData {
 
     public static final String STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE = "SAP_Integration_Suite_Landscape";
 
-    public static final String LABEL_ADD_ALTERNATIVE_PARTNER = "Add new Alternative Partner";
+    public static final String LABEL_ADD_ALTERNATIVE_PARTNER = "Add new alternative partner";
     public static final String LABEL_ADD_ENTRY = "Add new entry";
     public static final String LABEL_ADD_NEW_TENANT = "Add new tenant";
     public static final String LABEL_ADD_ROW = "Add row";
@@ -68,6 +68,7 @@ public final class SharedData {
     public static final String LABEL_ENTER_NEW_PID = "Enter new Pid";
     public static final String LABEL_ENTRIES = "Entries";
     public static final String LABEL_ERROR = "Error";
+    public static final String LABEL_ERROR_EXPORT_TRY_AGAIN = "Error when exporting. Please try again.";
     public static final String LABEL_ERROR_ADD_AT_LEAST_ONE_NEW_PARTNER_ID_TO_MIGRATE = "Add at least one new partner id to migrate.";
     public static final String LABEL_ERROR_EMPTY_INPUT = "Input field(s) may not be empty. Please provide all values and send again.";
     public static final String LABEL_ERROR_MERGING_XSLT = "Error when merging XSLT";
@@ -86,6 +87,23 @@ public final class SharedData {
     public static final String LABEL_FILL_OUT_ALL_FIELDS = "All fields must be filled out.";
     public static final String LABEL_GENERATE_XSLT = "Generate resulting XSLT";
     public static final String LABEL_GENERATED_XSLT_INVALID_SYNTAX = "The generated XSLT might contain invalid syntax";
+    public static final String LABEL_EXPORT = "Export?";
+    public static final String LABEL_EXPORT_1 = "Export ";
+    public static final String LABEL_EXPORT_2 = " alternative partner(s) to local files.";
+    public static final String LABEL_EXPORT_ALTERNATIVE_PARTNERS = "Export selected entries";
+    public static final String LABEL_EXPORT_BINARY_PARAMETERS = "Include Binary Parameters";
+    public static final String LABEL_EXPORT_COMPLETED = "Finished export. Files were written to: ";
+    public static final String LABEL_EXPORT_ID = "export";
+    public static final String LABEL_EXPORT_STRING_PARAMETERS = "Include String Parameters";
+    public static final String LABEL_IMPORT_PARTNER_DIRECTORY = "Import from local files";
+    public static final String LABEL_IMPORT_FILES_DETECTED = "The following resource files were detected:";
+    public static final String LABEL_IMPORT_START = "Import";
+    public static final String LABEL_IMPORT_FINISHED = "Finished import. ";
+    public static final String LABEL_IMPORT_SUCCESSFUL = "Successfully imported all entries.";
+    public static final String LABEL_IMPORT_FAILED_1 = "During import, ";
+    public static final String LABEL_IMPORT_FAILED_2 = " request(s) failed. Please check the logs for details.";
+    public static final String LABEL_ERROR_IMPORT_TRY_AGAIN = "Error when importing. Please try again.";
+    public static final String LABEL_IMPORT_NO_SUPPORTED_FILES = "No supported files selected. Please select AlternativePartners, BinaryParameters or StringParameters JSON files.";
     public static final String LABEL_HEADER_COLOR = "Header Color";
     public static final String LABEL_HTTP_ERROR = "ERROR";
     public static final String LABEL_HTTP_SUCCESS = "SUCCESS";
@@ -153,7 +171,7 @@ public final class SharedData {
     public static final String LABEL_TRANSPORT = "Replicate?";
     public static final String LABEL_TRANSPORT_1 = "Replicate ";
     public static final String LABEL_TRANSPORT_2 = " alternative partner(s) with binary / string parameters to selected tenant.";
-    public static final String LABEL_TRANSPORT_ALTERNATIVE_PARTNERS = "Replicate to another Tenant";
+    public static final String LABEL_TRANSPORT_ALTERNATIVE_PARTNERS = "Replicate to another tenant";
     public static final String LABEL_TRANSPORT_ERROR_ADD_TENANT = "Please add at least one more tenant to use the replication feature.";
     public static final String LABEL_TRANSPORT_ID = "replicate";
     public static final String LABEL_TRANSPORT_START_1 = "Start replication of ";

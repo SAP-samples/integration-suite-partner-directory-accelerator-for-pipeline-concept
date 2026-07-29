@@ -1,0 +1,74 @@
+{"d": {"results": [
+    {
+        "Hexid": "4D696B655F54657374496E74657266616365",
+        "LastModifiedBy": "sb-4b4bc6fe-4760-4e2c-a5f8-ef349a1c71d2!b15282|it!b117912",
+        "Hexagency": "4D696B655F5465737453657276696365",
+        "Hexscheme": "53656E646572496E74657266616365",
+        "Agency": "Mike_TestService",
+        "Scheme": "SenderInterface",
+        "CreatedBy": "sb-4b4bc6fe-4760-4e2c-a5f8-ef349a1c71d2!b15282|it!b117912",
+        "CreatedTime": "/Date(1744111027611)/",
+        "LastModifiedTime": "/Date(1744111027611)/",
+        "Pid": "Mike_PID1",
+        "Id": "Mike_TestInterface",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/AlternativePartners(Hexagency='4D696B655F5465737453657276696365',Hexscheme='53656E646572496E74657266616365',Hexid='4D696B655F54657374496E74657266616365')",
+            "type": "com.sap.hci.api.AlternativePartner",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/AlternativePartners(Hexagency='4D696B655F5465737453657276696365',Hexscheme='53656E646572496E74657266616365',Hexid='4D696B655F54657374496E74657266616365')"
+        }
+    },
+    {
+        "Hexid": "494E564F49432E494E564F494330325F74657374",
+        "LastModifiedBy": "tamas.szilagyi@sap.com",
+        "Hexagency": "42535F5433335F74657374",
+        "Hexscheme": "53656E646572496E74657266616365",
+        "Agency": "BS_T33_test",
+        "Scheme": "SenderInterface",
+        "CreatedBy": "tamas.szilagyi@sap.com",
+        "CreatedTime": "/Date(1758271579148)/",
+        "LastModifiedTime": "/Date(1758271579148)/",
+        "Pid": "migrate_idoc_pipeline",
+        "Id": "INVOIC.INVOIC02_test",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/AlternativePartners(Hexagency='42535F5433335F74657374',Hexscheme='53656E646572496E74657266616365',Hexid='494E564F49432E494E564F494330325F74657374')",
+            "type": "com.sap.hci.api.AlternativePartner",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/AlternativePartners(Hexagency='42535F5433335F74657374',Hexscheme='53656E646572496E74657266616365',Hexid='494E564F49432E494E564F494330325F74657374')"
+        }
+    },
+    {
+        "Hexid": "74657374",
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "Hexagency": "74657374",
+        "Hexscheme": "53656E646572496E74657266616365",
+        "Agency": "test",
+        "Scheme": "SenderInterface",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1785239535283)/",
+        "LastModifiedTime": "/Date(1785239535283)/",
+        "Pid": "test",
+        "Id": "test",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/AlternativePartners(Hexagency='74657374',Hexscheme='53656E646572496E74657266616365',Hexid='74657374')",
+            "type": "com.sap.hci.api.AlternativePartner",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/AlternativePartners(Hexagency='74657374',Hexscheme='53656E646572496E74657266616365',Hexid='74657374')"
+        }
+    },
+    {
+        "Hexid": "47656E657269634D6573736167655F4F75745F415F74657374",
+        "LastModifiedBy": "tamas.szilagyi@sap.com",
+        "Hexagency": "58494E5F3130355F74657374",
+        "Hexscheme": "53656E646572496E74657266616365",
+        "Agency": "XIN_105_test",
+        "Scheme": "SenderInterface",
+        "CreatedBy": "tamas.szilagyi@sap.com",
+        "CreatedTime": "/Date(1758291002410)/",
+        "LastModifiedTime": "/Date(1758291002410)/",
+        "Pid": "migration_xi_test",
+        "Id": "GenericMessage_Out_A_test",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/AlternativePartners(Hexagency='58494E5F3130355F74657374',Hexscheme='53656E646572496E74657266616365',Hexid='47656E657269634D6573736167655F4F75745F415F74657374')",
+            "type": "com.sap.hci.api.AlternativePartner",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/AlternativePartners(Hexagency='58494E5F3130355F74657374',Hexscheme='53656E646572496E74657266616365',Hexid='47656E657269634D6573736167655F4F75745F415F74657374')"
+        }
+    }
+]}}

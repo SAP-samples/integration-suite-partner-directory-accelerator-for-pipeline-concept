@@ -1,0 +1,58 @@
+{"d": {"results": [
+    {
+        "LastModifiedBy": "tamas.szilagyi@sap.com",
+        "CreatedBy": "tamas.szilagyi@sap.com",
+        "CreatedTime": "/Date(1758291002467)/",
+        "LastModifiedTime": "/Date(1758291002467)/",
+        "Value": "Receiver",
+        "Pid": "migration_xi_test",
+        "Id": "receiverDetermination",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='migration_xi_test',Id='receiverDetermination')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='migration_xi_test',Id='receiverDetermination')"
+        }
+    },
+    {
+        "LastModifiedBy": "tamas.szilagyi@sap.com",
+        "CreatedBy": "tamas.szilagyi@sap.com",
+        "CreatedTime": "/Date(1758291002514)/",
+        "LastModifiedTime": "/Date(1758291002514)/",
+        "Value": "/migration_xi_test/pip07/Receiver/IFIndex1",
+        "Pid": "migration_xi_test",
+        "Id": "interfaceDetermination_Receiver",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='migration_xi_test',Id='interfaceDetermination_Receiver')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='migration_xi_test',Id='interfaceDetermination_Receiver')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-4b4bc6fe-4760-4e2c-a5f8-ef349a1c71d2!b15282|it!b117912",
+        "CreatedTime": "/Date(1744111213008)/",
+        "LastModifiedTime": "/Date(1782288793961)/",
+        "Value": "3",
+        "Pid": "Mike_PID1",
+        "Id": "MaxJMSRetries",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='Mike_PID1',Id='MaxJMSRetries')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='Mike_PID1',Id='MaxJMSRetries')"
+        }
+    },
+    {
+        "LastModifiedBy": "tamas.szilagyi@sap.com",
+        "CreatedBy": "tamas.szilagyi@sap.com",
+        "CreatedTime": "/Date(1777278475144)/",
+        "LastModifiedTime": "/Date(1777278475144)/",
+        "Value": "/idoc/mapping",
+        "Pid": "migrate_idoc_pipeline",
+        "Id": "receiverDetermination",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='migrate_idoc_pipeline',Id='receiverDetermination')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='migrate_idoc_pipeline',Id='receiverDetermination')"
+        }
+    }
+]}}

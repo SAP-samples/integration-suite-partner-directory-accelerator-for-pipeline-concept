@@ -1,0 +1,20 @@
+{"d": {"results": [
+    {
+        "Hexid": "53495F53656E6446696C65",
+        "LastModifiedBy": "mate.moricz@sap.com",
+        "Hexagency": "42435F5334485F543333",
+        "Hexscheme": "53656E646572496E74657266616365",
+        "Agency": "agency1",
+        "Scheme": "SenderInterface",
+        "CreatedBy": "mate.moricz@sap.com",
+        "CreatedTime": "/Date(1744015724924)/",
+        "LastModifiedTime": "/Date(1744015724924)/",
+        "Pid": "pid1",
+        "Id": "id1",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/AlternativePartners(Hexagency='42435F5334485F543333',Hexscheme='53656E646572496E74657266616365',Hexid='53495F53656E6446696C65')",
+            "type": "com.sap.hci.api.AlternativePartner",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/AlternativePartners(Hexagency='42435F5334485F543333',Hexscheme='53656E646572496E74657266616365',Hexid='53495F53656E6446696C65')"
+        }
+    }
+]}}

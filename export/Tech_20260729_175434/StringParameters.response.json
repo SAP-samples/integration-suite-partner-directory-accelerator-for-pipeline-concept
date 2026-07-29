@@ -1,0 +1,394 @@
+{"d": {"results": [
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731938896327)/",
+        "LastModifiedTime": "/Date(1731938896327)/",
+        "Value": "/PIP/Step03/Samples/Scenario_1",
+        "Pid": "PIP_Samples_Scenario_1",
+        "Id": "InboundConversionEndpoint",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_1',Id='InboundConversionEndpoint')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_1',Id='InboundConversionEndpoint')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939168178)/",
+        "LastModifiedTime": "/Date(1731939168178)/",
+        "Value": "Receiver_21",
+        "Pid": "PIP_Samples_Scenario_2B",
+        "Id": "receiverDetermination",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2B',Id='receiverDetermination')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2B',Id='receiverDetermination')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939157698)/",
+        "LastModifiedTime": "/Date(1731939157698)/",
+        "Value": "2",
+        "Pid": "PIP_Samples_Scenario_2A",
+        "Id": "MaxJMSRetries",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2A',Id='MaxJMSRetries')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2A',Id='MaxJMSRetries')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939180004)/",
+        "LastModifiedTime": "/Date(1731939180004)/",
+        "Value": "/PIP/Step05/Samples/Scenario_2C",
+        "Pid": "PIP_Samples_Scenario_2C",
+        "Id": "CustomXIDEndpoint",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2C',Id='CustomXIDEndpoint')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2C',Id='CustomXIDEndpoint')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939144646)/",
+        "LastModifiedTime": "/Date(1731939144646)/",
+        "Value": "2",
+        "Pid": "PIP_Samples_Scenario_2",
+        "Id": "MaxJMSRetries",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2',Id='MaxJMSRetries')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2',Id='MaxJMSRetries')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939167949)/",
+        "LastModifiedTime": "/Date(1731939167949)/",
+        "Value": "2",
+        "Pid": "PIP_Samples_Scenario_2B",
+        "Id": "MaxJMSRetries",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2B',Id='MaxJMSRetries')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2B',Id='MaxJMSRetries')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939179593)/",
+        "LastModifiedTime": "/Date(1731939179593)/",
+        "Value": "2",
+        "Pid": "PIP_Samples_Scenario_2C",
+        "Id": "MaxJMSRetries",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2C',Id='MaxJMSRetries')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2C',Id='MaxJMSRetries')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939200748)/",
+        "LastModifiedTime": "/Date(1731939200748)/",
+        "Value": "3",
+        "Pid": "PIP_Samples_Scenario_4",
+        "Id": "MaxJMSRetries",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4',Id='MaxJMSRetries')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4',Id='MaxJMSRetries')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939211455)/",
+        "LastModifiedTime": "/Date(1731939211455)/",
+        "Value": "/PIP/Step03/Samples/Scenario_4",
+        "Pid": "PIP_Samples_Scenario_4A",
+        "Id": "InboundConversionEndpoint",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4A',Id='InboundConversionEndpoint')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4A',Id='InboundConversionEndpoint')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939232901)/",
+        "LastModifiedTime": "/Date(1731939232901)/",
+        "Value": "2",
+        "Pid": "PIP_Samples_Scenario_6",
+        "Id": "MaxJMSRetries",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_6',Id='MaxJMSRetries')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_6',Id='MaxJMSRetries')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939179795)/",
+        "LastModifiedTime": "/Date(1731939179795)/",
+        "Value": "Receiver_21",
+        "Pid": "PIP_Samples_Scenario_2C",
+        "Id": "receiverDetermination",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2C',Id='receiverDetermination')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2C',Id='receiverDetermination')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939200962)/",
+        "LastModifiedTime": "/Date(1731939200962)/",
+        "Value": "/PIP/Step04/Samples/Scenario_4",
+        "Pid": "PIP_Samples_Scenario_4",
+        "Id": "ReuseXRDEndpoint",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4',Id='ReuseXRDEndpoint')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4',Id='ReuseXRDEndpoint')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939201184)/",
+        "LastModifiedTime": "/Date(1731939201184)/",
+        "Value": "Default",
+        "Pid": "PIP_Samples_Scenario_4",
+        "Id": "ReceiverNotDeterminedType",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4',Id='ReceiverNotDeterminedType')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4',Id='ReceiverNotDeterminedType')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939211668)/",
+        "LastModifiedTime": "/Date(1731939211668)/",
+        "Value": "3",
+        "Pid": "PIP_Samples_Scenario_4A",
+        "Id": "MaxJMSRetries",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4A',Id='MaxJMSRetries')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4A',Id='MaxJMSRetries')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939188475)/",
+        "LastModifiedTime": "/Date(1731939188475)/",
+        "Value": "2",
+        "Pid": "PIP_Samples_Scenario_3",
+        "Id": "MaxJMSRetries",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_3',Id='MaxJMSRetries')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_3',Id='MaxJMSRetries')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939200552)/",
+        "LastModifiedTime": "/Date(1731939200552)/",
+        "Value": "/PIP/Step03/Samples/Scenario_4",
+        "Pid": "PIP_Samples_Scenario_4",
+        "Id": "InboundConversionEndpoint",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4',Id='InboundConversionEndpoint')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4',Id='InboundConversionEndpoint')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939201377)/",
+        "LastModifiedTime": "/Date(1731939201377)/",
+        "Value": "Receiver_41",
+        "Pid": "PIP_Samples_Scenario_4",
+        "Id": "ReceiverNotDeterminedDefault",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4',Id='ReceiverNotDeterminedDefault')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4',Id='ReceiverNotDeterminedDefault')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939211872)/",
+        "LastModifiedTime": "/Date(1731939211872)/",
+        "Value": "/PIP/Step04/Samples/Scenario_4A",
+        "Pid": "PIP_Samples_Scenario_4A",
+        "Id": "CustomXRDEndpoint",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4A',Id='CustomXRDEndpoint')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_4A',Id='CustomXRDEndpoint')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939233340)/",
+        "LastModifiedTime": "/Date(1731939233340)/",
+        "Value": "/PIP/Step07/Samples/Scenario_6/Receiver_61/IfIdx1",
+        "Pid": "PIP_Samples_Scenario_6",
+        "Id": "interfaceDetermination_Receiver_61",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_6',Id='interfaceDetermination_Receiver_61')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_6',Id='interfaceDetermination_Receiver_61')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939233131)/",
+        "LastModifiedTime": "/Date(1731939233131)/",
+        "Value": "Receiver_61",
+        "Pid": "PIP_Samples_Scenario_6",
+        "Id": "receiverDetermination",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_6',Id='receiverDetermination')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_6',Id='receiverDetermination')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1771244273906)/",
+        "LastModifiedTime": "/Date(1771244273906)/",
+        "Value": "PIPX01",
+        "Pid": "PIP_Samples_Scenario_2D",
+        "Id": "InboundQueue",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2D',Id='InboundQueue')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2D',Id='InboundQueue')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1771430233528)/",
+        "LastModifiedTime": "/Date(1771430233528)/",
+        "Value": "/PIP/Step07/Samples/Scenario_5/Receiver_51/IfIdx1",
+        "Pid": "PIP_Samples_Scenario_5",
+        "Id": "interfaceDetermination_Receiver_51",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_5',Id='interfaceDetermination_Receiver_51')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_5',Id='interfaceDetermination_Receiver_51')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1771430242055)/",
+        "LastModifiedTime": "/Date(1771430242055)/",
+        "Value": "Receiver_51",
+        "Pid": "PIP_Samples_Scenario_5",
+        "Id": "receiverDetermination",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_5',Id='receiverDetermination')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_5',Id='receiverDetermination')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1771244274142)/",
+        "LastModifiedTime": "/Date(1771244274142)/",
+        "Value": "/PIP/Step03/Samples/Scenario_2",
+        "Pid": "PIP_Samples_Scenario_2D",
+        "Id": "InboundConversionEndpoint",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2D',Id='InboundConversionEndpoint')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2D',Id='InboundConversionEndpoint')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1771244383102)/",
+        "LastModifiedTime": "/Date(1771244383102)/",
+        "Value": "/PIP/Step03/Samples/Scenario_1",
+        "Pid": "PIP_Samples_Scenario_1A",
+        "Id": "InboundConversionEndpoint",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_1A',Id='InboundConversionEndpoint')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_1A',Id='InboundConversionEndpoint')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1771430263515)/",
+        "LastModifiedTime": "/Date(1771430263515)/",
+        "Value": "2",
+        "Pid": "PIP_Samples_Scenario_5",
+        "Id": "MaxJMSRetries",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_5',Id='MaxJMSRetries')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_5',Id='MaxJMSRetries')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1771322002982)/",
+        "LastModifiedTime": "/Date(1771322002982)/",
+        "Value": "1",
+        "Pid": "PIP_Samples_Scenario_1A",
+        "Id": "MaxJMSRetries",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_1A',Id='MaxJMSRetries')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_1A',Id='MaxJMSRetries')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1771244273660)/",
+        "LastModifiedTime": "/Date(1771259921155)/",
+        "Value": "3",
+        "Pid": "PIP_Samples_Scenario_2D",
+        "Id": "MaxJMSRetries",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2D',Id='MaxJMSRetries')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='PIP_Samples_Scenario_2D',Id='MaxJMSRetries')"
+        }
+    }
+]}}

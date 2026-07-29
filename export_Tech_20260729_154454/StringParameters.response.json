@@ -1,0 +1,16 @@
+{"d": {"results": [
+    {
+        "LastModifiedBy": "sb-8978b1f2-586b-446e-bcc9-d4abef2beeed!b15282|it!b117912",
+        "CreatedBy": "sb-8978b1f2-586b-446e-bcc9-d4abef2beeed!b15282|it!b117912",
+        "CreatedTime": "/Date(1768387076188)/",
+        "LastModifiedTime": "/Date(1768387076188)/",
+        "Value": "5",
+        "Pid": "pid1",
+        "Id": "MaxJMSRetries",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='CS_TestSFTP_I561732',Id='MaxJMSRetries')",
+            "type": "com.sap.hci.api.StringParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/StringParameters(Pid='CS_TestSFTP_I561732',Id='MaxJMSRetries')"
+        }
+    }
+]}}

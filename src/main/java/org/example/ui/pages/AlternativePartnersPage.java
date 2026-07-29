@@ -3,14 +3,17 @@ package org.example.ui.pages;
 import org.example.model.AlternativePartner;
 import org.example.ui.components.SearchPanel;
 import org.example.ui.dialogs.AddAlternativePartnerDialog;
+import org.example.ui.dialogs.ImportDialog;
 import org.example.ui.dialogs.LandscapeDialog;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -127,6 +130,36 @@ public class AlternativePartnersPage extends JPanel {
             cardLayout.show(panelContainer, LABEL_MIGRATE_DEPRECATED_ENTRIES_ID);
         });
         buttonPanel.add(migrateDeprecatedEntries);
+
+        // export button
+        JButton exportButton = new JButton(LABEL_EXPORT_ALTERNATIVE_PARTNERS);
+        exportButton.addActionListener(e -> {
+            LOGGER.info("Export Page selected");
+            for (AlternativePartner partner : currentAlternativePartnersList) {
+                partner.setSelected(false);
+            }
+            ExportPage exportPage = new ExportPage();
+            panelContainer.add(exportPage, LABEL_EXPORT_ID);
+            cardLayout.show(panelContainer, LABEL_EXPORT_ID);
+        });
+        buttonPanel.add(exportButton);
+
+        // import button
+        JButton importButton = new JButton(LABEL_IMPORT_PARTNER_DIRECTORY);
+        importButton.addActionListener(e -> {
+            LOGGER.info("Import selected");
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setMultiSelectionEnabled(true);
+            fileChooser.setFileFilter(new FileNameExtensionFilter("JSON files (*.json)", "json"));
+            File exportRoot = new File(new File(TENANTS_FILE_NAME).getAbsoluteFile().getParentFile(), "export");
+            fileChooser.setCurrentDirectory(exportRoot.exists() ? exportRoot : new File(TENANTS_FILE_NAME).getAbsoluteFile().getParentFile());
+            int result = fileChooser.showOpenDialog(mainFrame);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File[] selectedFiles = fileChooser.getSelectedFiles();
+                new ImportDialog(selectedFiles);
+            }
+        });
+        buttonPanel.add(importButton);
 
         return buttonPanel;
     }

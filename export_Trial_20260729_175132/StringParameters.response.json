@@ -1,0 +1,14 @@
+{"d": {"results": [{
+    "LastModifiedBy": "sb-3aacecf4-152c-483a-8fd2-69520ce31948!b135418|it!b196",
+    "CreatedBy": "sb-3aacecf4-152c-483a-8fd2-69520ce31948!b135418|it!b196",
+    "CreatedTime": "/Date(1785340235211)/",
+    "LastModifiedTime": "/Date(1785340235211)/",
+    "Value": "5",
+    "Pid": "pid1",
+    "Id": "MaxJMSRetries",
+    "__metadata": {
+        "id": "https://c9bf7666trial.it-cpitrial03.cfapps.ap21.hana.ondemand.com:443/api/v1/StringParameters(Pid='pid1',Id='MaxJMSRetries')",
+        "type": "com.sap.hci.api.StringParameter",
+        "uri": "https://c9bf7666trial.it-cpitrial03.cfapps.ap21.hana.ondemand.com:443/api/v1/StringParameters(Pid='pid1',Id='MaxJMSRetries')"
+    }
+}]}}

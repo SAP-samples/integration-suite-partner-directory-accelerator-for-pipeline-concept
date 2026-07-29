@@ -1,0 +1,257 @@
+{"d": {"results": [
+    {
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1771230987299)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1771230987299)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHhzbDpzdHlsZXNoZWV0IHZlcnNpb249IjMuMCIgeG1sbnM6eHNsPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L1hTTC9UcmFuc2Zvcm0iPgo8IS0tIGRlZmluZSBoZWFkZXIgZGNfY291bnRyeSAtLT4KCTx4c2w6cGFyYW0gbmFtZT0iZGNfY291bnRyeSIvPgogICAgPHhzbDp0ZW1wbGF0ZSBtYXRjaD0iLyI+CiAgICAgICAgPG5zMDpJbnRlcmZhY2VzIHhtbG5zOm5zMD0iaHR0cDovL3NhcC5jb20veGkvWEkvU3lzdGVtIj4KICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIkZGNfY291bnRyeSA9ICdERSciPgogICAgICAgICAgICAgICAgPEludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICA8SW5kZXg+MTwvSW5kZXg+CiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18xL1JlY2VpdmVyXzEyL0lmSWR4MTwvU2VydmljZT4KICAgICAgICAgICAgICAgIDwvSW50ZXJmYWNlPgogICAgICAgICAgICA8L3hzbDppZj4KICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIkZGNfY291bnRyeSAhPSAnREUnIj4KICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgPEluZGV4PjI8L0luZGV4PgogICAgICAgICAgICAgICAgICAgIDxTZXJ2aWNlPi9QSVAvU3RlcDA3L1NhbXBsZXMvU2NlbmFyaW9fMS9SZWNlaXZlcl8xMi9JZklkeDI8L1NlcnZpY2U+CiAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4KICAgICAgICAgICAgPC94c2w6aWY+CiAgICAgICAgPC9uczA6SW50ZXJmYWNlcz4KICAgIDwveHNsOnRlbXBsYXRlPgo8L3hzbDpzdHlsZXNoZWV0Pg==",
+        "Pid": "PIP_Samples_Scenario_1",
+        "Id": "interfaceDetermination_Receiver_12",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_1',Id='interfaceDetermination_Receiver_12')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_1',Id='interfaceDetermination_Receiver_12')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1771230987969)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1771230987969)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHhzbDpzdHlsZXNoZWV0IHZlcnNpb249IjMuMCIgeG1sbnM6eHNsPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L1hTTC9UcmFuc2Zvcm0iPgogICAgPHhzbDp0ZW1wbGF0ZSBtYXRjaD0iLyI+CiAgICAgICAgPG5zMDpJbnRlcmZhY2VzIHhtbG5zOm5zMD0iaHR0cDovL3NhcC5jb20veGkvWEkvU3lzdGVtIj4KICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIvKjpJdGVtL1F1YW50aXR5ID0gJzEwJyI+CiAgICAgICAgICAgICAgICA8SW50ZXJmYWNlPgogICAgICAgICAgICAgICAgICAgIDxJbmRleD4xPC9JbmRleD4KICAgICAgICAgICAgICAgICAgICA8U2VydmljZT4vUElQL1N0ZXAwNy9TYW1wbGVzL1NjZW5hcmlvXzEvUmVjZWl2ZXJfMTMvSWZJZHgxPC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgPC9JbnRlcmZhY2U+CiAgICAgICAgICAgIDwveHNsOmlmPgogICAgICAgICAgICA8eHNsOmlmIHRlc3Q9Ii8qOkl0ZW0vQ3VycmVuY3lDb2RlID0gJ0VVUiciPgogICAgICAgICAgICAgICAgPEludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICA8SW5kZXg+MjwvSW5kZXg+CiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18xL1JlY2VpdmVyXzEzL0lmSWR4MjwvU2VydmljZT4KICAgICAgICAgICAgICAgIDwvSW50ZXJmYWNlPgogICAgICAgICAgICA8L3hzbDppZj4KICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIvKjpJdGVtL1F1YW50aXR5ICE9ICcxMCciPgogICAgICAgICAgICAgICAgPEludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICA8SW5kZXg+MzwvSW5kZXg+CiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18xL1JlY2VpdmVyXzEzL0lmSWR4MzwvU2VydmljZT4KICAgICAgICAgICAgICAgIDwvSW50ZXJmYWNlPgogICAgICAgICAgICA8L3hzbDppZj4KICAgICAgICA8L25zMDpJbnRlcmZhY2VzPgogICAgPC94c2w6dGVtcGxhdGU+CjwveHNsOnN0eWxlc2hlZXQ+",
+        "Pid": "PIP_Samples_Scenario_1",
+        "Id": "interfaceDetermination_Receiver_13",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_1',Id='interfaceDetermination_Receiver_13')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_1',Id='interfaceDetermination_Receiver_13')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-4b4bc6fe-4760-4e2c-a5f8-ef349a1c71d2!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939157976)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1749039937108)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHhzbDpzdHlsZXNoZWV0IHZlcnNpb249IjMuMCIgeG1sbnM6eHNsPSdodHRwOi8vd3d3LnczLm9yZy8xOTk5L1hTTC9UcmFuc2Zvcm0nPgogICAgPHhzbDp0ZW1wbGF0ZSBtYXRjaD0iLyI+CiAgICAgICAgPG5zMDpSZWNlaXZlcnMgeG1sbnM6bnMwPSdodHRwOi8vc2FwLmNvbS94aS9YSS9TeXN0ZW0nPgogICAgICAgICAgICA8UmVjZWl2ZXJOb3REZXRlcm1pbmVkPgogICAgICAgICAgICAgICAgPFR5cGU+RGVmYXVsdDwvVHlwZT4KICAgICAgICAgICAgICAgIDxEZWZhdWx0UmVjZWl2ZXI+CiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+UmVjZWl2ZXJfMjE8L1NlcnZpY2U+CiAgICAgICAgICAgICAgICAgICAgPEludGVyZmFjZXM+CiAgICAgICAgICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW5kZXg+MTwvSW5kZXg+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8U2VydmljZT4vUElQL1N0ZXAwNy9TYW1wbGVzL1NjZW5hcmlvXzIvUmVjZWl2ZXJfMjEvSWZJZHgxPC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICA8L0ludGVyZmFjZXM+CiAgICAgICAgICAgICAgICA8L0RlZmF1bHRSZWNlaXZlcj4KICAgICAgICAgICAgPC9SZWNlaXZlck5vdERldGVybWluZWQ+CiAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6T3JkZXIvU3VwcGxpZXIgPSAnQUJYQ0QnIj4KICAgICAgICAgICAgICAgIDxSZWNlaXZlcj4KICAgICAgICAgICAgICAgICAgICA8U2VydmljZT5SZWNlaXZlcl8yMTwvU2VydmljZT4KICAgICAgICAgICAgICAgICAgICA8SW50ZXJmYWNlcz4KICAgICAgICAgICAgICAgICAgICAgICAgPEludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbmRleD4xPC9JbmRleD4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxTZXJ2aWNlPi9QSVAvU3RlcDA3L1NhbXBsZXMvU2NlbmFyaW9fMi9SZWNlaXZlcl8yMS9JZklkeDE8L1NlcnZpY2U+CiAgICAgICAgICAgICAgICAgICAgICAgIDwvSW50ZXJmYWNlPgogICAgICAgICAgICAgICAgICAgIDwvSW50ZXJmYWNlcz4KICAgICAgICAgICAgICAgIDwvUmVjZWl2ZXI+CiAgICAgICAgICAgIDwveHNsOmlmPgogICAgICAgICAgICA8eHNsOmlmIHRlc3Q9Ii8qOk9yZGVyL1N1cHBsaWVyID0gJ0VGR0gnIj4KICAgICAgICAgICAgICAgIDxSZWNlaXZlcj4KICAgICAgICAgICAgICAgICAgICA8U2VydmljZT5SZWNlaXZlcl8yMjwvU2VydmljZT4KICAgICAgICAgICAgICAgICAgICA8SW50ZXJmYWNlcz4KICAgICAgICAgICAgICAgICAgICAgICAgPEludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbmRleD4xPC9JbmRleD4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxTZXJ2aWNlPi9QSVAvU3RlcDA3L1NhbXBsZXMvU2NlbmFyaW9fMi9SZWNlaXZlcl8yMi9JZklkeDE8L1NlcnZpY2U+CiAgICAgICAgICAgICAgICAgICAgICAgIDwvSW50ZXJmYWNlPgogICAgICAgICAgICAgICAgICAgIDwvSW50ZXJmYWNlcz4KICAgICAgICAgICAgICAgIDwvUmVjZWl2ZXI+CiAgICAgICAgICAgIDwveHNsOmlmPgogICAgICAgIDwvbnMwOlJlY2VpdmVycz4KICAgIDwveHNsOnRlbXBsYXRlPgo8L3hzbDpzdHlsZXNoZWV0Pg==",
+        "Pid": "PIP_Samples_Scenario_2A",
+        "Id": "receiverDetermination",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_2A',Id='receiverDetermination')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_2A',Id='receiverDetermination')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939145520)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1731939145520)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjx4c2w6c3R5bGVzaGVldCB2ZXJzaW9uPSIzLjAiIHhtbG5zOnhzbD0iaHR0cDovL3d3dy53My5vcmcvMTk5OS9YU0wvVHJhbnNmb3JtIj4NCiAgICA8eHNsOnRlbXBsYXRlIG1hdGNoPSIvIj4NCiAgICAgICAgPG5zMDpJbnRlcmZhY2VzIHhtbG5zOm5zMD0iaHR0cDovL3NhcC5jb20veGkvWEkvU3lzdGVtIj4NCiAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6T3JkZXIvQ291bnRyeSA9ICdERSciPg0KICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+DQogICAgICAgICAgICAgICAgICAgIDxJbmRleD4xPC9JbmRleD4NCiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18yL1JlY2VpdmVyXzIyL0lmSWR4MTwvU2VydmljZT4NCiAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4NCiAgICAgICAgICAgIDwveHNsOmlmPg0KICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIvKjpPcmRlci9Db3VudHJ5ICE9ICdERSciPg0KICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+DQogICAgICAgICAgICAgICAgICAgIDxJbmRleD4yPC9JbmRleD4NCiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18yL1JlY2VpdmVyXzIyL0lmSWR4MjwvU2VydmljZT4NCiAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4NCiAgICAgICAgICAgIDwveHNsOmlmPg0KICAgICAgICA8L25zMDpJbnRlcmZhY2VzPg0KICAgIDwveHNsOnRlbXBsYXRlPg0KPC94c2w6c3R5bGVzaGVldD4=",
+        "Pid": "PIP_Samples_Scenario_2",
+        "Id": "interfaceDetermination_Receiver_22",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_2',Id='interfaceDetermination_Receiver_22')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_2',Id='interfaceDetermination_Receiver_22')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939168486)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1731939168486)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjx4c2w6c3R5bGVzaGVldCB2ZXJzaW9uPSIzLjAiIHhtbG5zOnhzbD0iaHR0cDovL3d3dy53My5vcmcvMTk5OS9YU0wvVHJhbnNmb3JtIj4NCiAgICA8eHNsOnRlbXBsYXRlIG1hdGNoPSIvIj4NCiAgICAgICAgPG5zMDpJbnRlcmZhY2VzIHhtbG5zOm5zMD0iaHR0cDovL3NhcC5jb20veGkvWEkvU3lzdGVtIj4NCiAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6T3JkZXIvQ291bnRyeSA9ICdERSciPg0KICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+DQogICAgICAgICAgICAgICAgICAgIDxJbmRleD4xPC9JbmRleD4NCiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18yL3tyZWNlaXZlcn19L0lmSWR4MTwvU2VydmljZT4NCiAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4NCiAgICAgICAgICAgIDwveHNsOmlmPg0KICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIvKjpPcmRlci9Db3VudHJ5ICE9ICdERSciPg0KICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+DQogICAgICAgICAgICAgICAgICAgIDxJbmRleD4yPC9JbmRleD4NCiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18yL1JlY2VpdmVyXzIxL0lmSWR4MjwvU2VydmljZT4NCiAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4NCiAgICAgICAgICAgIDwveHNsOmlmPg0KICAgICAgICA8L25zMDpJbnRlcmZhY2VzPg0KICAgIDwveHNsOnRlbXBsYXRlPg0KPC94c2w6c3R5bGVzaGVldD4=",
+        "Pid": "PIP_Samples_Scenario_2B",
+        "Id": "interfaceDetermination_Receiver_21",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_2B',Id='interfaceDetermination_Receiver_21')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_2B',Id='interfaceDetermination_Receiver_21')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-4b4bc6fe-4760-4e2c-a5f8-ef349a1c71d2!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939144953)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1744124498858)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHhzbDpzdHlsZXNoZWV0IHZlcnNpb249IjMuMCIgeG1sbnM6eHNsPSdodHRwOi8vd3d3LnczLm9yZy8xOTk5L1hTTC9UcmFuc2Zvcm0nPgogICAgPHhzbDp0ZW1wbGF0ZSBtYXRjaD0iLyI+CiAgICAgICAgPG5zMDpSZWNlaXZlcnMgeG1sbnM6bnMwPSdodHRwOi8vc2FwLmNvbS94aS9YSS9TeXN0ZW0nPgogICAgICAgICAgICA8UmVjZWl2ZXJOb3REZXRlcm1pbmVkPgogICAgICAgICAgICAgICAgPFR5cGU+RGVmYXVsdDwvVHlwZT4KICAgICAgICAgICAgICAgIDxEZWZhdWx0UmVjZWl2ZXI+CiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+UmVjZWl2ZXJfMjE8L1NlcnZpY2U+CiAgICAgICAgICAgICAgICA8L0RlZmF1bHRSZWNlaXZlcj4KICAgICAgICAgICAgPC9SZWNlaXZlck5vdERldGVybWluZWQ+CiAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6T3JkZXIvU3VwcGxpZXIgPSAnQUJDRCciPgogICAgICAgICAgICAgICAgPFJlY2VpdmVyPgogICAgICAgICAgICAgICAgICAgIDxTZXJ2aWNlPlJlY2VpdmVyXzI1PC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgPC9SZWNlaXZlcj4KICAgICAgICAgICAgPC94c2w6aWY+CiAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6T3JkZXIvU3VwcGxpZXIgIT0gJ0FCQ0QnIj4KICAgICAgICAgICAgICAgIDxSZWNlaXZlcj4KICAgICAgICAgICAgICAgICAgICA8U2VydmljZT5SZWNlaXZlcl8yMjwvU2VydmljZT4KICAgICAgICAgICAgICAgIDwvUmVjZWl2ZXI+CiAgICAgICAgICAgIDwveHNsOmlmPgogICAgICAgIDwvbnMwOlJlY2VpdmVycz4KICAgIDwveHNsOnRlbXBsYXRlPgo8L3hzbDpzdHlsZXNoZWV0Pg==",
+        "Pid": "PIP_Samples_Scenario_2",
+        "Id": "receiverDetermination",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_2',Id='receiverDetermination')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_2',Id='receiverDetermination')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939145238)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1731939145238)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjx4c2w6c3R5bGVzaGVldCB2ZXJzaW9uPSIzLjAiIHhtbG5zOnhzbD0iaHR0cDovL3d3dy53My5vcmcvMTk5OS9YU0wvVHJhbnNmb3JtIj4NCiAgICA8eHNsOnRlbXBsYXRlIG1hdGNoPSIvIj4NCiAgICAgICAgPG5zMDpJbnRlcmZhY2VzIHhtbG5zOm5zMD0iaHR0cDovL3NhcC5jb20veGkvWEkvU3lzdGVtIj4NCiAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6T3JkZXIvQ291bnRyeSA9ICdERSciPg0KICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+DQogICAgICAgICAgICAgICAgICAgIDxJbmRleD4xPC9JbmRleD4NCiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18yL1JlY2VpdmVyXzIxL0lmSWR4MTwvU2VydmljZT4NCiAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4NCiAgICAgICAgICAgIDwveHNsOmlmPg0KICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIvKjpPcmRlci9Db3VudHJ5ICE9ICdERSciPg0KICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+DQogICAgICAgICAgICAgICAgICAgIDxJbmRleD4yPC9JbmRleD4NCiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18yL1JlY2VpdmVyXzIxL0lmSWR4MjwvU2VydmljZT4NCiAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4NCiAgICAgICAgICAgIDwveHNsOmlmPg0KICAgICAgICA8L25zMDpJbnRlcmZhY2VzPg0KICAgIDwveHNsOnRlbXBsYXRlPg0KPC94c2w6c3R5bGVzaGVldD4=",
+        "Pid": "PIP_Samples_Scenario_2",
+        "Id": "interfaceDetermination_Receiver_21",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_2',Id='interfaceDetermination_Receiver_21')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_2',Id='interfaceDetermination_Receiver_21')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939158228)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1731939158228)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjx4c2w6c3R5bGVzaGVldCB2ZXJzaW9uPSIzLjAiIHhtbG5zOnhzbD0iaHR0cDovL3d3dy53My5vcmcvMTk5OS9YU0wvVHJhbnNmb3JtIj4NCiAgICA8eHNsOnRlbXBsYXRlIG1hdGNoPSIvIj4NCiAgICAgICAgPG5zMDpJbnRlcmZhY2VzIHhtbG5zOm5zMD0iaHR0cDovL3NhcC5jb20veGkvWEkvU3lzdGVtIj4NCiAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6T3JkZXIvQ291bnRyeSA9ICdERSciPg0KICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+DQogICAgICAgICAgICAgICAgICAgIDxJbmRleD4xPC9JbmRleD4NCiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18yL1JlY2VpdmVyXzIyL0lmSWR4MTwvU2VydmljZT4NCiAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4NCiAgICAgICAgICAgIDwveHNsOmlmPg0KICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIvKjpPcmRlci9Db3VudHJ5ICE9ICdERSciPg0KICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+DQogICAgICAgICAgICAgICAgICAgIDxJbmRleD4yPC9JbmRleD4NCiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18yL1JlY2VpdmVyXzIyL0lmSWR4MjwvU2VydmljZT4NCiAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4NCiAgICAgICAgICAgIDwveHNsOmlmPg0KICAgICAgICA8L25zMDpJbnRlcmZhY2VzPg0KICAgIDwveHNsOnRlbXBsYXRlPg0KPC94c2w6c3R5bGVzaGVldD4=",
+        "Pid": "PIP_Samples_Scenario_2A",
+        "Id": "interfaceDetermination_Receiver_22",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_2A',Id='interfaceDetermination_Receiver_22')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_2A',Id='interfaceDetermination_Receiver_22')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939188784)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1731939188784)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjx4c2w6c3R5bGVzaGVldCB2ZXJzaW9uPSIzLjAiIHhtbG5zOnhzbD0iaHR0cDovL3d3dy53My5vcmcvMTk5OS9YU0wvVHJhbnNmb3JtIj4NCiAgICA8eHNsOnRlbXBsYXRlIG1hdGNoPSIvIj4NCiAgICAgICAgPG5zMDpSZWNlaXZlcnMgeG1sbnM6bnMwPSJodHRwOi8vc2FwLmNvbS94aS9YSS9TeXN0ZW0iPg0KICAgICAgICAgICAgPFJlY2VpdmVyTm90RGV0ZXJtaW5lZD4NCiAgICAgICAgICAgICAgICA8VHlwZT5JZ25vcmU8L1R5cGU+DQogICAgICAgICAgICAgICAgPERlZmF1bHRSZWNlaXZlci8+DQogICAgICAgICAgICA8L1JlY2VpdmVyTm90RGV0ZXJtaW5lZD4NCiAgICAgICAgICAgIDxSZWNlaXZlcj4NCiAgICAgICAgICAgICAgICA8U2VydmljZT5SZWNlaXZlcl8zMTwvU2VydmljZT4NCiAgICAgICAgICAgIDwvUmVjZWl2ZXI+DQogICAgICAgIDwvbnMwOlJlY2VpdmVycz4NCiAgICA8L3hzbDp0ZW1wbGF0ZT4NCjwveHNsOnN0eWxlc2hlZXQ+",
+        "Pid": "PIP_Samples_Scenario_3",
+        "Id": "receiverDetermination",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_3',Id='receiverDetermination')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_3',Id='receiverDetermination')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939202270)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1731939202270)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjx4c2w6c3R5bGVzaGVldCB2ZXJzaW9uPSIzLjAiIHhtbG5zOnhzbD0iaHR0cDovL3d3dy53My5vcmcvMTk5OS9YU0wvVHJhbnNmb3JtIj4NCiAgICA8eHNsOnRlbXBsYXRlIG1hdGNoPSIvIj4NCiAgICAgICAgPG5zMDpJbnRlcmZhY2VzIHhtbG5zOm5zMD0iaHR0cDovL3NhcC5jb20veGkvWEkvU3lzdGVtIj4NCiAgICAgICAgICAgIDxJbnRlcmZhY2U+DQogICAgICAgICAgICAgICAgPEluZGV4PjE8L0luZGV4Pg0KICAgICAgICAgICAgICAgIDxTZXJ2aWNlPi9QSVAvU3RlcDA3L1NhbXBsZXMvU2NlbmFyaW9fNC9SZWNlaXZlcl80My9JZklkeDE8L1NlcnZpY2U+DQogICAgICAgICAgICA8L0ludGVyZmFjZT4NCiAgICAgICAgPC9uczA6SW50ZXJmYWNlcz4NCiAgICA8L3hzbDp0ZW1wbGF0ZT4NCjwveHNsOnN0eWxlc2hlZXQ+",
+        "Pid": "PIP_Samples_Scenario_4",
+        "Id": "interfaceDetermination_Receiver_43",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_4',Id='interfaceDetermination_Receiver_43')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_4',Id='interfaceDetermination_Receiver_43')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939189061)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1731939189061)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjx4c2w6c3R5bGVzaGVldCB2ZXJzaW9uPSIzLjAiIHhtbG5zOnhzbD0iaHR0cDovL3d3dy53My5vcmcvMTk5OS9YU0wvVHJhbnNmb3JtIj4NCiAgICA8eHNsOnRlbXBsYXRlIG1hdGNoPSIvIj4NCiAgICAgICAgPG5zMDpJbnRlcmZhY2VzIHhtbG5zOm5zMD0iaHR0cDovL3NhcC5jb20veGkvWEkvU3lzdGVtIj4NCiAgICAgICAgICAgIDxJbnRlcmZhY2U+DQogICAgICAgICAgICAgICAgPEluZGV4PjE8L0luZGV4Pg0KICAgICAgICAgICAgICAgIDxTZXJ2aWNlPi9QSVAvU3RlcDA3L1NhbXBsZXMvU2NlbmFyaW9fMy9SZWNlaXZlcl8zMS9lb2lvPC9TZXJ2aWNlPg0KICAgICAgICAgICAgPC9JbnRlcmZhY2U+DQogICAgICAgIDwvbnMwOkludGVyZmFjZXM+DQogICAgPC94c2w6dGVtcGxhdGU+DQo8L3hzbDpzdHlsZXNoZWV0Pg==",
+        "Pid": "PIP_Samples_Scenario_3",
+        "Id": "interfaceDetermination_Receiver_31",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_3',Id='interfaceDetermination_Receiver_31')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_3',Id='interfaceDetermination_Receiver_31')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939201979)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1731939201979)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjx4c2w6c3R5bGVzaGVldCB2ZXJzaW9uPSIzLjAiIHhtbG5zOnhzbD0iaHR0cDovL3d3dy53My5vcmcvMTk5OS9YU0wvVHJhbnNmb3JtIj4NCiAgICA8eHNsOnRlbXBsYXRlIG1hdGNoPSIvIj4NCiAgICAgICAgPG5zMDpJbnRlcmZhY2VzIHhtbG5zOm5zMD0iaHR0cDovL3NhcC5jb20veGkvWEkvU3lzdGVtIj4NCiAgICAgICAgICAgIDxJbnRlcmZhY2U+DQogICAgICAgICAgICAgICAgPEluZGV4PjE8L0luZGV4Pg0KICAgICAgICAgICAgICAgIDxTZXJ2aWNlPi9QSVAvU3RlcDA3L1NhbXBsZXMvU2NlbmFyaW9fNC9SZWNlaXZlcl80Mi9JZklkeDE8L1NlcnZpY2U+DQogICAgICAgICAgICA8L0ludGVyZmFjZT4NCiAgICAgICAgPC9uczA6SW50ZXJmYWNlcz4NCiAgICA8L3hzbDp0ZW1wbGF0ZT4NCjwveHNsOnN0eWxlc2hlZXQ+",
+        "Pid": "PIP_Samples_Scenario_4",
+        "Id": "interfaceDetermination_Receiver_42",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_4',Id='interfaceDetermination_Receiver_42')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_4',Id='interfaceDetermination_Receiver_42')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedBy": "sb-8fffa4b7-bba5-4523-ac82-dc60f9111f88!b15282|it!b117912",
+        "CreatedTime": "/Date(1731939201700)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1731939201700)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjx4c2w6c3R5bGVzaGVldCB2ZXJzaW9uPSIzLjAiIHhtbG5zOnhzbD0iaHR0cDovL3d3dy53My5vcmcvMTk5OS9YU0wvVHJhbnNmb3JtIj4NCiAgICA8eHNsOnRlbXBsYXRlIG1hdGNoPSIvIj4NCiAgICAgICAgPG5zMDpJbnRlcmZhY2VzIHhtbG5zOm5zMD0iaHR0cDovL3NhcC5jb20veGkvWEkvU3lzdGVtIj4NCiAgICAgICAgICAgIDxJbnRlcmZhY2U+DQogICAgICAgICAgICAgICAgPEluZGV4PjE8L0luZGV4Pg0KICAgICAgICAgICAgICAgIDxTZXJ2aWNlPi9QSVAvU3RlcDA3L1NhbXBsZXMvU2NlbmFyaW9fNC9SZWNlaXZlcl80MS9JZklkeDE8L1NlcnZpY2U+DQogICAgICAgICAgICA8L0ludGVyZmFjZT4NCiAgICAgICAgPC9uczA6SW50ZXJmYWNlcz4NCiAgICA8L3hzbDp0ZW1wbGF0ZT4NCjwveHNsOnN0eWxlc2hlZXQ+",
+        "Pid": "PIP_Samples_Scenario_4",
+        "Id": "interfaceDetermination_Receiver_41",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_4',Id='interfaceDetermination_Receiver_41')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_4',Id='interfaceDetermination_Receiver_41')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1771244384049)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1771321942519)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHhzbDpzdHlsZXNoZWV0IHZlcnNpb249IjMuMCIgeG1sbnM6eHNsPSdodHRwOi8vd3d3LnczLm9yZy8xOTk5L1hTTC9UcmFuc2Zvcm0nPgogICAgPHhzbDpwYXJhbSBuYW1lPSJkY19jb3VudHJ5IiAvPgogICAgPHhzbDp0ZW1wbGF0ZSBtYXRjaD0iLyI+CiAgICAgICAgPG5zMDpSZWNlaXZlcnMgeG1sbnM6bnMwPSdodHRwOi8vc2FwLmNvbS94aS9YSS9TeXN0ZW0nPgogICAgICAgICAgICA8UmVjZWl2ZXJOb3REZXRlcm1pbmVkPgogICAgICAgICAgICAgICAgPFR5cGU+RGVmYXVsdDwvVHlwZT4KICAgICAgICAgICAgICAgIDxEZWZhdWx0UmVjZWl2ZXI+CiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+UmVjZWl2ZXJfMTA8L1NlcnZpY2U+CiAgICAgICAgICAgICAgICAgICAgPEludGVyZmFjZXM+CiAgICAgICAgICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW5kZXg+MTwvSW5kZXg+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8U2VydmljZT4vZXJyb3I8L1NlcnZpY2U+CiAgICAgICAgICAgICAgICAgICAgICAgIDwvSW50ZXJmYWNlPgogICAgICAgICAgICAgICAgICAgIDwvSW50ZXJmYWNlcz4KICAgICAgICAgICAgICAgIDwvRGVmYXVsdFJlY2VpdmVyPgogICAgICAgICAgICA8L1JlY2VpdmVyTm90RGV0ZXJtaW5lZD4KICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIvKjpJdGVtL0NhdGVnb3J5ID0gJ0tleWJvYXJkcyciPgogICAgICAgICAgICAgICAgPFJlY2VpdmVyPgogICAgICAgICAgICAgICAgICAgIDxTZXJ2aWNlPlJlY2VpdmVyXzExPC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgICAgIDxJbnRlcmZhY2VzPgogICAgICAgICAgICAgICAgICAgICAgICA8eHNsOmlmIHRlc3Q9Ii8qOkl0ZW0vUXVhbnRpdHkgPSAnMTAnIj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEluZGV4PjE8L0luZGV4PgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxTZXJ2aWNlPi9QSVAvU3RlcDA3L1NhbXBsZXMvU2NlbmFyaW9fMS9SZWNlaXZlcl8xMS9JZklkeDE8L1NlcnZpY2U+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICAgICAgPC94c2w6aWY+CiAgICAgICAgICAgICAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6SXRlbS9DdXJyZW5jeUNvZGUgPSAnRVVSJyI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW50ZXJmYWNlPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbmRleD4yPC9JbmRleD4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8U2VydmljZT4vUElQL1N0ZXAwNy9TYW1wbGVzL1NjZW5hcmlvXzEvUmVjZWl2ZXJfMTEvSWZJZHgyPC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9JbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgICAgIDwveHNsOmlmPgogICAgICAgICAgICAgICAgICAgICAgICA8eHNsOmlmIHRlc3Q9Ii8qOkl0ZW0vUXVhbnRpdHkgIT0gJzEwJyI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW50ZXJmYWNlPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbmRleD4zPC9JbmRleD4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8U2VydmljZT4vUElQL1N0ZXAwNy9TYW1wbGVzL1NjZW5hcmlvXzEvUmVjZWl2ZXJfMTEvSWZJZHgzPC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9JbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgICAgIDwveHNsOmlmPgogICAgICAgICAgICAgICAgICAgIDwvSW50ZXJmYWNlcz4KICAgICAgICAgICAgICAgIDwvUmVjZWl2ZXI+CiAgICAgICAgICAgIDwveHNsOmlmPgogICAgICAgICAgICA8eHNsOmlmIHRlc3Q9IigvKjpJdGVtL0NhdGVnb3J5ID0gJ0tleWJvYXJkcycpIG9yICgvKjpJdGVtL0NhdGVnb3J5ID0gJ1NvZnR3YXJlJykiPgogICAgICAgICAgICAgICAgPFJlY2VpdmVyPgogICAgICAgICAgICAgICAgICAgIDxTZXJ2aWNlPlJlY2VpdmVyXzEyPC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgICAgIDxJbnRlcmZhY2VzPgogICAgICAgICAgICAgICAgICAgICAgICA8eHNsOmlmIHRlc3Q9IiRkY19jb3VudHJ5ID0gJ0RFJyI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW50ZXJmYWNlPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbmRleD4xPC9JbmRleD4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8U2VydmljZT4vUElQL1N0ZXAwNy9TYW1wbGVzL1NjZW5hcmlvXzEvUmVjZWl2ZXJfMTIvSWZJZHgxPC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9JbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgICAgIDwveHNsOmlmPgogICAgICAgICAgICAgICAgICAgICAgICA8eHNsOmlmIHRlc3Q9IiRkY19jb3VudHJ5ICE9ICdERSciPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPEludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW5kZXg+MjwvSW5kZXg+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18xL1JlY2VpdmVyXzEyL0lmSWR4MjwvU2VydmljZT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvSW50ZXJmYWNlPgogICAgICAgICAgICAgICAgICAgICAgICA8L3hzbDppZj4KICAgICAgICAgICAgICAgICAgICA8L0ludGVyZmFjZXM+CiAgICAgICAgICAgICAgICA8L1JlY2VpdmVyPgogICAgICAgICAgICA8L3hzbDppZj4KICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIoLyo6SXRlbS9DYXRlZ29yeSA9ICdLZXlib2FyZHMnKSBhbmQgKC8qOkl0ZW0vUHJvZHVjdE5hbWUgIT0gJ1hYWFgnKSI+CiAgICAgICAgICAgICAgICA8UmVjZWl2ZXI+CiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+UmVjZWl2ZXJfMTM8L1NlcnZpY2U+CiAgICAgICAgICAgICAgICAgICAgPEludGVyZmFjZXM+CiAgICAgICAgICAgICAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6SXRlbS9RdWFudGl0eSA9ICcxMCciPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPEludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW5kZXg+MTwvSW5kZXg+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18xL1JlY2VpdmVyXzEzL0lmSWR4MTwvU2VydmljZT4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvSW50ZXJmYWNlPgogICAgICAgICAgICAgICAgICAgICAgICA8L3hzbDppZj4KICAgICAgICAgICAgICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIvKjpJdGVtL0N1cnJlbmN5Q29kZSA9ICdFVVInIj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEluZGV4PjI8L0luZGV4PgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxTZXJ2aWNlPi9QSVAvU3RlcDA3L1NhbXBsZXMvU2NlbmFyaW9fMS9SZWNlaXZlcl8xMy9JZklkeDI8L1NlcnZpY2U+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICAgICAgPC94c2w6aWY+CiAgICAgICAgICAgICAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6SXRlbS9RdWFudGl0eSAhPSAnMTAnIj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEluZGV4PjM8L0luZGV4PgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxTZXJ2aWNlPi9QSVAvU3RlcDA3L1NhbXBsZXMvU2NlbmFyaW9fMS9SZWNlaXZlcl8xMy9JZklkeDM8L1NlcnZpY2U+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICAgICAgPC94c2w6aWY+CiAgICAgICAgICAgICAgICAgICAgPC9JbnRlcmZhY2VzPgogICAgICAgICAgICAgICAgPC9SZWNlaXZlcj4KICAgICAgICAgICAgPC94c2w6aWY+CiAgICAgICAgPC9uczA6UmVjZWl2ZXJzPgogICAgPC94c2w6dGVtcGxhdGU+CjwveHNsOnN0eWxlc2hlZXQ+",
+        "Pid": "PIP_Samples_Scenario_1A",
+        "Id": "receiverDetermination",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_1A',Id='receiverDetermination')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_1A',Id='receiverDetermination')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1771244274739)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1771244274739)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHhzbDpzdHlsZXNoZWV0IHZlcnNpb249IjMuMCIgeG1sbnM6eHNsPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L1hTTC9UcmFuc2Zvcm0iPgogICAgPHhzbDp0ZW1wbGF0ZSBtYXRjaD0iLyI+CiAgICAgICAgPG5zMDpSZWNlaXZlcnMgeG1sbnM6bnMwPSJodHRwOi8vc2FwLmNvbS94aS9YSS9TeXN0ZW0iPgogICAgICAgICAgICA8UmVjZWl2ZXJOb3REZXRlcm1pbmVkPgogICAgICAgICAgICAgICAgPFR5cGU+RGVmYXVsdDwvVHlwZT4KICAgICAgICAgICAgICAgIDxEZWZhdWx0UmVjZWl2ZXI+CiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+QlNfRVJQMjE8L1NlcnZpY2U+CiAgICAgICAgICAgICAgICAgICAgPEludGVyZmFjZXM+CiAgICAgICAgICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIvKjpPcmRlci9Db3VudHJ5ID0gJ0RFJyI+CiAgICAgICAgICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW5kZXg+MTwvSW5kZXg+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8U2VydmljZT4vUElQL1N0ZXAwNy9TYW1wbGVzL1NjZW5hcmlvXzIvUmVjZWl2ZXJfMjEvSWZJZHgxPC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICA8L3hzbDppZj4KICAgICAgICAgICAgICAgICAgICA8eHNsOmlmIHRlc3Q9Ii8qOk9yZGVyL0NvdW50cnkgIT0gJ0RFJyI+CiAgICAgICAgICAgICAgICAgICAgICAgIDxJbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW5kZXg+MjwvSW5kZXg+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8U2VydmljZT4vUElQL1N0ZXAwNy9TYW1wbGVzL1NjZW5hcmlvXzIvUmVjZWl2ZXJfMjEvSWZJZHgyPC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgICAgICAgICA8L0ludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICA8L3hzbDppZj4KICAgICAgICAgICAgICAgICAgICA8L0ludGVyZmFjZXM+CiAgICAgICAgICAgICAgICA8L0RlZmF1bHRSZWNlaXZlcj4KICAgICAgICAgICAgPC9SZWNlaXZlck5vdERldGVybWluZWQ+CiAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6T3JkZXIvU3VwcGxpZXIgPSAnQUJDRCciPgogICAgICAgICAgICAgICAgPFJlY2VpdmVyPgogICAgICAgICAgICAgICAgICAgIDxTZXJ2aWNlPkJTX0VSUDIxPC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgICAgIDxJbnRlcmZhY2VzPgogICAgICAgICAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6T3JkZXIvQ291bnRyeSA9ICdERSciPgogICAgICAgICAgICAgICAgICAgICAgICA8SW50ZXJmYWNlPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPEluZGV4PjE8L0luZGV4PgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18yL1JlY2VpdmVyXzIxL0lmSWR4MTwvU2VydmljZT4KICAgICAgICAgICAgICAgICAgICAgICAgPC9JbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgPC94c2w6aWY+CiAgICAgICAgICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIvKjpPcmRlci9Db3VudHJ5ICE9ICdERSciPgogICAgICAgICAgICAgICAgICAgICAgICA8SW50ZXJmYWNlPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPEluZGV4PjI8L0luZGV4PgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18yL1JlY2VpdmVyXzIxL0lmSWR4MjwvU2VydmljZT4KICAgICAgICAgICAgICAgICAgICAgICAgPC9JbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgPC94c2w6aWY+CiAgICAgICAgICAgICAgICAgICAgPC9JbnRlcmZhY2VzPgogICAgICAgICAgICAgICAgPC9SZWNlaXZlcj4KICAgICAgICAgICAgPC94c2w6aWY+CiAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6T3JkZXIvU3VwcGxpZXIgPSAnRUZHSCciPgogICAgICAgICAgICAgICAgPFJlY2VpdmVyPgogICAgICAgICAgICAgICAgICAgIDxTZXJ2aWNlPkJTX0VSUDIyPC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgICAgIDxJbnRlcmZhY2VzPgogICAgICAgICAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6T3JkZXIvQ291bnRyeSA9ICdERSciPgogICAgICAgICAgICAgICAgICAgICAgICA8SW50ZXJmYWNlPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPEluZGV4PjE8L0luZGV4PgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18yL1JlY2VpdmVyXzIyL0lmSWR4MTwvU2VydmljZT4KICAgICAgICAgICAgICAgICAgICAgICAgPC9JbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgPC94c2w6aWY+CiAgICAgICAgICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIvKjpPcmRlci9Db3VudHJ5ICE9ICdERSciPgogICAgICAgICAgICAgICAgICAgICAgICA8SW50ZXJmYWNlPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPEluZGV4PjI8L0luZGV4PgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18yL1JlY2VpdmVyXzIyL0lmSWR4MjwvU2VydmljZT4KICAgICAgICAgICAgICAgICAgICAgICAgPC9JbnRlcmZhY2U+CiAgICAgICAgICAgICAgICAgICAgPC94c2w6aWY+CiAgICAgICAgICAgICAgICAgICAgPC9JbnRlcmZhY2VzPgogICAgICAgICAgICAgICAgPC9SZWNlaXZlcj4KICAgICAgICAgICAgPC94c2w6aWY+CiAgICAgICAgPC9uczA6UmVjZWl2ZXJzPgogICAgPC94c2w6dGVtcGxhdGU+CjwveHNsOnN0eWxlc2hlZXQ+",
+        "Pid": "PIP_Samples_Scenario_2D",
+        "Id": "receiverDetermination",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_2D',Id='receiverDetermination')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_2D',Id='receiverDetermination')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1771230986414)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1771610886620)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHhzbDpzdHlsZXNoZWV0IHZlcnNpb249IjMuMCIgeG1sbnM6eHNsPSdodHRwOi8vd3d3LnczLm9yZy8xOTk5L1hTTC9UcmFuc2Zvcm0nPgogICAgPHhzbDp0ZW1wbGF0ZSBtYXRjaD0iLyI+CiAgICAgICAgPG5zMDpSZWNlaXZlcnMgeG1sbnM6bnMwPSdodHRwOi8vc2FwLmNvbS94aS9YSS9TeXN0ZW0nPgogICAgICAgICAgICA8UmVjZWl2ZXJOb3REZXRlcm1pbmVkPgogICAgICAgICAgICAgICAgPFR5cGU+RXJyb3I8L1R5cGU+CiAgICAgICAgICAgICAgICA8RGVmYXVsdFJlY2VpdmVyLz4KICAgICAgICAgICAgPC9SZWNlaXZlck5vdERldGVybWluZWQ+CiAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iLyo6SXRlbS9DYXRlZ29yeSA9ICdLZXlib2FyZHMnIj4KICAgICAgICAgICAgICAgIDxSZWNlaXZlcj4KICAgICAgICAgICAgICAgICAgICA8U2VydmljZT5SZWNlaXZlcl8xMTwvU2VydmljZT4KICAgICAgICAgICAgICAgIDwvUmVjZWl2ZXI+CiAgICAgICAgICAgIDwveHNsOmlmPgogICAgICAgICAgICA8eHNsOmlmIHRlc3Q9IigvKjpJdGVtL0NhdGVnb3J5ID0gJ0tleWJvYXJkcycpIG9yICgvKjpJdGVtL0NhdGVnb3J5ID0gJ1NvZnR3YXJlJykiPgogICAgICAgICAgICAgICAgPFJlY2VpdmVyPgogICAgICAgICAgICAgICAgICAgIDxTZXJ2aWNlPlJlY2VpdmVyXzEyPC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgPC9SZWNlaXZlcj4KICAgICAgICAgICAgPC94c2w6aWY+CiAgICAgICAgICAgIDx4c2w6aWYgdGVzdD0iKC8qOkl0ZW0vQ2F0ZWdvcnkgPSAnS2V5Ym9hcmRzJykgYW5kICgvKjpJdGVtL1Byb2R1Y3ROYW1lICE9ICdYWFhYJykiPgogICAgICAgICAgICAgICAgPFJlY2VpdmVyPgogICAgICAgICAgICAgICAgICAgIDxTZXJ2aWNlPlJlY2VpdmVyXzEzPC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgPC9SZWNlaXZlcj4KICAgICAgICAgICAgPC94c2w6aWY+CiAgICAgICAgPC9uczA6UmVjZWl2ZXJzPgogICAgPC94c2w6dGVtcGxhdGU+CjwveHNsOnN0eWxlc2hlZXQ+",
+        "Pid": "PIP_Samples_Scenario_1",
+        "Id": "receiverDetermination",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_1',Id='receiverDetermination')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_1',Id='receiverDetermination')"
+        }
+    },
+    {
+        "LastModifiedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedBy": "sb-a6a67fcf-09b9-4a65-aa41-1bd08f67c417!b15282|it!b117912",
+        "CreatedTime": "/Date(1771230986725)/",
+        "ContentType": "xsl",
+        "LastModifiedTime": "/Date(1771838362867)/",
+        "Value": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHhzbDpzdHlsZXNoZWV0IHZlcnNpb249IjMuMCIgeG1sbnM6eHNsPSdodHRwOi8vd3d3LnczLm9yZy8xOTk5L1hTTC9UcmFuc2Zvcm0nPgogICAgPHhzbDp0ZW1wbGF0ZSBtYXRjaD0iLyI+CiAgICAgICAgPG5zMDpJbnRlcmZhY2VzIHhtbG5zOm5zMD0naHR0cDovL3NhcC5jb20veGkvWEkvU3lzdGVtJz4KICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIvKjpJdGVtL1F1YW50aXR5ID0gJzEwIiI+CiAgICAgICAgICAgICAgICA8SW50ZXJmYWNlPgogICAgICAgICAgICAgICAgICAgIDxJbmRleD4xPC9JbmRleD4KICAgICAgICAgICAgICAgICAgICA8U2VydmljZT4vUElQL1N0ZXAwNy9TYW1wbGVzL1NjZW5hcmlvXzEvUmVjZWl2ZXJfMTEvSWZJZHgxPC9TZXJ2aWNlPgogICAgICAgICAgICAgICAgPC9JbnRlcmZhY2U+CiAgICAgICAgICAgIDwveHNsOmlmPgogICAgICAgICAgICA8eHNsOmlmIHRlc3Q9Ii8qOkl0ZW0vQ3VycmVuY3lDb2RlID0gJ0VVUiciPgogICAgICAgICAgICAgICAgPEludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICA8SW5kZXg+MjwvSW5kZXg+CiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18xL1JlY2VpdmVyXzExL0lmSWR4MjwvU2VydmljZT4KICAgICAgICAgICAgICAgIDwvSW50ZXJmYWNlPgogICAgICAgICAgICA8L3hzbDppZj4KICAgICAgICAgICAgPHhzbDppZiB0ZXN0PSIvKjpJdGVtL1F1YW50aXR5ICE9ICcxMCciPgogICAgICAgICAgICAgICAgPEludGVyZmFjZT4KICAgICAgICAgICAgICAgICAgICA8SW5kZXg+MzwvSW5kZXg+CiAgICAgICAgICAgICAgICAgICAgPFNlcnZpY2U+L1BJUC9TdGVwMDcvU2FtcGxlcy9TY2VuYXJpb18xL1JlY2VpdmVyXzExL0lmSWR4MzwvU2VydmljZT4KICAgICAgICAgICAgICAgIDwvSW50ZXJmYWNlPgogICAgICAgICAgICA8L3hzbDppZj4KICAgICAgICA8L25zMDpJbnRlcmZhY2VzPgogICAgPC94c2w6dGVtcGxhdGU+CjwveHNsOnN0eWxlc2hlZXQ+",
+        "Pid": "PIP_Samples_Scenario_1",
+        "Id": "interfaceDetermination_Receiver_11",
+        "__metadata": {
+            "id": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_1',Id='interfaceDetermination_Receiver_11')",
+            "type": "com.sap.hci.api.BinaryParameter",
+            "uri": "https://tech.it-cpi018.cfapps.eu10-003.hana.ondemand.com:443/api/v1/BinaryParameters(Pid='PIP_Samples_Scenario_1',Id='interfaceDetermination_Receiver_11')"
+        }
+    }
+]}}
