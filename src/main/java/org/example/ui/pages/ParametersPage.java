@@ -120,9 +120,9 @@ public class ParametersPage extends JPanel {
                     JPanel panelStringParameters = getPanelStringParameters();
                     tabbedPane.add(LABEL_STRING_PARAMETERS, panelStringParameters);
 
-                    // Landscape Stages + Receiver speicfic queue (Sender/Receiver Settings)
+                    // Landscape Stages + Receiver specific queue (Sender/Receiver Settings)
                     JPanel panelLandscapeStages = getPanelLandscapeStages();
-                    tabbedPane.add(LABEL_RECEIVER_SETTINGS, panelLandscapeStages);
+                    tabbedPane.add(LABEL_SND_RCV_SETTINGS, panelLandscapeStages);
 
                     tabbedPane.addChangeListener(e -> {
                         try {
@@ -174,7 +174,7 @@ public class ParametersPage extends JPanel {
 
                     // Landscape Stages
                     JPanel panelLandscapeStages = getPanelLandscapeStages();
-                    tabbedPane.add(LABEL_RECEIVER_SETTINGS, panelLandscapeStages);
+                    tabbedPane.add(LABEL_SND_RCV_SETTINGS, panelLandscapeStages);
 
                     tabbedPane.addChangeListener(e -> {
                         try {
@@ -228,7 +228,7 @@ public class ParametersPage extends JPanel {
 
                     // Landscape Stages
                     JPanel panelLandscapeStages = getPanelLandscapeStages();
-                    tabbedPane.add(LABEL_RECEIVER_SETTINGS, panelLandscapeStages);
+                    tabbedPane.add(LABEL_SND_RCV_SETTINGS, panelLandscapeStages);
 
                     tabbedPane.addChangeListener(e -> {
                         try {
