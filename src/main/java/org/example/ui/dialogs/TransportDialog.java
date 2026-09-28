@@ -10,8 +10,10 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static org.example.utils.SharedData.*;
 
@@ -73,6 +75,7 @@ public class TransportDialog extends JDialog {
         JButton transportButton = new JButton(LABEL_TRANSPORT_1 + counterSelected + LABEL_TRANSPORT_2);
         transportButton.addActionListener(e -> {
             loadingIcon.startTimer();
+            String sourceTenantName = currentTenantName;
 
             SwingWorker<Void, Void> worker = new SwingWorker<>() {
                 @Override
@@ -139,20 +142,36 @@ public class TransportDialog extends JDialog {
                             httpTransportHandler.transportStringParameters(jsonStringParametersToTransport, overwrite, transportErrors, false, null);
                         }
 
-                        mainFrame.setSelectedTenant(selectedTenantName);
-                        dispose();
-
                         if (transportErrors.isEmpty()) {
+                            mainFrame.setSelectedTenant(sourceTenantName);
+                            dispose();
+
                             String logTransport = LABEL_TRANSPORT_FINISHED + LABEL_TRANSPORT_SUCCESSFUL;
                             JOptionPane.showMessageDialog(mainFrame, logTransport, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
                             LOGGER.info(logTransport);
                         } else {
-                            String logTransport = LABEL_TRANSPORT_FINISHED + LABEL_TRANSPORT_FAILED_1 + transportErrors.size() + LABEL_TRANSPORT_FAILED_2;
-                            JOptionPane.showMessageDialog(mainFrame, logTransport, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
+                            dispose();
+
+                            Set<String> uniqueTransportErrors = new LinkedHashSet<>(transportErrors);
+                            String logTransport = LABEL_TRANSPORT_FINISHED + LABEL_TRANSPORT_FAILED_1 + uniqueTransportErrors.size() + LABEL_TRANSPORT_FAILED_2;
+                            JTextArea errorTextArea = new JTextArea(String.join("\n\n", uniqueTransportErrors));
+                            errorTextArea.setEditable(false);
+                            errorTextArea.setLineWrap(true);
+                            errorTextArea.setWrapStyleWord(true);
+                            errorTextArea.setCaretPosition(0);
+
+                            JScrollPane errorScrollPane = new JScrollPane(errorTextArea);
+                            errorScrollPane.setPreferredSize(new Dimension(UI_DIALOG_WIDTH * 2, UI_DIALOG_HEIGHT * 2));
+
+                            JOptionPane.showMessageDialog(mainFrame,
+                                    new Object[]{logTransport, errorScrollPane},
+                                    LABEL_WARNING,
+                                    JOptionPane.WARNING_MESSAGE);
                             LOGGER.warn(logTransport);
                         }
                     } catch (Exception ex) {
                         LOGGER.error(ex);
+                        dispose();
                         JOptionPane.showMessageDialog(mainFrame, LABEL_ERROR_TRANSPORT_TRY_AGAIN, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
                     }
                     return null;

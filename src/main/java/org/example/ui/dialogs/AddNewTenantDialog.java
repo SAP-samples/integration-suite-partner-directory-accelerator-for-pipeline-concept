@@ -6,6 +6,8 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -123,9 +125,20 @@ public class AddNewTenantDialog extends JDialog {
     private void setupListeners() {
         cancelButton.addActionListener(e -> dispose());
 
+        urlField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (!urlField.getText().trim().isEmpty()) {
+                    urlField.setText(normalizeTenantUrl(urlField.getText()));
+                }
+            }
+        });
+
         saveButton.addActionListener(e -> {
             if (areFieldsValid()) {
-                TenantCredentials newTenant = new TenantCredentials(tenantNameField.getText().trim(), criticalCheckBox.isSelected(), urlField.getText().trim(), tokenUrlField.getText().trim(), clientIdField.getText().trim(), new String(clientSecretField.getPassword()).trim(), null, null);
+                String normalizedUrl = normalizeTenantUrl(urlField.getText());
+                urlField.setText(normalizedUrl);
+                TenantCredentials newTenant = new TenantCredentials(tenantNameField.getText().trim(), criticalCheckBox.isSelected(), normalizedUrl, tokenUrlField.getText().trim(), clientIdField.getText().trim(), new String(clientSecretField.getPassword()).trim(), null, null);
 
                 try {
                     if (dialogTitle.equals(LABEL_EDIT_SELECTED_TENANT)) { // edit tenant
@@ -206,5 +219,18 @@ public class AddNewTenantDialog extends JDialog {
                 !tokenUrlField.getText().trim().isEmpty() &&
                 !clientIdField.getText().trim().isEmpty() &&
                 clientSecretField.getPassword().length > 0;
+    }
+
+    private String normalizeTenantUrl(String url) {
+        String normalizedUrl = url.trim();
+        if (!normalizedUrl.endsWith(PATH_TO_API) ) {
+            if (!normalizedUrl.endsWith("/")) {
+                normalizedUrl += PATH_TO_API;
+            }
+            else {
+                normalizedUrl = normalizedUrl.substring(0, normalizedUrl.length() - 1) + PATH_TO_API;
+            }                
+        }
+        return normalizedUrl;
     }
 }

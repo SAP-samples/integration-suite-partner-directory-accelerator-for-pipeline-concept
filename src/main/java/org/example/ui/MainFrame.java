@@ -14,14 +14,25 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.prefs.Preferences;
 
 import static org.example.ui.components.LabelTimer.showHttpResponseWithTimer;
 import static org.example.utils.SharedData.*;
 import static org.example.utils.TenantCredentials.getTenantObjectByCredentials;
 
 public class MainFrame extends JFrame {
+    private static final String WINDOW_WIDTH_KEY = "windowWidth";
+    private static final String WINDOW_HEIGHT_KEY = "windowHeight";
+    private static final String WINDOW_MAXIMIZED_KEY = "windowMaximized";
+    private static final int DEFAULT_WINDOW_WIDTH = 1200;
+    private static final int DEFAULT_WINDOW_HEIGHT = 800;
+
+    private final Preferences windowPreferences = Preferences.userNodeForPackage(MainFrame.class);
+
     private AddNewTenantDialog dialogAdd;
     private AddNewTenantDialog dialogEdit;
 
@@ -36,7 +47,13 @@ public class MainFrame extends JFrame {
 
         setTitle(UI_TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        restoreWindowSize();
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                saveWindowSize();
+            }
+        });
 
         jsonApiHandler = new JsonApiHandler();
         xsltHandler = new XsltHandler();
@@ -172,6 +189,29 @@ public class MainFrame extends JFrame {
         if (dialogEdit != null) {
             dialogEdit.setLocationRelativeTo(mainFrame);
         }
+    }
+
+    private void restoreWindowSize() {
+        Rectangle screenBounds = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getMaximumWindowBounds();
+        int width = windowPreferences.getInt(WINDOW_WIDTH_KEY, DEFAULT_WINDOW_WIDTH);
+        int height = windowPreferences.getInt(WINDOW_HEIGHT_KEY, DEFAULT_WINDOW_HEIGHT);
+
+        width = Math.max(800, Math.min(width, screenBounds.width));
+        height = Math.max(600, Math.min(height, screenBounds.height));
+        setSize(width, height);
+        setLocationRelativeTo(null);
+
+        if (windowPreferences.getBoolean(WINDOW_MAXIMIZED_KEY, false)) {
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
+        }
+    }
+
+    private void saveWindowSize() {
+        boolean maximized = (getExtendedState() & JFrame.MAXIMIZED_BOTH) != 0;
+        windowPreferences.putInt(WINDOW_WIDTH_KEY, getWidth());
+        windowPreferences.putInt(WINDOW_HEIGHT_KEY, getHeight());
+        windowPreferences.putBoolean(WINDOW_MAXIMIZED_KEY, maximized);
     }
 
     private void onTenantSelected() {

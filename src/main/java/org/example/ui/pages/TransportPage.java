@@ -22,18 +22,33 @@ public class TransportPage extends JPanel {
 
         String[] columnNames = {LABEL_TRANSPORT, LABEL_AGENCY, LABEL_SCHEME, LABEL_ID_ALTERNATIVE_PARTNERS, LABEL_PID};
         tableModel = new DefaultTableModel(columnNames, 0);
-
-        SearchPanel searchPanel = new SearchPanel(currentAlternativePartnersList, this::refreshTableData);
-        add(searchPanel, BorderLayout.NORTH);
-
-        refreshTableData(currentAlternativePartnersList);
-
         table = new JTable(tableModel) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 return columnIndex == 0 ? Boolean.class : String.class;
             }
         };
+
+        SearchPanel searchPanel = new SearchPanel(currentAlternativePartnersList, this::refreshTableData);
+
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        topPanel.add(searchPanel);
+
+        JPanel selectionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        JButton selectAllButton = new JButton(LABEL_BUTTON_SELECT_ALL);
+        selectAllButton.addActionListener(e -> actionSelect(tableModel, true));
+        selectionPanel.add(selectAllButton);
+
+        JButton deselectAllButton = new JButton(LABEL_BUTTON_DESELECT_ALL);
+        deselectAllButton.addActionListener(e -> actionSelect(tableModel, false));
+        selectionPanel.add(deselectAllButton);
+
+        topPanel.add(selectionPanel);
+        add(topPanel, BorderLayout.NORTH);
+
+        refreshTableData(currentAlternativePartnersList);
 
         table.getColumnModel().getColumn(0).setMaxWidth(70);
         table.getTableHeader().setReorderingAllowed(false);
@@ -76,24 +91,8 @@ public class TransportPage extends JPanel {
             }
         });
 
-        add(new JScrollPane(table), BorderLayout.CENTER);
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-
-        BackButton backButton = new BackButton();
-        buttonPanel.add(backButton);
-
-        JButton deselectAllButton = new JButton(LABEL_BUTTON_DESELECT_ALL);
-        deselectAllButton.addActionListener(e -> actionSelect(tableModel, false));
-        buttonPanel.add(deselectAllButton);
-
-        JButton selectAllButton = new JButton(LABEL_BUTTON_SELECT_ALL);
-        selectAllButton.addActionListener(e -> actionSelect(tableModel, true));
-        buttonPanel.add(selectAllButton);
-
-        JButton transportButton = new JButton(LABEL_TRANSPORT_ALTERNATIVE_PARTNERS);
+        JButton transportButton = new JButton(LABEL_TRANSPORT_SELECT_TARGET);
         transportButton.addActionListener(e -> {
-            searchPanel.resetSearch();
             int counterSelected = 0;
             for (AlternativePartner partner : currentAlternativePartnersList) {
                 if (partner.isSelected()) {
@@ -106,7 +105,14 @@ public class TransportPage extends JPanel {
                 JOptionPane.showMessageDialog(mainFrame, LABEL_ERROR_SELECT_AT_LEAST_ONE_ENTRY, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
             }
         });
-        buttonPanel.add(transportButton);
+        selectionPanel.add(transportButton);
+
+        add(new JScrollPane(table), BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        BackButton backButton = new BackButton();
+        buttonPanel.add(backButton);
 
         add(buttonPanel, BorderLayout.AFTER_LAST_LINE);
     }
