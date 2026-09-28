@@ -97,7 +97,7 @@ public final class SharedData {
     public static final String LABEL_INTERFACE_DETERMINATION = "Interface Determination";
     public static final String LABEL_LANDSCAPE_STAGES = "Landscape Stages";
     public static final String LABEL_LANDSCAPE_SPECIFIC_SYTEM_NAMES = "Landscape Specific System Names";
-    public static final String LABEL_RECEIVER_SETTINGS = "Snd/Rcv System Settings";
+    public static final String LABEL_SND_RCV_SETTINGS = "Snd/Rcv System Settings";
     public static final String LABEL_LAST_TENANT = "Last tenant cannot be deleted. You can still edit this tenant.";
     public static final String LABEL_MAINTAIN_NAMESPACES = "Maintain Namespaces";
     public static final String LABEL_MAINTAIN_LANDSCAPE_FIRST = "To setup landscape stages for a scenario, first maintain String Parameter \"" + STRING_PARAMETER_PID_SAP_INTEGRATION_SUITE_LANDSCAPE + "\" (on bottom of Alternative Partners Page).";
