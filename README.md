@@ -133,7 +133,7 @@ The "Add new tenant" button allows you to specify the URL to the Partner Directo
 **Manual input** allows you to fill out the input fields:
 * **`Tenant Name`**: Here you can add any name for the tenant you are adding. Please make sure that the tenant name is unique for all the tenants you added.
 * **`Critical`**: With this checkbox, you can e.g. mark productive tenants. For critical tenants, the header bar of the UI is colored in red.
-* **`URL`**: The URL to access the Partner Directory API, usually ending with `.hana.ondemand.com`. The string `/api/v1/` must be added here. Please make sure that the URL is unique for all the tenants you added.
+* **`URL`**: The URL to access the Partner Directory API, usually ending with `.hana.ondemand.com`. The string `/api/v1/` will automatically be added here if you don't enter it. Please make sure that the URL is unique for all the tenants you added.
 * **`Token URL`**: This URL is called to get the token, it usually ends with `/oauth/token`, which should be included here as it is shown in the BTP.
 * **`Client ID`**: The client ID is required to get an OAuth token and can be seen in the service instance credentials in the BTP.
 * **`Client Secret`**: The client secret is required to get an OAuth token and can be seen in the service instance credentials in the BTP.
@@ -303,21 +303,29 @@ In the "Point to Point Determination" tab, exactly one receiver system and one r
 
 By clicking the "Send changes to API" button, existing string parameters starting with the IDs "receiverDetermination" and "interfaceDetermination_" are deleted. Then, the values from the input fields are sent to the API.
 
-#### String Parameters
+### String Parameters
 
 ![String Parameters Image](images/ParametersPageStringParameters.png)
 
 In the "String Parameters" tab, string parameters can be added, updated, and deleted by entering the desired value in the input field of the corresponding ID.
 
-The string parameters relevant to the Pipeline Concept are listed in the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#message-processing-behavior).
+Some notes: 
+- The string parameters relevant to the Pipeline Concept are listed in the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#message-processing-behavior).
 
-Additionally, the scenario-specific string parameters for the community extension [Process Integration Pipeline Extension - Restart via Data Store](https://community.sap.com/t5/integration-blog-posts/process-integration-pipeline-extension-restart-via-data-store/ba-p/14153116) are supported (namely RetryDataStore, restartMode, and MaxDataStoreRetries).
+- Here you can, for example, configure a ***receiver-specific queue on a per-scenario basis***. See [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/message-processing-behavior?locale=en-US#receiver-specific-outbound-queue)
 
-To implement [Point-to-Point scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#special-case%3A-point-to-point-scenarios), please select this option when [adding a new alternative partner](#add-new-alternative-partner).
+- Additionally, the scenario-specific string parameters for the community extension [Process Integration Pipeline Extension - Restart via Data Store](https://community.sap.com/t5/integration-blog-posts/process-integration-pipeline-extension-restart-via-data-store/ba-p/14153116) are supported (namely RetryDataStore, restartMode, and MaxDataStoreRetries).
 
 By clicking the "Send changes to API" button, all values in the input fields are read and sent to the API to create or update the relevant string parameter. If an input field is empty, the relevant string parameter will be deleted if it exists.
 
-#### Landscape Stages
+#### Snd/Rcv System Settings (Prev. Landscape Stages)
+
+***Changes in version 1.1.0:***
+The tab got renamed to "Snd/Rcv System Settings" as it now supports configuring the receiver-specific default queue for all receivers of a scenario.
+
+Here you can: 
+1. Configure a receiver-specific default queue name (optional, otherwise the default outbound queue PIPQ04 is used by the Pipeline Iflows)
+2. Configure system identifier <> alias mapping for the different landscape stages.
 
 ![Landscape Stages Image](images/ParametersPageLandscapeStages.png)
 
@@ -351,13 +359,13 @@ The buttons "Deselect all shown entries" and "Select all shown entries" on the b
 
 ![Replication Dialog]( images/ReplicationDialog.png)
 
-Once you have selected all alternative partners to replicate, you can click on "Replicate to another Tenant". By using the dropdown menu, you need to select your target tenant from the list of tenants you previously added.
+Once you have selected all alternative partners to replicate, you can click on "Select Target Tenant". By using the dropdown menu, you need to select your target tenant from the list of tenants you previously added.
 
-You can decide to overwrite entries which already exist in the target tenant. If the checkbox is not checked, only HTTP Post requests are sent to create new entries. If the combination of keys of an entry already exist, the request will fail. In contrast, if the checkbox is checked, an HTTP Post request is sent at first. If the combination of keys already exist, the tools sends an additional HTTP Put request to overwrite the existing entry in the target tenant.
+You can decide to overwrite entries which already exist in the target tenant. If the checkbox is not checked, only HTTP Post requests are sent to create new entries. If the combination of keys of an entry already exist, the request will fail and the errors returned by the API will be displayed. ***Changes in v1.1.0: The previously selected scenarios/systems remain selected so that you can retry the replication with a modified selection or use the "Overwrite existing entries" function (checkbox), if you like.*** If the corresponding checkbox is checked, an HTTP Post request is sent at first. If the combination of keys already exist, the tools sends an additional HTTP Put request to overwrite the existing entry in the target tenant.
 
-If you select "Include SAP_Integration_Suite_Landscape", all string parameters having the Pid "SAP_Integration_Suite_Landscape" are included in the replication.
+If you select "Include SAP_Integration_Suite_Landscape", all string parameters having the Pid "SAP_Integration_Suite_Landscape" are included in the replication. This should only be necessary once (for a new landscape) or if you edited tenant names or stage names.
 
-The button "Replicate x alternative partners with binary / string parameters to selected tenant" starts the replication to the selected tenant. Depending (among others) on the number of replicated entries and your network connection, this can take some time. During replication, you can see details in the logs. Once finished, the view is switched to the [Alternative Partners Page](#alternative-partners-page) of the target tenant.
+The button "Replicate x alternative partners with binary / string parameters to selected tenant" starts the replication to the selected tenant. Depending (among others) on the number of replicated entries and your network connection, this can take some time. During replication, you can see details in the logs. Once finished, the source tenant view is displayed again (***Changes in v1.1.0: previously the app switched to the target tenant page - however, it was not obvious that the tenant selection changed.***)
 
 ### Migrate deprecated entries Page
 
