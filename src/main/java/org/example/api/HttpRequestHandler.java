@@ -297,22 +297,24 @@ public class HttpRequestHandler {
     }
 
     public void sendGetRequestStringParameters(String pid, Set<String> listReceiverNames) throws Exception {
-        StringBuilder filterReceiverSpecificQueue = new StringBuilder();
-        for (String receiverName : listReceiverNames) {
-            if (!filterReceiverSpecificQueue.isEmpty()) {
-                filterReceiverSpecificQueue.append("%20or%20");
-            }
-            filterReceiverSpecificQueue.append(JSON_KEY_PID + "%20eq%20'").append(receiverName).append("'");
-        }
 
         String endpoint = API_STRING_PARTNERS + "?$filter="
                 + JSON_KEY_PID + "%20eq%20'" + pid + "'";
 
-        if (!listReceiverNames.isEmpty()) {
-            endpoint += "%20or%20(" + JSON_KEY_ID + "%20eq%20'" + STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE
-                    + "'%20and%20(" + filterReceiverSpecificQueue + "))";
-        }
+        JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
+        jsonApiHandler.parseStringParametersJson(jsonResponseBody);
+    }
 
+    // get receiver specific string parameters
+    public void sendGetRequestStringParameters(Set<String> listReceiverNames) throws Exception {
+        StringBuilder filterReceiverParams = new StringBuilder();
+        for (String receiverName : listReceiverNames) {
+            if (!filterReceiverParams.isEmpty()) {
+                filterReceiverParams.append("%20or%20");
+            }
+            filterReceiverParams.append(JSON_KEY_PID + "%20eq%20'").append(receiverName).append("'");
+        }
+        String endpoint = API_STRING_PARTNERS + "?$filter=" + filterReceiverParams;
         JSONObject jsonResponseBody = sendGetRequestsAndHandlePagination(endpoint);
         jsonApiHandler.parseStringParametersJson(jsonResponseBody);
     }
@@ -388,7 +390,7 @@ public class HttpRequestHandler {
                 logLatestResponse();
 
                 if (!(this.latestStatusCode >= 200 && this.latestStatusCode <= 299)) {
-                    transportErrors.add(this.latestResponseLabel);
+                    transportErrors.add(getLatestErrorMessage());
                 }
             } catch (Exception e) {
                 String errorMessage = "Error sending HTTP request for alternative partner (agency: " + agency + ", scheme: " + scheme + ", id: " + id + ", pid: " + pid + "): ";
@@ -413,7 +415,7 @@ public class HttpRequestHandler {
                 sendPutRequestAlternativePartners(agency, scheme, id, newPid, true);
 
                 if (!(this.latestStatusCode >= 200 && this.latestStatusCode <= 299)) {
-                    transportErrors.add(this.latestResponseLabel);
+                    transportErrors.add(getLatestErrorMessage());
                 }
             } catch (Exception e) {
                 String errorMessage = "Error sending HTTP request for alternative partner (agency: " + agency + ", scheme: " + scheme + ", id: " + id + ", pid: " + newPid + "): ";
@@ -467,7 +469,7 @@ public class HttpRequestHandler {
                         logLatestResponse();
 
                         if (!(this.latestStatusCode >= 200 && this.latestStatusCode <= 299)) {
-                            transportErrors.add(this.latestResponseLabel);
+                            transportErrors.add(getLatestErrorMessage());
                         }
                     } catch (Exception e) {
                         String errorMessage = "Error sending HTTP request for binary parameter (id: " + id + ", pid: " + pid + "): ";
@@ -541,7 +543,7 @@ public class HttpRequestHandler {
                         logLatestResponse();
 
                         if (!(this.latestStatusCode >= 200 && this.latestStatusCode <= 299)) {
-                            transportErrors.add(this.latestResponseLabel);
+                            transportErrors.add(getLatestErrorMessage());
                         }
                     } catch (Exception e) {
                         String errorMessage = "Error sending HTTP request for string parameter (id: " + id + ", pid: " + pid + "): ";
@@ -726,6 +728,17 @@ public class HttpRequestHandler {
             return LABEL_HTTP_ERROR;
         } else {
             return LABEL_HTTP_WARNING;
+        }
+    }
+
+    private String getLatestErrorMessage() {
+        try {
+            return new JSONObject(this.latestResponse.body())
+                    .getJSONObject("error")
+                    .getJSONObject("message")
+                    .getString("value");
+        } catch (Exception e) {
+            return this.latestResponseLabel;
         }
     }
 

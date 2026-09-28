@@ -158,7 +158,7 @@ public class JsonApiHandler {
         JSONObject dObject = jsonResponseBody.getJSONObject(JSON_KEY_D);
         JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
 
-        currentStringParametersList.clear();
+       // currentStringParametersList.clear(); // don't clear as we need to keep values from previous calls for the same scenario (for the receiver specific default queue). Instead, clear it when a scenario is opened in the ParametersPage (see ParametersPage.java line 94).
 
         for (int i = 0; i < resultsArray.length(); i++) {
             JSONObject resultObject = resultsArray.getJSONObject(i);
@@ -169,11 +169,17 @@ public class JsonApiHandler {
             StringParameter stringParameter = new StringParameter(pid, id, value);
 
             if (id.equals(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE)) {
-                id = id + pid;
+                id = id + "_DEFAULT_" + pid;
             }
 
             currentStringParametersList.put(id, stringParameter);
         }
+    }
+
+    public boolean isResultsEmpty(JSONObject jsonResponseBody) {
+        JSONObject dObject = jsonResponseBody.getJSONObject(JSON_KEY_D);
+        JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
+        return resultsArray.isEmpty();
     }
 
     public void parseStringParameterLandscapeJson(JSONObject jsonResponseBody) {
@@ -202,11 +208,5 @@ public class JsonApiHandler {
 
             currentLandscapeTenantParameters.put(id, value);
         }
-    }
-
-    public boolean isResultsEmpty(JSONObject jsonResponseBody) {
-        JSONObject dObject = jsonResponseBody.getJSONObject(JSON_KEY_D);
-        JSONArray resultsArray = dObject.getJSONArray(JSON_KEY_RESULTS);
-        return resultsArray.isEmpty();
     }
 }

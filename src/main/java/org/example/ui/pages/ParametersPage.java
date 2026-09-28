@@ -89,6 +89,9 @@ public class ParametersPage extends JPanel {
 
         try {
             LOGGER.info("Parameters Page selected with Pid \"{}\"", pid);
+            // Discard parameters from a previously opened scenario before determining
+            // the type of the current scenario.
+            currentStringParametersList.clear();
             httpRequestHandler.sendGetRequestBinaryParameters(pid);
             httpRequestHandler.sendGetRequestStringParameters(pid);
 
@@ -117,9 +120,9 @@ public class ParametersPage extends JPanel {
                     JPanel panelStringParameters = getPanelStringParameters();
                     tabbedPane.add(LABEL_STRING_PARAMETERS, panelStringParameters);
 
-                    // Landscape Stages
+                    // Landscape Stages + Receiver speicfic queue (Sender/Receiver Settings)
                     JPanel panelLandscapeStages = getPanelLandscapeStages();
-                    tabbedPane.add(LABEL_LANDSCAPE_STAGES, panelLandscapeStages);
+                    tabbedPane.add(LABEL_RECEIVER_SETTINGS, panelLandscapeStages);
 
                     tabbedPane.addChangeListener(e -> {
                         try {
@@ -140,9 +143,11 @@ public class ParametersPage extends JPanel {
                                 panelStringParameters.add(getPanelStringParameters());
                                 panelStringParameters.revalidate();
                                 panelStringParameters.repaint();
-                            } else if (index == 2) { // Landscape Stages
+                            } else if (index == 2) { // Landscape Stages + Receiver speicfic queue (Sender/Receiver Settings)
+                                listReceiverNames.set(getListReceiverNamesDependingOnDeterminationType(true));
                                 httpRequestHandler.sendGetRequestStringParameterLandscape();
                                 httpRequestHandler.sendGetRequestAlternativePartnersLandscape(getSystemNames(true));
+                                httpRequestHandler.sendGetRequestStringParameters(listReceiverNames.get());
 
                                 panelLandscapeStages.removeAll();
                                 panelLandscapeStages.add(getPanelLandscapeStages());
@@ -169,7 +174,7 @@ public class ParametersPage extends JPanel {
 
                     // Landscape Stages
                     JPanel panelLandscapeStages = getPanelLandscapeStages();
-                    tabbedPane.add(LABEL_LANDSCAPE_STAGES, panelLandscapeStages);
+                    tabbedPane.add(LABEL_RECEIVER_SETTINGS, panelLandscapeStages);
 
                     tabbedPane.addChangeListener(e -> {
                         try {
@@ -196,9 +201,11 @@ public class ParametersPage extends JPanel {
                                 panelStringParameters.add(getPanelStringParameters());
                                 panelStringParameters.revalidate();
                                 panelStringParameters.repaint();
-                            } else if (index == 3) { // Landscape Stages
+                            } else if (index == 3) { // Landscape Stages + Receiver speicfic queue (Sender/Receiver Settings )
+                                listReceiverNames.set(getListReceiverNamesDependingOnDeterminationType(true));
                                 httpRequestHandler.sendGetRequestStringParameterLandscape();
                                 httpRequestHandler.sendGetRequestAlternativePartnersLandscape(getSystemNames(true));
+                                httpRequestHandler.sendGetRequestStringParameters(listReceiverNames.get());
 
                                 panelLandscapeStages.removeAll();
                                 panelLandscapeStages.add(getPanelLandscapeStages());
@@ -221,7 +228,7 @@ public class ParametersPage extends JPanel {
 
                     // Landscape Stages
                     JPanel panelLandscapeStages = getPanelLandscapeStages();
-                    tabbedPane.add(LABEL_LANDSCAPE_STAGES, panelLandscapeStages);
+                    tabbedPane.add(LABEL_RECEIVER_SETTINGS, panelLandscapeStages);
 
                     tabbedPane.addChangeListener(e -> {
                         try {
@@ -243,9 +250,12 @@ public class ParametersPage extends JPanel {
                                 panelStringParameters.add(getPanelStringParameters());
                                 panelStringParameters.revalidate();
                                 panelStringParameters.repaint();
-                            } else if (index == 2) { // Landscape Stages
+                            } else if (index == 2) { // Landscape Stages + Receiver speicfic queue (Sender/Receiver Settings )
+                                listReceiverNames.set(getListReceiverNamesDependingOnDeterminationType(false));
                                 httpRequestHandler.sendGetRequestStringParameterLandscape();
                                 httpRequestHandler.sendGetRequestAlternativePartnersLandscape(getSystemNames(false));
+                                httpRequestHandler.sendGetRequestStringParameters(listReceiverNames.get());
+
 
                                 panelLandscapeStages.removeAll();
                                 panelLandscapeStages.add(getPanelLandscapeStages());
@@ -553,7 +563,7 @@ public class ParametersPage extends JPanel {
             String stringParameterLabel = stringParameterLabelList.get(i);
             String stringParameterId;
             if (stringParameterLabel.startsWith(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE)) {
-                stringParameterId = STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + stringParameterLabel.replaceAll(".*\"(.*?)\".*", "$1"); // extract receiver for id
+                stringParameterId = STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + "_" + stringParameterLabel.replaceAll(".*\"(.*?)\".*", "$1"); // extract receiver for id
             } else if (stringParameterLabel.startsWith(STRING_PARAMETER_LABEL_DATA_STORE)) {
                 stringParameterId = stringParameterLabel.replace(STRING_PARAMETER_LABEL_DATA_STORE, "");
             } else {
@@ -578,6 +588,11 @@ public class ParametersPage extends JPanel {
             gbc.gridx = 1;
             gbc.anchor = GridBagConstraints.LINE_START;
             panelStringParameters.add(textFieldStringParameter, gbc);
+
+            if (stringParameterLabel.startsWith(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE)) {
+                gbc.gridx = 2;
+                panelStringParameters.add(createReceiverQueueInfoLabel(LABEL_RECEIVER_QUEUE_TOOLTIP), gbc);
+            }
 
             supportedStringParameterList.put(stringParameterId, textFieldStringParameter);
         }
@@ -608,9 +623,24 @@ public class ParametersPage extends JPanel {
         }
 
         Set<String> systemNames = getSystemNames(false);
+        Set<String> receiverNames = getListReceiverNamesDependingOnDeterminationType(false);
+        String senderSystem = editableHeader.currentHeaderValues.get(LABEL_AGENCY);
         JComboBox<String> dropdown = new JComboBox<>(systemNames.toArray(new String[0]));
         JPanel dropdownPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         dropdownPanel.add(dropdown);
+        JLabel systemRoleLabel = new JLabel();
+        dropdownPanel.add(systemRoleLabel);
+
+        JTextField queueField = new JTextField(20);
+        JPanel queuePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        queuePanel.add(new JLabel(LABEL_RCV_SPEC_QUEUE));
+        queuePanel.add(queueField);
+        queuePanel.add(createReceiverQueueInfoLabel(LABEL_RECEIVER_DEFAULT_QUEUE_TOOLTIP));
+
+        JPanel queueSection = new JPanel();
+        queueSection.setLayout(new BoxLayout(queueSection, BoxLayout.Y_AXIS));
+        queueSection.add(Box.createVerticalStrut(2 * UI_PADDING));
+        queueSection.add(queuePanel);
 
         JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JRadioButton businessSystemNameButton = new JRadioButton(SCHEME_BUSINESS_SYSTEM_NAME, true);
@@ -622,45 +652,64 @@ public class ParametersPage extends JPanel {
 
         radioPanel.add(businessSystemNameButton);
         radioPanel.add(logicalSystemNameButton);
+        radioPanel.add(createReceiverQueueInfoLabel("Used for Idoc senders only."));
 
-        JPanel selectionPanel = new JPanel(new GridLayout(2, 1));
+        JPanel selectionPanel = new JPanel();
+        selectionPanel.setLayout(new BoxLayout(selectionPanel, BoxLayout.Y_AXIS));
         selectionPanel.add(dropdownPanel);
-        selectionPanel.add(radioPanel);
+        selectionPanel.add(queueSection);
+        selectionPanel.add(Box.createVerticalStrut(6 * UI_PADDING));
+
         landscapePanel.add(selectionPanel, BorderLayout.NORTH);
 
         KeyPanel contentPanel = new KeyPanel(new GridBagLayout());
-        landscapePanel.add(contentPanel, BorderLayout.CENTER);
+
+        JPanel receiverSettingsPanel = new JPanel();
+        receiverSettingsPanel.setLayout(new BoxLayout(receiverSettingsPanel, BoxLayout.Y_AXIS));
+        receiverSettingsPanel.setBorder(BorderFactory.createTitledBorder(LABEL_LANDSCAPE_SPECIFIC_SYTEM_NAMES));
+        radioPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        contentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        receiverSettingsPanel.add(radioPanel);
+        receiverSettingsPanel.add(contentPanel);
+
+        JPanel receiverSettingsWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        receiverSettingsWrapper.add(receiverSettingsPanel);
+        landscapePanel.add(receiverSettingsWrapper, BorderLayout.CENTER);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
         gbc.anchor = GridBagConstraints.WEST;
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.add(getSendButtonLandscape(contentPanel, dropdown, buttonGroup));
+        buttonPanel.add(getSendButtonLandscape(contentPanel, queueField, dropdown, buttonGroup, receiverNames));
         landscapePanel.add(buttonPanel, BorderLayout.SOUTH);
 
         try {
             String initialSystemAlias = (String) dropdown.getSelectedItem();
-            updateLandscapeContent(contentPanel, gbc, initialSystemAlias, SCHEME_BUSINESS_SYSTEM_NAME);
+            updateLandscapeContent(contentPanel, queueField, queueSection, systemRoleLabel, receiverNames, senderSystem,
+                    gbc, initialSystemAlias, SCHEME_BUSINESS_SYSTEM_NAME);
 
             businessSystemNameButton.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     String selectedAlias = (String) dropdown.getSelectedItem();
-                    updateLandscapeContent(contentPanel, gbc, selectedAlias, SCHEME_BUSINESS_SYSTEM_NAME);
+                    updateLandscapeContent(contentPanel, queueField, queueSection, systemRoleLabel, receiverNames, senderSystem,
+                            gbc, selectedAlias, SCHEME_BUSINESS_SYSTEM_NAME);
                 }
             });
 
             logicalSystemNameButton.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     String selectedAlias = (String) dropdown.getSelectedItem();
-                    updateLandscapeContent(contentPanel, gbc, selectedAlias, SCHEME_LOGICAL_SYSTEM_NAME);
+                    updateLandscapeContent(contentPanel, queueField, queueSection, systemRoleLabel, receiverNames, senderSystem,
+                            gbc, selectedAlias, SCHEME_LOGICAL_SYSTEM_NAME);
                 }
             });
 
             dropdown.addActionListener(e -> {
                 String selectedAlias = (String) dropdown.getSelectedItem();
                 String scheme = getSelectedButtonText(buttonGroup);
-                updateLandscapeContent(contentPanel, gbc, selectedAlias, scheme);
+                updateLandscapeContent(contentPanel, queueField, queueSection, systemRoleLabel, receiverNames, senderSystem,
+                        gbc, selectedAlias, scheme);
             });
         } catch (Exception e) {
             LOGGER.error(e);
@@ -669,9 +718,29 @@ public class ParametersPage extends JPanel {
         return landscapePanel;
     }
 
-    private void updateLandscapeContent(KeyPanel panel, GridBagConstraints gbc, String systemAlias, String scheme) {
+    private void updateLandscapeContent(KeyPanel panel, JTextField queueField, JPanel queueSection,
+                                        JLabel systemRoleLabel, Set<String> receiverNames, String senderSystem,
+                                        GridBagConstraints gbc,
+                                        String systemAlias, String scheme) {
         panel.removeAll();
+
+        boolean isReceiver = receiverNames.contains(systemAlias);
+        queueSection.setVisible(isReceiver);
+        queueSection.getParent().revalidate();
+        queueSection.getParent().repaint();
+        systemRoleLabel.setText(isReceiver ? "Receiver" : Objects.equals(systemAlias, senderSystem) ? "Sender" : "");
+
+        // update rcv spec. queue name in text field
+        String rcvSpecQueue = "";
+
+        if (currentStringParametersList.get(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + "_DEFAULT_" + systemAlias) != null) {
+            rcvSpecQueue = currentStringParametersList.get(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + "_DEFAULT_" + systemAlias).getValue();
+        }
+        queueField.setText(rcvSpecQueue);
+
         int rowIndex = 0;
+
+        // update stage dependant system names in text fields
         for (Map.Entry<String, String> landscapeTenantEntry : currentLandscapeTenantParameters.entrySet()) {
             String stage = landscapeTenantEntry.getValue();
 
@@ -710,12 +779,38 @@ public class ParametersPage extends JPanel {
         panel.repaint();
     }
 
-    private JButton getSendButtonLandscape(KeyPanel keyPanel, JComboBox<String> dropdown, ButtonGroup buttonGroup) {
+    private JButton getSendButtonLandscape(KeyPanel keyPanel, JTextField queueField, JComboBox<String> dropdown,
+                                           ButtonGroup buttonGroup, Set<String> receiverNames) {
         JButton sendButton = new JButton(LABEL_SEND_CHANGES_TO_API);
         sendButton.addActionListener(e -> {
             String selectedSystemNameAlias = (String) dropdown.getSelectedItem();
             String selectedScheme = getSelectedButtonText(buttonGroup);
 
+            if (receiverNames.contains(selectedSystemNameAlias)) {
+                // update rec. spec. queue name (if changed)
+                String enteredQueueName = queueField.getText();
+                String queueMapKey = STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + "_DEFAULT_" + selectedSystemNameAlias;
+                StringParameter existingQueue = currentStringParametersList.get(queueMapKey);
+                String oldQueueName = existingQueue == null ? "" : existingQueue.getValue();
+                try {
+                    if (!oldQueueName.isEmpty() && queueField.getText().isEmpty()) {
+                        httpRequestHandler.sendDeleteRequestStringParameters(selectedSystemNameAlias, STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE);
+                        currentStringParametersList.remove(queueMapKey);
+                    } else if (!oldQueueName.isEmpty() && !enteredQueueName.equals(oldQueueName)) {
+                        httpRequestHandler.sendPutRequestStringParameters(selectedSystemNameAlias, STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE, queueField.getText());
+                        currentStringParametersList.put(queueMapKey,
+                                new StringParameter(selectedSystemNameAlias, STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE, enteredQueueName));
+                    } else if (oldQueueName.isEmpty() && !enteredQueueName.isEmpty()) {
+                        httpRequestHandler.sendPostRequestStringParameters(selectedSystemNameAlias, STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE, queueField.getText());
+                        currentStringParametersList.put(queueMapKey,
+                                new StringParameter(selectedSystemNameAlias, STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE, enteredQueueName));
+                    }
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+            // update system names (if changed)
             for (String componentKey : keyPanel.getAllKeys()) {
                 if (componentKey.startsWith(selectedScheme + "-") && componentKey.endsWith("-" + selectedSystemNameAlias)) {
                     JTextField keyField = (JTextField) keyPanel.getComponent(componentKey);
@@ -873,8 +968,8 @@ public class ParametersPage extends JPanel {
                 String stringParameterId;
                 String stringParameterPid;
                 if (stringParameterIdMap.startsWith(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE)) {
-                    String receiverName = stringParameterIdMap.replace(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE, "");
-                    stringParameterId = STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + receiverName;
+                    String receiverName = stringParameterIdMap.replace(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + "_", "");
+                    stringParameterId = STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + "_" + receiverName;
                     stringParameterPid = pid;
                 } else {
                     stringParameterId = stringParameterIdMap;
@@ -1872,6 +1967,41 @@ public class ParametersPage extends JPanel {
         panel.setMinimumSize(new Dimension(width, 20));
         panel.add(label, BorderLayout.CENTER);
         return panel;
+    }
+
+    private JLabel createReceiverQueueInfoLabel(String text) {
+        JLabel infoLabel = new JLabel("ⓘ") {
+            @Override
+            public JToolTip createToolTip() {
+                JToolTip toolTip = super.createToolTip();
+                toolTip.setBackground(new Color(255, 255, 204));
+                toolTip.setOpaque(true);
+                return toolTip;
+            }
+        };
+        infoLabel.setForeground(Color.BLUE);
+        infoLabel.setToolTipText("<html>" + wrapTooltipText(text, 50) + "</html>");
+        ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
+        toolTipManager.setInitialDelay(0);
+        toolTipManager.setDismissDelay(Integer.MAX_VALUE);
+        return infoLabel;
+    }
+
+    private String wrapTooltipText(String text, int maxLineLength) {
+        StringBuilder wrappedText = new StringBuilder();
+        int lineLength = 0;
+        for (String word : text.split(" ")) {
+            if (lineLength > 0 && lineLength + word.length() + 1 > maxLineLength) {
+                wrappedText.append("<br>");
+                lineLength = 0;
+            } else if (lineLength > 0) {
+                wrappedText.append(" ");
+                lineLength++;
+            }
+            wrappedText.append(word);
+            lineLength += word.length();
+        }
+        return wrappedText.toString();
     }
 
     private JLabel createLabel(String text) {
