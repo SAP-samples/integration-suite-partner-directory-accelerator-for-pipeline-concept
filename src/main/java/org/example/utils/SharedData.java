@@ -20,7 +20,7 @@ import java.util.Map;
 public final class SharedData {
     public static AlternativePartnersPage alternativePartnersPage;
 
-    public static final String UI_TITLE = "Partner Directory Accelerator UI (version 1.0.2)";
+    public static final String UI_TITLE = "Partner Directory Accelerator UI (version 1.0.2)"; // todo: change version before release
     public static final int UI_PADDING = 5;
     public static final int UI_TEXT_FIELD_COLUMNS = 30;
     public static final int UI_SEARCH_FIELD_WIDTH = 15;
@@ -56,7 +56,6 @@ public final class SharedData {
     public static final String LABEL_CONFIRMATION = "Confirmation";
     public static final String LABEL_CONDITION = "XPath Condition";
     public static final String LABEL_CONTAINS_SYNTAX_ERRORS = " contains syntax errors.";
-    public static final String LABEL_CRITICAL = "Critical";
     public static final String LABEL_DEFAULT = "Default";
     public static final String LABEL_DEFAULT_COMBINED_DETERMINATION = "Use default (combined determination)";
     public static final String LABEL_DELETE = "Delete";
@@ -87,6 +86,7 @@ public final class SharedData {
     public static final String LABEL_FILL_OUT_ALL_FIELDS = "All fields must be filled out.";
     public static final String LABEL_GENERATE_XSLT = "Generate resulting XSLT";
     public static final String LABEL_GENERATED_XSLT_INVALID_SYNTAX = "The generated XSLT might contain invalid syntax";
+    public static final String LABEL_HEADER_COLOR = "Header Color";
     public static final String LABEL_HTTP_ERROR = "ERROR";
     public static final String LABEL_HTTP_SUCCESS = "SUCCESS";
     public static final String LABEL_HTTP_WARNING = "WARNING";
@@ -237,6 +237,7 @@ public final class SharedData {
     public static final String JSON_KEY_HEXAGENCY = "Hexagency";
     public static final String JSON_KEY_HEXID = "Hexid";
     public static final String JSON_KEY_HEXSCHEME = "Hexscheme";
+    public static final String JSON_KEY_HEADER_COLOR = "headerColor";
     public static final String JSON_KEY_ID = "Id";
     public static final String JSON_KEY_IMPORTANT = "important";
     public static final String JSON_KEY_NAME = "name";
@@ -276,6 +277,54 @@ public final class SharedData {
     public static final String TILDE = "~";
 
     public static final String DATE_TIME_FORMATTER_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    public static final String DEFAULT_TENANT_HEADER_COLOR_HEX = "DEFAULT";
+
+    public static final String HEADER_COLOR_LABEL_DEFAULT = "Default (System Gray)";
+    public static final String HEADER_COLOR_LABEL_BLUE = "Blue";
+    public static final String HEADER_COLOR_LABEL_TEAL = "Teal";
+    public static final String HEADER_COLOR_LABEL_GREEN = "Green";
+    public static final String HEADER_COLOR_LABEL_LIME = "Lime";
+    public static final String HEADER_COLOR_LABEL_AMBER = "Amber";
+    public static final String HEADER_COLOR_LABEL_ORANGE = "Orange";
+    public static final String HEADER_COLOR_LABEL_RED = "Red";
+    public static final String HEADER_COLOR_LABEL_PINK = "Pink";
+    public static final String HEADER_COLOR_LABEL_PURPLE = "Purple";
+
+    public static final String HEADER_COLOR_HEX_BLUE = "#1976D2";
+    public static final String HEADER_COLOR_HEX_TEAL = "#00796B";
+    public static final String HEADER_COLOR_HEX_GREEN = "#2E7D32";
+    public static final String HEADER_COLOR_HEX_LIME = "#9E9D24";
+    public static final String HEADER_COLOR_HEX_AMBER = "#FF8F00";
+    public static final String HEADER_COLOR_HEX_ORANGE = "#EF6C00";
+    public static final String HEADER_COLOR_HEX_RED = "#C62828";
+    public static final String HEADER_COLOR_HEX_PINK = "#AD1457";
+    public static final String HEADER_COLOR_HEX_PURPLE = "#6A1B9A";
+
+    public static final String[] TENANT_HEADER_COLOR_LABELS = {
+            HEADER_COLOR_LABEL_DEFAULT,
+            HEADER_COLOR_LABEL_BLUE,
+            HEADER_COLOR_LABEL_TEAL,
+            HEADER_COLOR_LABEL_GREEN,
+            HEADER_COLOR_LABEL_LIME,
+            HEADER_COLOR_LABEL_AMBER,
+            HEADER_COLOR_LABEL_ORANGE,
+            HEADER_COLOR_LABEL_RED,
+            HEADER_COLOR_LABEL_PINK,
+            HEADER_COLOR_LABEL_PURPLE
+    };
+
+    public static final String[] TENANT_HEADER_COLOR_HEX_VALUES = {
+            DEFAULT_TENANT_HEADER_COLOR_HEX,
+            HEADER_COLOR_HEX_BLUE,
+            HEADER_COLOR_HEX_TEAL,
+            HEADER_COLOR_HEX_GREEN,
+            HEADER_COLOR_HEX_LIME,
+            HEADER_COLOR_HEX_AMBER,
+            HEADER_COLOR_HEX_ORANGE,
+            HEADER_COLOR_HEX_RED,
+            HEADER_COLOR_HEX_PINK,
+            HEADER_COLOR_HEX_PURPLE
+    };
 
     public static final int DEFAULT_COLUMNS_TEXT_FIELD = 30;
 
