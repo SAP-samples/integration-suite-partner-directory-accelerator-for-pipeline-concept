@@ -512,6 +512,19 @@ public class HttpRequestHandler {
         return null;
     }
 
+    public JSONObject getAlternativePartnersToExport(List<String> pidsToExport) {
+        String filter = buildPidFilterAlternativePartners(pidsToExport);
+
+        try {
+            String endpoint = API_ALTERNATIVE_PARTNERS + filter;
+            return sendGetRequestsAndHandlePagination(endpoint);
+        } catch (Exception e) {
+            LOGGER.error(e);
+        }
+
+        return null;
+    }
+
     public void transportStringParameters(JSONObject jsonObjectToTransport, boolean overwrite, List<String> transportErrors, boolean shouldDeleteOldEntries, HashMap<String, String> oldAndNewPids) {
         try {
             JSONObject dObject = jsonObjectToTransport.getJSONObject(JSON_KEY_D);
@@ -619,6 +632,24 @@ public class HttpRequestHandler {
         for (String pid : pids) {
             filterBuilder.append(prefix);
             filterBuilder.append(JSON_KEY_PID + "%20eq%20'").append(pid).append("'");
+            prefix = "%20or%20";
+        }
+
+        return filterBuilder.toString();
+    }
+
+    private String buildPidFilterAlternativePartners(List<String> pids) {
+        if (pids == null || pids.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder filterBuilder = new StringBuilder();
+        filterBuilder.append("?$filter=");
+        String prefix = "";
+
+        for (String pid : pids) {
+            filterBuilder.append(prefix);
+            filterBuilder.append(JSON_KEY_PID).append("%20eq%20'").append(pid).append("'");
             prefix = "%20or%20";
         }
 
