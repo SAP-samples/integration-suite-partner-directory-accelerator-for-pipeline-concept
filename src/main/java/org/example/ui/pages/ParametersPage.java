@@ -666,7 +666,7 @@ public class ParametersPage extends JPanel {
 
         JPanel receiverSettingsPanel = new JPanel();
         receiverSettingsPanel.setLayout(new BoxLayout(receiverSettingsPanel, BoxLayout.Y_AXIS));
-        receiverSettingsPanel.setBorder(BorderFactory.createTitledBorder(LABEL_LANDSCAPE_SPECIFIC_SYTEM_NAMES));
+        receiverSettingsPanel.setBorder(BorderFactory.createTitledBorder(LABEL_LANDSCAPE_SPECIFIC_SYSTEM_NAMES));
         radioPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         contentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         receiverSettingsPanel.add(radioPanel);
