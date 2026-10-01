@@ -4,6 +4,7 @@ target/
 !**/src/test/**/target/
 applogs/
 backup/
+export/
 tenants.json
 
 ### IntelliJ IDEA ###
