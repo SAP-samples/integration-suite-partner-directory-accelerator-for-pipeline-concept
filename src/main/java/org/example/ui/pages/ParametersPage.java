@@ -10,6 +10,21 @@ import org.example.exceptions.TableEmptyException;
 import org.example.exceptions.XsltNotExistsException;
 import org.example.exceptions.XsltSyntaxException;
 import org.example.model.AlternativePartner;
+import org.example.model.BinaryParameter;
+import org.example.model.StringParameter;
+import org.example.templates.TemplateCombinedDetermination;
+import org.example.templates.TemplateInterfaceDetermination;
+import org.example.templates.TemplateReceiverDetermination;
+import org.example.ui.components.BackButton;
+import org.example.ui.components.EditableHeader;
+import org.example.ui.components.KeyButtonGroup;
+import org.example.ui.components.KeyPanel;
+import org.example.ui.dialogs.SetTypeOfDeterminationDialog;
+import org.example.utils.XsltSyntaxValidator;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rsyntaxtextarea.Theme;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -17,8 +32,9 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
-
-import java.awt.event.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,19 +44,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import org.example.model.BinaryParameter;
-import org.example.model.StringParameter;
-import org.example.templates.TemplateInterfaceDetermination;
-import org.example.templates.TemplateReceiverDetermination;
-import org.example.templates.TemplateCombinedDetermination;
-import org.example.ui.components.*;
-import org.example.ui.dialogs.SetTypeOfDeterminationDialog;
-import org.example.utils.XsltSyntaxValidator;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.fife.ui.rsyntaxtextarea.Theme;
-import org.fife.ui.rtextarea.RTextScrollPane;
 
 import static org.example.ui.components.LabelTimer.showHttpResponseWithTimer;
 import static org.example.utils.SharedData.*;
@@ -324,6 +327,13 @@ public class ParametersPage extends JPanel {
         rTextScrollPane.getTextArea().setText(xsltToDisplay);
     }
 
+    private void populateReceiverInterfaceNames(DefaultTableModel tableModel, List<String> receiverInterfaceNames) {
+        for (int row = 0; row < tableModel.getRowCount(); row++) {
+            String receiverInterfaceName = row < receiverInterfaceNames.size() ? receiverInterfaceNames.get(row) : "";
+            tableModel.setValueAt(receiverInterfaceName, row, 2);
+        }
+    }
+
     private KeyPanel showTableReceiverDetermination(TemplateReceiverDetermination templateReceiverDetermination, boolean showXsltButtons) {
         KeyPanel keyPanel = new KeyPanel(new BorderLayout());
 
@@ -462,7 +472,7 @@ public class ParametersPage extends JPanel {
     }
 
     private KeyPanel showTableInterfaceDetermination(TemplateInterfaceDetermination templateInterfaceDetermination, RTextScrollPane rTextScrollPane, BinaryParameter currentInterfaceDetermination, boolean showXsltButtons) {
-        DefaultTableModel tableModel = new DefaultTableModel(new Object[]{LABEL_CONDITION, LABEL_RECEIVER_INTERFACE}, 0);
+        DefaultTableModel tableModel = new DefaultTableModel(new Object[]{LABEL_CONDITION, LABEL_RECEIVER_INTERFACE, LABEL_RECEIVER_INTERFACE_NAME}, 0);
         JTable table = new JTable(tableModel);
         table.setName(currentInterfaceDetermination.getId());
         table.getTableHeader().setReorderingAllowed(false);
@@ -472,6 +482,8 @@ public class ParametersPage extends JPanel {
         for (String[] strings : dataToInsert) {
             tableModel.addRow(strings);
         }
+        // Use names extracted by the template object (already in correct order)
+        populateReceiverInterfaceNames(tableModel, templateInterfaceDetermination.getReceiverInterfaceNames());
 
         table.setGridColor(Color.BLACK);
 
@@ -903,7 +915,7 @@ public class ParametersPage extends JPanel {
     private JButton getAddRowButton(JTable table, DefaultTableModel tableModel) {
         JButton addButton = new JButton(LABEL_ADD_ROW);
         addButton.addActionListener(e -> {
-            tableModel.addRow(new Object[]{"", ""});
+            tableModel.addRow(new Object[]{"", "", ""});
             int newRowCount = tableModel.getRowCount() - 1;
             table.setRowSelectionInterval(newRowCount, newRowCount);
         });
@@ -1063,8 +1075,10 @@ public class ParametersPage extends JPanel {
                         for (int i = 0; i < tableInterface.getRowCount(); i++) {
                             String condition = (String) tableInterface.getValueAt(i, 0);
                             String interfaceName = (String) tableInterface.getValueAt(i, 1);
+                            String receiverInterfaceName = (String) tableInterface.getValueAt(i, 2);
                             objectCombinedDetermination.mapInterfaceDeterminations.putIfAbsent(entry.getKey(), new TemplateInterfaceDetermination());
                             objectCombinedDetermination.mapInterfaceDeterminations.get(entry.getKey()).setHashMapConditionService(condition, interfaceName);
+                            objectCombinedDetermination.mapInterfaceDeterminations.get(entry.getKey()).addReceiverInterfaceName(receiverInterfaceName);
                         }
                     }
                 }
@@ -1148,7 +1162,9 @@ public class ParametersPage extends JPanel {
                 for (int i = 0; i < table.getRowCount(); i++) {
                     String condition = (String) table.getValueAt(i, 0);
                     String combined = (String) table.getValueAt(i, 1);
+                    String receiverInterfaceName = (String) table.getValueAt(i, 2);
                     objectInterfaceDetermination.setHashMapConditionService(condition, combined);
+                    objectInterfaceDetermination.addReceiverInterfaceName(receiverInterfaceName);
                 }
 
                 objectInterfaceDetermination.setParams();

@@ -21,6 +21,7 @@ public class TemplateInterfaceDetermination implements TemplateObjects {
     private Map<String, String> namespaces = new HashMap<>();
     private final Set<String> params = new HashSet<>(); // e.g. dc_country like in <xsl:if test="$dc_country = 'DE'"> and <xsl:param name="dc_country"/>
     private final Map<String, List<String>> hashMapConditionService = new LinkedHashMap<>(); // XPath condition with receiver interface(s)
+    private final List<String> receiverInterfaceNames = new ArrayList<>(); // Names for each interface in order
 
     // namespaces
 
@@ -95,12 +96,30 @@ public class TemplateInterfaceDetermination implements TemplateObjects {
         return result.toArray(new String[0][]);
     }
 
+    // receiver interface names
+
+    public List<String> getReceiverInterfaceNames() {
+        return receiverInterfaceNames;
+    }
+
+    public void addReceiverInterfaceName(String name) {
+        this.receiverInterfaceNames.add(name == null ? "" : name);
+    }
+
+    public void setReceiverInterfaceNames(List<String> names) {
+        this.receiverInterfaceNames.clear();
+        if (names != null) {
+            this.receiverInterfaceNames.addAll(names);
+        }
+    }
+
     // helper methods
 
     public void clear() {
         this.namespaces.clear();
         this.params.clear();
         this.hashMapConditionService.clear();
+        this.receiverInterfaceNames.clear();
     }
 
     public void xsltToObjectInterfaceDetermination(String xslt) throws Exception { // only for multiple XSLTs
@@ -140,6 +159,13 @@ public class TemplateInterfaceDetermination implements TemplateObjects {
             String condition = (conditionItem == null) ? "" : conditionItem.getStringValue();
 
             this.setHashMapConditionService(condition, interfaceName);
+
+            // Extract the name for this interface
+            XPathSelector nameSelector = xpath.compile("//*[@test]/Interface/Service[text()='" + interfaceName + "']/parent::Interface/Name/text() | //*[@test]/Interface/Service[text()='" + interfaceName + "']/parent::Interface/name/text()").load();
+            nameSelector.setContextItem(processor.newDocumentBuilder().wrap(document));
+            XdmItem nameItem = nameSelector.evaluateSingle();
+            String receiverInterfaceName = (nameItem == null) ? "" : nameItem.getStringValue();
+            this.addReceiverInterfaceName(receiverInterfaceName);
         }
     }
 
@@ -180,6 +206,13 @@ public class TemplateInterfaceDetermination implements TemplateObjects {
             String condition = (conditionItem == null) ? "" : conditionItem.getStringValue();
 
             this.setHashMapConditionService(condition, interfaceName);
+
+            // Extract the name for this interface
+            XPathSelector nameSelector = xpath.compile("//Service[text()='" + receiverName + "']/following-sibling::Interfaces//Interface/Service[text()='" + interfaceName + "']/parent::Interface/Name/text() | //Service[text()='" + receiverName + "']/following-sibling::Interfaces//Interface/Service[text()='" + interfaceName + "']/parent::Interface/name/text()").load();
+            nameSelector.setContextItem(processor.newDocumentBuilder().wrap(document));
+            XdmItem nameItem = nameSelector.evaluateSingle();
+            String receiverInterfaceName = (nameItem == null) ? "" : nameItem.getStringValue();
+            this.addReceiverInterfaceName(receiverInterfaceName);
         }
     }
 }

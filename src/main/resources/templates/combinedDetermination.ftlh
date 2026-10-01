@@ -14,6 +14,7 @@
                     <Service>${receiverDetermination.defaultReceiver?no_esc}</Service>
                     <Interfaces>
 <#assign i = 1>
+<#assign nameIndex = 0>
 <#list mapInterfaceDeterminations[receiverDetermination.defaultReceiver].hashMapConditionService?keys as interfaceCondition>
 <#if interfaceCondition!="">
                         <xsl:if test="${interfaceCondition?no_esc}">
@@ -21,7 +22,11 @@
                             <Interface>
                                 <Index>${i}</Index>
                                 <Service>${interfaceName?no_esc}</Service>
+<#if nameIndex < mapInterfaceDeterminations[receiverDetermination.defaultReceiver].receiverInterfaceNames?size && mapInterfaceDeterminations[receiverDetermination.defaultReceiver].receiverInterfaceNames[nameIndex]?has_content>
+                                <Name>${mapInterfaceDeterminations[receiverDetermination.defaultReceiver].receiverInterfaceNames[nameIndex]?no_esc}</Name>
+</#if>
                             </Interface>
+<#assign nameIndex = nameIndex + 1>
 <#assign i = i + 1>
 </#list>
                         </xsl:if>
@@ -30,7 +35,11 @@
                         <Interface>
                             <Index>${i}</Index>
                             <Service>${interfaceName?no_esc}</Service>
+<#if nameIndex < mapInterfaceDeterminations[receiverDetermination.defaultReceiver].receiverInterfaceNames?size && mapInterfaceDeterminations[receiverDetermination.defaultReceiver].receiverInterfaceNames[nameIndex]?has_content>
+                            <Name>${mapInterfaceDeterminations[receiverDetermination.defaultReceiver].receiverInterfaceNames[nameIndex]?no_esc}</Name>
+</#if>
                         </Interface>
+<#assign nameIndex = nameIndex + 1>
 <#assign i = i + 1>
 </#list>
 </#if>
@@ -49,6 +58,7 @@
                     <Service>${receiverName?no_esc}</Service>
                     <Interfaces>
 <#assign i = 1>
+<#assign nameIndex = 0>
 <#list mapInterfaceDeterminations[receiverName].hashMapConditionService?keys as interfaceCondition>
 <#if interfaceCondition!="">
                         <xsl:if test="${interfaceCondition?no_esc}">
@@ -56,7 +66,11 @@
                             <Interface>
                                 <Index>${i}</Index>
                                 <Service>${interfaceName?no_esc}</Service>
+<#if nameIndex < mapInterfaceDeterminations[receiverName].receiverInterfaceNames?size && mapInterfaceDeterminations[receiverName].receiverInterfaceNames[nameIndex]?has_content>
+                                <Name>${mapInterfaceDeterminations[receiverName].receiverInterfaceNames[nameIndex]?no_esc}</Name>
+</#if>
                             </Interface>
+<#assign nameIndex = nameIndex + 1>
 <#assign i = i + 1>
 </#list>
                         </xsl:if>
@@ -65,7 +79,11 @@
                         <Interface>
                             <Index>${i}</Index>
                             <Service>${interfaceName?no_esc}</Service>
+<#if nameIndex < mapInterfaceDeterminations[receiverName].receiverInterfaceNames?size && mapInterfaceDeterminations[receiverName].receiverInterfaceNames[nameIndex]?has_content>
+                            <Name>${mapInterfaceDeterminations[receiverName].receiverInterfaceNames[nameIndex]?no_esc}</Name>
+</#if>
                         </Interface>
+<#assign nameIndex = nameIndex + 1>
 <#assign i = i + 1>
 </#list>
 </#if>
@@ -80,6 +98,7 @@
                 <Service>${receiverName?no_esc}</Service>
                 <Interfaces>
 <#assign i = 1>
+<#assign nameIndex = 0>
 <#list mapInterfaceDeterminations[receiverName].hashMapConditionService?keys as interfaceCondition>
 <#if interfaceCondition!="">
                     <xsl:if test="${interfaceCondition?no_esc}">
@@ -87,7 +106,11 @@
                         <Interface>
                             <Index>${i}</Index>
                             <Service>${interfaceName?no_esc}</Service>
+<#if nameIndex < mapInterfaceDeterminations[receiverName].receiverInterfaceNames?size && mapInterfaceDeterminations[receiverName].receiverInterfaceNames[nameIndex]?has_content>
+                            <Name>${mapInterfaceDeterminations[receiverName].receiverInterfaceNames[nameIndex]?no_esc}</Name>
+</#if>
                         </Interface>
+<#assign nameIndex = nameIndex + 1>
 <#assign i = i + 1>
 </#list>
                     </xsl:if>
@@ -96,7 +119,11 @@
                     <Interface>
                         <Index>${i}</Index>
                         <Service>${interfaceName?no_esc}</Service>
+<#if nameIndex < mapInterfaceDeterminations[receiverName].receiverInterfaceNames?size && mapInterfaceDeterminations[receiverName].receiverInterfaceNames[nameIndex]?has_content>
+                        <Name>${mapInterfaceDeterminations[receiverName].receiverInterfaceNames[nameIndex]?no_esc}</Name>
+</#if>
                     </Interface>
+<#assign nameIndex = nameIndex + 1>
 <#assign i = i + 1>
 </#list>
 </#if>

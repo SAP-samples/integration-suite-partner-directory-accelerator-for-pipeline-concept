@@ -126,6 +126,7 @@ public final class SharedData {
     public static final String LABEL_RECEIVER_DETERMINATION = "Receiver Determination";
     public static final String LABEL_RECEIVER_INTERFACE = "Receiver Interface";
     public static final String LABEL_RECEIVER_INTERFACE_DETERMINATION = "Receiver and Interface Determination";
+    public static final String LABEL_RECEIVER_INTERFACE_NAME = "Receiver Interface Name";
     public static final String LABEL_RECEIVER_NOT_FOUND = "If no receiver is found, proceed as follows";
     public static final String LABEL_RECEIVER_QUEUE_TOOLTIP = "This is the name of a scenario specific outbound queue dedicated to the receiver mentioned in the label. Enter the name of the queue including the suffix (\"PIPQ04[suffix]\") that is configure in the Step06 Iflow that you duplicated to process this queue.";
     public static final String LABEL_RCV_SPEC_QUEUE = "Receiver Specific (Default) Queue";
