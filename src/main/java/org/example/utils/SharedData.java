@@ -290,7 +290,7 @@ public final class SharedData {
     public static final String HEADER_COLOR_LABEL_TEAL = "Teal";
     public static final String HEADER_COLOR_LABEL_GREEN = "Green";
     public static final String HEADER_COLOR_LABEL_LIME = "Lime";
-    public static final String HEADER_COLOR_LABEL_AMBER = "Amber";
+    public static final String HEADER_COLOR_LABEL_YELLOW = "Yellow";
     public static final String HEADER_COLOR_LABEL_ORANGE = "Orange";
     public static final String HEADER_COLOR_LABEL_RED = "Red";
     public static final String HEADER_COLOR_LABEL_PINK = "Pink";
@@ -300,7 +300,7 @@ public final class SharedData {
     public static final String HEADER_COLOR_HEX_TEAL = "#00796B";
     public static final String HEADER_COLOR_HEX_GREEN = "#2E7D32";
     public static final String HEADER_COLOR_HEX_LIME = "#9E9D24";
-    public static final String HEADER_COLOR_HEX_AMBER = "#FF8F00";
+    public static final String HEADER_COLOR_HEX_YELLOW = "#FF8F00";
     public static final String HEADER_COLOR_HEX_ORANGE = "#EF6C00";
     public static final String HEADER_COLOR_HEX_RED = "#C62828";
     public static final String HEADER_COLOR_HEX_PINK = "#AD1457";
@@ -312,7 +312,7 @@ public final class SharedData {
             HEADER_COLOR_LABEL_TEAL,
             HEADER_COLOR_LABEL_GREEN,
             HEADER_COLOR_LABEL_LIME,
-            HEADER_COLOR_LABEL_AMBER,
+            HEADER_COLOR_LABEL_YELLOW,
             HEADER_COLOR_LABEL_ORANGE,
             HEADER_COLOR_LABEL_RED,
             HEADER_COLOR_LABEL_PINK,
@@ -325,7 +325,7 @@ public final class SharedData {
             HEADER_COLOR_HEX_TEAL,
             HEADER_COLOR_HEX_GREEN,
             HEADER_COLOR_HEX_LIME,
-            HEADER_COLOR_HEX_AMBER,
+            HEADER_COLOR_HEX_YELLOW,
             HEADER_COLOR_HEX_ORANGE,
             HEADER_COLOR_HEX_RED,
             HEADER_COLOR_HEX_PINK,
