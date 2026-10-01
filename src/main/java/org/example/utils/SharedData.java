@@ -130,6 +130,7 @@ public final class SharedData {
     public static final String LABEL_MOVE_ROW_DOWN = "Move row down";
     public static final String LABEL_MOVE_ROW_UP = "Move row up";
     public static final String LABEL_MULTIPLE_XSLTS = "Multiple XSLTs";
+    public static final String LABEL_NAMESPACE_DIALOG_EMPTY = "Once there are any namespace prefixes in any of the XPath conditions, they will automatically be shown in this dialog. You can then add corresponding URIs of the namespace prefixes here.";
     public static final String LABEL_NAMESPACE_PREFIX = "Namespace Prefix";
     public static final String LABEL_NAMESPACE_URI = "Namespace URI";
     public static final String LABEL_OVERWRITE_EXISTING_ENTRIES = "Overwrite existing entries";

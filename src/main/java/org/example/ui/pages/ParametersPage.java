@@ -29,12 +29,15 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -43,12 +46,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static org.example.ui.components.LabelTimer.showHttpResponseWithTimer;
 import static org.example.utils.SharedData.*;
 
 public class ParametersPage extends JPanel {
+
+    private static final Pattern NAMESPACE_PREFIX_PATTERN = Pattern.compile("([A-Za-z_][A-Za-z0-9_\\-.]*):([A-Za-z_*][A-Za-z0-9_\\-.]*)");
 
     private final TemplateReceiverDetermination objectReceiverDetermination = new TemplateReceiverDetermination();
     private final TemplateInterfaceDetermination objectInterfaceDetermination = new TemplateInterfaceDetermination();
@@ -1186,53 +1190,44 @@ public class ParametersPage extends JPanel {
 
     private JButton getMaintainNamespacesButton(Map<String, String> namespacesSaved, JTable tableReceiverDetermination, Map<String, JTable> tablesInterfaceDeterminations) {
         JButton namespacesButton = new JButton(LABEL_MAINTAIN_NAMESPACES);
+        AtomicReference<JDialog> dialogReference = new AtomicReference<>();
 
         namespacesButton.addActionListener(e -> {
+            JDialog existingDialog = dialogReference.get();
+            if (existingDialog != null && existingDialog.isDisplayable()) {
+                existingDialog.toFront();
+                existingDialog.requestFocus();
+                return;
+            }
+
             Map<String, String> namespacesTemp = new HashMap<>();
 
             if (namespacesSaved != null) {
                 namespacesTemp.putAll(namespacesSaved);
             }
 
-            Set<String> namespacePrefixes = getNamespacePrefixesFromTablesAndUpdateNamespacesMap(namespacesTemp, tableReceiverDetermination, tablesInterfaceDeterminations);
-
-            JDialog dialog = new JDialog(mainFrame, LABEL_MAINTAIN_NAMESPACES, true);
+            JDialog dialog = new JDialog(mainFrame, LABEL_MAINTAIN_NAMESPACES, false);
             dialog.setLayout(new BorderLayout());
             dialog.setSize(UI_DIALOG_WIDTH, UI_DIALOG_HEIGHT);
             dialog.setLocationRelativeTo(mainFrame);
+            dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            dialogReference.set(dialog);
 
             JPanel namespacesPanel = new JPanel(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(UI_PADDING, 5 * UI_PADDING, UI_PADDING, 5 * UI_PADDING);
-            gbc.anchor = GridBagConstraints.WEST;
+            JScrollPane namespacesScrollPane = new JScrollPane(namespacesPanel);
+            namespacesScrollPane.setBorder(BorderFactory.createEmptyBorder());
+            dialog.add(namespacesScrollPane, BorderLayout.CENTER);
 
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            JLabel topLabelNamespacePrefix = new JLabel(colon(LABEL_NAMESPACE_PREFIX));
-            namespacesPanel.add(topLabelNamespacePrefix, gbc);
+            Map<String, JTextField> namespaceFields = new LinkedHashMap<>();
+            Set<TableModel> observedTableModels = new HashSet<>();
+            final Runnable[] refreshNamespacesDialog = new Runnable[1];
+            TableModelListener namespaceTableModelListener = tableModelEvent -> SwingUtilities.invokeLater(refreshNamespacesDialog[0]);
 
-            gbc.gridx = 1;
-            JLabel topLabelNamespaceUri = new JLabel(colon(LABEL_NAMESPACE_URI));
-            namespacesPanel.add(topLabelNamespaceUri, gbc);
-
-            Map<JLabel, JTextField> mapLabelField = new HashMap<>();
-            gbc.gridx = 0;
-
-            for (String prefix : namespacePrefixes) {
-                gbc.gridy++;
-                JLabel labelNamespacePrefix = new JLabel(prefix);
-                namespacesPanel.add(labelNamespacePrefix, gbc);
-
-                gbc.gridx = 1;
-                JTextField inputFieldNamespaceUri = new JTextField(namespacesTemp.getOrDefault(prefix, ""), UI_TEXT_FIELD_COLUMNS);
-                namespacesPanel.add(inputFieldNamespaceUri, gbc);
-
-                mapLabelField.put(labelNamespacePrefix, inputFieldNamespaceUri);
-
-                gbc.gridx = 0;
-            }
-
-            dialog.add(namespacesPanel, BorderLayout.CENTER);
+            refreshNamespacesDialog[0] = () -> {
+                updateObservedNamespaceTableModels(observedTableModels, namespaceTableModelListener, tableReceiverDetermination, tablesInterfaceDeterminations);
+                refreshNamespacesPanel(namespacesPanel, namespaceFields, namespacesTemp, tableReceiverDetermination, tablesInterfaceDeterminations);
+            };
+            refreshNamespacesDialog[0].run();
 
             JPanel buttonPanel = new JPanel(new FlowLayout());
 
@@ -1242,9 +1237,10 @@ public class ParametersPage extends JPanel {
 
             JButton saveButton = new JButton(LABEL_SAVE);
             saveButton.addActionListener(e1 -> {
-                namespacesSaved.clear();
-                for (Map.Entry<JLabel, JTextField> entry : mapLabelField.entrySet()) {
-                    namespacesSaved.put(entry.getKey().getText(), entry.getValue().getText());
+                syncNamespaceTextFields(namespaceFields, namespacesTemp);
+                if (namespacesSaved != null) {
+                    namespacesSaved.clear();
+                    namespacesSaved.putAll(namespacesTemp);
                 }
                 dialog.dispose();
             });
@@ -1252,48 +1248,157 @@ public class ParametersPage extends JPanel {
 
             dialog.add(buttonPanel, BorderLayout.SOUTH);
 
+            dialog.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e1) {
+                    for (TableModel tableModel : observedTableModels) {
+                        tableModel.removeTableModelListener(namespaceTableModelListener);
+                    }
+                    observedTableModels.clear();
+                    dialogReference.set(null);
+                }
+            });
+
             dialog.setVisible(true);
         });
 
         return namespacesButton;
     }
 
-    private Set<String> getNamespacePrefixesFromTablesAndUpdateNamespacesMap(Map<String, String> namespacesMap, JTable tableReceiverDetermination, Map<String, JTable> tablesInterfaceDeterminations) {
-        Set<String> namespacePrefixes = new HashSet<>();
+    private void refreshNamespacesPanel(JPanel namespacesPanel, Map<String, JTextField> namespaceFields, Map<String, String> namespacesTemp, JTable tableReceiverDetermination, Map<String, JTable> tablesInterfaceDeterminations) {
+        syncNamespaceTextFields(namespaceFields, namespacesTemp);
+        Set<String> namespacePrefixes = getNamespacePrefixesFromTablesAndUpdateNamespacesMap(namespacesTemp, tableReceiverDetermination, tablesInterfaceDeterminations);
 
+        namespaceFields.clear();
+        namespacesPanel.removeAll();
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(UI_PADDING, 5 * UI_PADDING, UI_PADDING, 5 * UI_PADDING);
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        if (namespacePrefixes.isEmpty()) {
+            gbc.gridwidth = 2;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            namespacesPanel.add(new JLabel(formatDialogTextBySentence(LABEL_NAMESPACE_DIALOG_EMPTY)), gbc);
+        } else {
+            namespacesPanel.add(new JLabel(colon(LABEL_NAMESPACE_PREFIX)), gbc);
+
+            gbc.gridx = 1;
+            namespacesPanel.add(new JLabel(colon(LABEL_NAMESPACE_URI)), gbc);
+
+            for (String prefix : namespacePrefixes) {
+                gbc.gridy++;
+                gbc.gridx = 0;
+                namespacesPanel.add(new JLabel(prefix), gbc);
+
+                gbc.gridx = 1;
+                JTextField inputFieldNamespaceUri = new JTextField(namespacesTemp.getOrDefault(prefix, ""), UI_TEXT_FIELD_COLUMNS);
+                namespaceFields.put(prefix, inputFieldNamespaceUri);
+                namespacesPanel.add(inputFieldNamespaceUri, gbc);
+            }
+        }
+
+        namespacesPanel.revalidate();
+        namespacesPanel.repaint();
+    }
+
+    static String formatDialogTextBySentence(String text) {
+        if (text == null || text.isBlank()) {
+            return "<html></html>";
+        }
+
+        return "<html>" + text.trim().replaceAll("\\.\\s+", ".<br>") + "</html>";
+    }
+
+    private void syncNamespaceTextFields(Map<String, JTextField> namespaceFields, Map<String, String> namespacesTemp) {
+        for (Map.Entry<String, JTextField> entry : namespaceFields.entrySet()) {
+            namespacesTemp.put(entry.getKey(), entry.getValue().getText());
+        }
+    }
+
+    private void updateObservedNamespaceTableModels(Set<TableModel> observedTableModels, TableModelListener namespaceTableModelListener, JTable tableReceiverDetermination, Map<String, JTable> tablesInterfaceDeterminations) {
+        Set<TableModel> currentTableModels = new HashSet<>(getNamespaceTableModels(tableReceiverDetermination, tablesInterfaceDeterminations));
+
+        for (TableModel currentTableModel : currentTableModels) {
+            if (observedTableModels.add(currentTableModel)) {
+                currentTableModel.addTableModelListener(namespaceTableModelListener);
+            }
+        }
+
+        Iterator<TableModel> iterator = observedTableModels.iterator();
+        while (iterator.hasNext()) {
+            TableModel observedTableModel = iterator.next();
+            if (!currentTableModels.contains(observedTableModel)) {
+                observedTableModel.removeTableModelListener(namespaceTableModelListener);
+                iterator.remove();
+            }
+        }
+    }
+
+    private List<TableModel> getNamespaceTableModels(JTable tableReceiverDetermination, Map<String, JTable> tablesInterfaceDeterminations) {
+        return getNamespaceTables(tableReceiverDetermination, tablesInterfaceDeterminations).stream()
+                .map(JTable::getModel)
+                .toList();
+    }
+
+    private List<JTable> getNamespaceTables(JTable tableReceiverDetermination, Map<String, JTable> tablesInterfaceDeterminations) {
         List<JTable> tables = new ArrayList<>();
+
         if (tableReceiverDetermination != null) {
             tables.add(tableReceiverDetermination);
         }
         if (tablesInterfaceDeterminations != null) {
-            for (String key : tablesInterfaceDeterminations.keySet()) {
-                if (tablesInterfaceDeterminations.get(key) != null) {
-                    tables.add(tablesInterfaceDeterminations.get(key));
+            for (JTable table : tablesInterfaceDeterminations.values()) {
+                if (table != null) {
+                    tables.add(table);
                 }
             }
         }
 
-        for (JTable table : tables) {
+        return tables;
+    }
+
+    private Set<String> getNamespacePrefixesFromTablesAndUpdateNamespacesMap(Map<String, String> namespacesMap, JTable tableReceiverDetermination, Map<String, JTable> tablesInterfaceDeterminations) {
+        List<String> xPathConditions = new ArrayList<>();
+
+        for (JTable table : getNamespaceTables(tableReceiverDetermination, tablesInterfaceDeterminations)) {
             if (table.isEditing()) {
                 table.getCellEditor().stopCellEditing();
             }
 
             DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
             for (int row = 0; row < tableModel.getRowCount(); row++) {
-                String xPathCondition = (String) tableModel.getValueAt(row, 0);
-
-                Pattern pattern = Pattern.compile("([a-zA-Z0-9_\\-]+):");
-                Matcher matcher = pattern.matcher(xPathCondition);
-
-                while (matcher.find()) {
-                    namespacePrefixes.add(matcher.group(1));
+                Object xPathCondition = tableModel.getValueAt(row, 0);
+                if (xPathCondition instanceof String xPathConditionString) {
+                    xPathConditions.add(xPathConditionString);
                 }
             }
         }
 
+        Set<String> namespacePrefixes = collectNamespacePrefixesFromXPathConditions(xPathConditions);
+
         namespacesMap.keySet().removeIf(namespacePrefixTemp -> !namespacePrefixes.contains(namespacePrefixTemp)); // changes the original namespacesMap so doesn't need to be returned
 
-        return namespacePrefixes.stream().sorted().collect(Collectors.toCollection(LinkedHashSet::new));
+        return namespacePrefixes;
+    }
+
+    static Set<String> collectNamespacePrefixesFromXPathConditions(Collection<String> xPathConditions) {
+        Set<String> namespacePrefixes = new TreeSet<>();
+
+        for (String xPathCondition : xPathConditions) {
+            if (xPathCondition == null || xPathCondition.isBlank()) {
+                continue;
+            }
+
+            Matcher matcher = NAMESPACE_PREFIX_PATTERN.matcher(xPathCondition);
+            while (matcher.find()) {
+                namespacePrefixes.add(matcher.group(1));
+            }
+        }
+
+        return new LinkedHashSet<>(namespacePrefixes);
     }
 
     private JButton getMergeXsltButton() {
