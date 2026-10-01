@@ -230,6 +230,8 @@ On the parameters page, you can create and update all binary parameters and stri
 
 On the upper part of the page, you can update the values for Sender System (named "agency" for alternative partner) and Sender Interface (named "id" for alternative partner). Once a value is changed, buttons to send and discard the changes on the alternative partner are shown. For the Pid, there is a dedicated button to change it. This is because the Pid is a key for both binary and string parameters, so "changing" it actually means to delete and newly create these all existing parameters of your scenario.
 
+Additionally, two delete actions are available next to the Sender System field: **"Delete this alternative partner only"** removes just the currently opened alternative partner, while **"Delete whole scenario of this Partner ID"** removes the complete scenario for the current Partner ID including related binary and string parameters.
+
 #### Option 1: Combined XSLT
 
 ![Combined XSLT Image](images/ParametersPageCombined.png)
@@ -483,7 +485,7 @@ Please note that the merge XSLT feature only works under the following prerequis
 
 Currently, there are some limits which the tool is not capable of:
 
-* **Deletion** of existing alternative partners and binary parameters is not possible (see [issue #7](../../issues/7)). String parameters can be deleted (if they are not used as point to point receiver and interface determination). To delete other existing entries, the [Partner Directory API](https://hub.sap.com/api/PartnerDirectory/overview) or the [Partner Directory UI](https://help.sap.com/docs/integration-suite/sap-integration-suite/managing-partner-directory-entries?version=CLOUD) can be used.
+* Individual binary parameters still cannot be deleted directly from the UI. However, alternative partners can now be deleted from the Parameters Page, and a complete scenario of one Partner ID can also be deleted there including its related binary and string parameters.
 * The string parameter "ReceiverSpecificQueue" can currently not be [replicated](#replication-page).
 * The [special case "Bypass Receiver Determination"](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/special-cases#pipeline-bypass-options) (which uses a string parameter for receiver determination and an XSLT for interface determination) is not supported.
 * For the community extension [Process Integration Pipeline Extension - Restart via Data Store](https://community.sap.com/t5/integration-blog-posts/process-integration-pipeline-extension-restart-via-data-store/ba-p/14153116), the restart job profiles are currently not supported. In contrast, the scenario-specific restart configuration settings (string parameters RetryDataStore, restartMode, and MaxDataStoreRetries) are supported.

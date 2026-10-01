@@ -16,6 +16,7 @@ import javax.swing.event.DocumentListener;
 
 import static org.example.model.AlternativePartner.addAlternativePartnerToList;
 import static org.example.model.AlternativePartner.removeAlternativePartnerFromList;
+import static org.example.model.AlternativePartner.removeAlternativePartnersByPid;
 import static org.example.ui.components.LabelTimer.showHttpResponseWithTimer;
 import static org.example.utils.SharedData.*;
 
@@ -197,6 +198,23 @@ public class EditableHeader extends JPanel {
             add(sendButton);
             add(cancelButton);
 
+            GridBagConstraints deleteButtonsGbc = new GridBagConstraints();
+            deleteButtonsGbc.gridx = 2;
+            deleteButtonsGbc.gridy = 0;
+            deleteButtonsGbc.gridwidth = 3;
+            deleteButtonsGbc.anchor = GridBagConstraints.WEST;
+            deleteButtonsGbc.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
+
+            JPanel deleteButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, UI_PADDING, 0));
+            JButton deleteEntryButton = new JButton(LABEL_DELETE_ENTRY);
+            deleteEntryButton.addActionListener(e -> deleteCurrentAlternativePartner());
+            deleteButtonsPanel.add(deleteEntryButton);
+
+            JButton deletePartnerIdButton = new JButton(LABEL_DELETE_PARTNER_ID);
+            deletePartnerIdButton.addActionListener(e -> deleteCurrentPartnerId());
+            deleteButtonsPanel.add(deletePartnerIdButton);
+            add(deleteButtonsPanel, deleteButtonsGbc);
+
             gbc.gridx = 2;
             gbc.gridy = 3;
             JButton changePidButton = new JButton(LABEL_CHANGE_PID);
@@ -314,6 +332,104 @@ public class EditableHeader extends JPanel {
             add(changePidButton, gbc);
         }
 
+    }
+
+    private void deleteCurrentAlternativePartner() {
+        if (!showDeleteConfirmationDialog(LABEL_SURE_TO_DELETE_ENTRY, LABEL_CONFIRM_DELETE_ENTRY)) {
+            return;
+        }
+
+        AlternativePartner alternativePartnerToDelete = new AlternativePartner(
+                currentHeaderValues.get(LABEL_AGENCY),
+                currentHeaderValues.get(LABEL_SCHEME),
+                currentHeaderValues.get(LABEL_ID_ALTERNATIVE_PARTNERS),
+                currentHeaderValues.get(LABEL_PID)
+        );
+
+        try {
+            String httpResponse = httpRequestHandler.sendDeleteRequestAlternativePartners(
+                    alternativePartnerToDelete.getAgency(),
+                    alternativePartnerToDelete.getScheme(),
+                    alternativePartnerToDelete.getId()
+            );
+
+            if (httpRequestHandler.wasLatestResponseSuccessful()) {
+                removeAlternativePartnerFromList(alternativePartnerToDelete);
+                if (!reloadAlternativePartnersOverview()) {
+                    showHttpResponseWithTimer(httpResponseLabelHeader, httpResponse);
+                }
+                showAlternativePartnersOverview();
+                JOptionPane.showMessageDialog(mainFrame, LABEL_DELETE_ENTRY_SUCCESSFUL, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(mainFrame, httpRequestHandler.getLatestErrorMessageForUi(), LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception ex) {
+            LOGGER.error(ex);
+            JOptionPane.showMessageDialog(mainFrame, ex.getMessage(), LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void deleteCurrentPartnerId() {
+        String pid = currentHeaderValues.get(LABEL_PID);
+        String confirmationText = LABEL_SURE_TO_DELETE_PARTNER_ID_1 + pid + LABEL_SURE_TO_DELETE_PARTNER_ID_2;
+        if (!showDeleteConfirmationDialog(confirmationText, LABEL_CONFIRM_DELETE_PARTNER_ID)) {
+            return;
+        }
+
+        List<String> deleteErrors = httpRequestHandler.deletePartnerId(pid);
+        boolean overviewReloaded = reloadAlternativePartnersOverview();
+
+        if (deleteErrors.isEmpty()) {
+            if (!overviewReloaded) {
+                removeAlternativePartnersByPid(pid);
+            }
+            showAlternativePartnersOverview();
+            JOptionPane.showMessageDialog(mainFrame, LABEL_DELETE_PARTNER_ID_SUCCESSFUL, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        String warningMessage = LABEL_DELETE_PARTNER_ID_FAILED_1 + deleteErrors.size() + LABEL_DELETE_PARTNER_ID_FAILED_2;
+        if (overviewReloaded) {
+            showAlternativePartnersOverview();
+            JOptionPane.showMessageDialog(mainFrame, warningMessage, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(mainFrame, warningMessage + "\n\n" + LABEL_DELETE_PARTNER_ID_RELOAD_REQUIRED, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private boolean showDeleteConfirmationDialog(String message, String title) {
+        String[] options = {LABEL_DELETE, LABEL_CANCEL};
+
+        int option = JOptionPane.showOptionDialog(
+                mainFrame,
+                message,
+                title,
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+
+        return option == 0;
+    }
+
+    private boolean reloadAlternativePartnersOverview() {
+        try {
+            String httpResponse = httpRequestHandler.sendGetRequestAlternativePartners(true);
+            showHttpResponseWithTimer(httpResponseLabelHeader, httpResponse);
+            return true;
+        } catch (Exception ex) {
+            LOGGER.error(ex);
+            return false;
+        }
+    }
+
+    private void showAlternativePartnersOverview() {
+        panelContainer.removeAll();
+        panelContainer.add(new org.example.ui.pages.AlternativePartnersPage());
+        panelContainer.revalidate();
+        panelContainer.repaint();
     }
 
     private void checkForChanges() {

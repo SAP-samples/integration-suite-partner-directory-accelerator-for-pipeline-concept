@@ -116,6 +116,10 @@ public class AlternativePartner {
                 && partner.getId().equals(partnerToRemove.getId()));
     }
 
+    public static void removeAlternativePartnersByPid(String pid) {
+        currentAlternativePartnersList.removeIf(partner -> partner.getPid().equals(pid));
+    }
+
     public static void addAlternativePartnerToList(AlternativePartner partnerToAdd) {
         if (!isDuplicate(partnerToAdd)) {
             currentAlternativePartnersList.add(partnerToAdd);

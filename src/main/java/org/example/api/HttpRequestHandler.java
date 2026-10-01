@@ -18,6 +18,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -375,6 +376,16 @@ public class HttpRequestHandler {
         return null;
     }
 
+    public List<String> deletePartnerId(String pid) {
+        List<String> deleteErrors = new ArrayList<>();
+
+        deleteAlternativePartnersByPid(pid, deleteErrors);
+        deleteBinaryParametersByPid(pid, deleteErrors);
+        deleteStringParametersByPid(pid, deleteErrors);
+
+        return deleteErrors;
+    }
+
     public void transportAlternativePartners(List<AlternativePartner> alternativePartnersToTransport, boolean overwrite, List<String> transportErrors) {
         for (AlternativePartner alternativePartner : alternativePartnersToTransport) {
             String agency = alternativePartner.getAgency();
@@ -600,6 +611,98 @@ public class HttpRequestHandler {
     private String convertStringToHexstring(String str) {
         char[] chars = Hex.encodeHex(str.getBytes(StandardCharsets.UTF_8));
         return String.valueOf(chars);
+    }
+
+    public boolean wasLatestResponseSuccessful() {
+        return this.latestStatusCode >= 200 && this.latestStatusCode <= 299;
+    }
+
+    public String getLatestErrorMessageForUi() {
+        return getLatestErrorMessage();
+    }
+
+    private void deleteAlternativePartnersByPid(String pid, List<String> deleteErrors) {
+        JSONObject alternativePartnersToDelete = getAlternativePartnersToTransport(pid);
+        if (alternativePartnersToDelete == null) {
+            return;
+        }
+
+        JSONArray resultsArray = getResultsArray(alternativePartnersToDelete);
+        LOGGER.info("Found {} alternative partners to delete for Pid {}.", resultsArray.length(), pid);
+
+        for (int i = 0; i < resultsArray.length(); i++) {
+            JSONObject resultObject = resultsArray.getJSONObject(i);
+            String agency = resultObject.getString(JSON_KEY_AGENCY);
+            String scheme = resultObject.getString(JSON_KEY_SCHEME);
+            String id = resultObject.getString(JSON_KEY_ID);
+
+            try {
+                sendDeleteRequestAlternativePartners(agency, scheme, id);
+                if (!wasLatestResponseSuccessful()) {
+                    deleteErrors.add(getLatestErrorMessage());
+                }
+            } catch (Exception e) {
+                String errorMessage = "Error deleting alternative partner (agency: " + agency + ", scheme: " + scheme + ", id: " + id + ", pid: " + pid + "): ";
+                LOGGER.error("{}{}", errorMessage, e);
+                deleteErrors.add(errorMessage + e.getMessage());
+            }
+        }
+    }
+
+    private void deleteBinaryParametersByPid(String pid, List<String> deleteErrors) {
+        JSONObject binaryParametersToDelete = getBinaryParametersToTransport(List.of(pid));
+        if (binaryParametersToDelete == null) {
+            return;
+        }
+
+        JSONArray resultsArray = getResultsArray(binaryParametersToDelete);
+        LOGGER.info("Found {} binary parameters to delete for Pid {}.", resultsArray.length(), pid);
+
+        for (int i = 0; i < resultsArray.length(); i++) {
+            JSONObject resultObject = resultsArray.getJSONObject(i);
+            String id = resultObject.getString(JSON_KEY_ID);
+
+            try {
+                sendDeleteRequestBinaryParameters(pid, id);
+                if (!wasLatestResponseSuccessful()) {
+                    deleteErrors.add(getLatestErrorMessage());
+                }
+            } catch (Exception e) {
+                String errorMessage = "Error deleting binary parameter (id: " + id + ", pid: " + pid + "): ";
+                LOGGER.error("{}{}", errorMessage, e);
+                deleteErrors.add(errorMessage + e.getMessage());
+            }
+        }
+    }
+
+    private void deleteStringParametersByPid(String pid, List<String> deleteErrors) {
+        JSONObject stringParametersToDelete = getStringParametersToTransport(List.of(pid));
+        if (stringParametersToDelete == null) {
+            return;
+        }
+
+        JSONArray resultsArray = getResultsArray(stringParametersToDelete);
+        LOGGER.info("Found {} string parameters to delete for Pid {}.", resultsArray.length(), pid);
+
+        for (int i = 0; i < resultsArray.length(); i++) {
+            JSONObject resultObject = resultsArray.getJSONObject(i);
+            String id = resultObject.getString(JSON_KEY_ID);
+
+            try {
+                sendDeleteRequestStringParameters(pid, id);
+                if (!wasLatestResponseSuccessful()) {
+                    deleteErrors.add(getLatestErrorMessage());
+                }
+            } catch (Exception e) {
+                String errorMessage = "Error deleting string parameter (id: " + id + ", pid: " + pid + "): ";
+                LOGGER.error("{}{}", errorMessage, e);
+                deleteErrors.add(errorMessage + e.getMessage());
+            }
+        }
+    }
+
+    private JSONArray getResultsArray(JSONObject jsonObject) {
+        return jsonObject.getJSONObject(JSON_KEY_D).getJSONArray(JSON_KEY_RESULTS);
     }
 
     private String buildPidFilterBinaryParameters(List<String> pids) {

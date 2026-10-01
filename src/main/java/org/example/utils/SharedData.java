@@ -51,6 +51,8 @@ public final class SharedData {
     public static final String LABEL_CLIENT_SECRET = "Client Secret";
     public static final String LABEL_COMBINED_XSLT = "Combined XSLT";
     public static final String LABEL_CONFIRM_CHANGE_PID = "Confirm to change Pid of whole scenario";
+    public static final String LABEL_CONFIRM_DELETE_ENTRY = "Confirm deletion of alternative partner";
+    public static final String LABEL_CONFIRM_DELETE_PARTNER_ID = "Confirm deletion of Partner ID";
     public static final String LABEL_CONFIRM_MIGRATION_1 = "Confirm migration of ";
     public static final String LABEL_CONFIRM_MIGRATION_2 = " scenario(s) using old partner ID with tilde to new partner ID.";
     public static final String LABEL_CONFIRMATION = "Confirmation";
@@ -59,8 +61,14 @@ public final class SharedData {
     public static final String LABEL_DEFAULT = "Default";
     public static final String LABEL_DEFAULT_COMBINED_DETERMINATION = "Use default (combined determination)";
     public static final String LABEL_DELETE = "Delete";
-    public static final String LABEL_DELETE_ENTRY = "Delete this entry";
+    public static final String LABEL_DELETE_ENTRY = "Delete this alternative partner only";
+    public static final String LABEL_DELETE_ENTRY_SUCCESSFUL = "Successfully deleted the alternative partner.";
     public static final String LABEL_DELETE_OLD_ENTRIES = "Delete entries with old Pid";
+    public static final String LABEL_DELETE_PARTNER_ID = "Delete whole scenario of this Partner ID";
+    public static final String LABEL_DELETE_PARTNER_ID_FAILED_1 = "During deletion of the Partner ID, ";
+    public static final String LABEL_DELETE_PARTNER_ID_FAILED_2 = " request(s) failed. Please check the logs for details.";
+    public static final String LABEL_DELETE_PARTNER_ID_RELOAD_REQUIRED = "Some delete requests failed and the overview could not be refreshed automatically. Please reload data from API.";
+    public static final String LABEL_DELETE_PARTNER_ID_SUCCESSFUL = "Successfully deleted the Partner ID and all related entries.";
     public static final String LABEL_DELETE_ROW = "Delete row";
     public static final String LABEL_DELETE_SELECTED_TENANT = "Delete selected tenant";
     public static final String LABEL_DOES_NOT_EXIST = " does not exist.";
@@ -172,6 +180,9 @@ public final class SharedData {
     public static final String LABEL_STRING_PARAMETERS = "String Parameters";
     public static final String LABEL_SUCCESS = "Success";
     public static final String LABEL_SURE_TO_DELETE = "Are you sure that you want to delete the selected tenant named \"";
+    public static final String LABEL_SURE_TO_DELETE_ENTRY = "Are you sure that you want to delete this alternative partner?";
+    public static final String LABEL_SURE_TO_DELETE_PARTNER_ID_1 = "Are you sure that you want to delete the whole Partner ID \"";
+    public static final String LABEL_SURE_TO_DELETE_PARTNER_ID_2 = "\" including all alternative partners and related binary / string parameters?";
     public static final String LABEL_TENANT_NAME = "Tenant Name";
     public static final String LABEL_USER = "User (optional)";
     public static final String LABEL_TOKEN_URL = "Token URL";
