@@ -34,6 +34,7 @@ public class AddNewTenantDialog extends JDialog {
     private final JTextField tokenUrlField;
     private final JTextField clientIdField;
     private final JPasswordField clientSecretField;
+    private final JTextField userField;
 
     private TenantCredentials tenantValues;
 
@@ -56,6 +57,7 @@ public class AddNewTenantDialog extends JDialog {
         tokenUrlField = new JTextField(UI_TEXT_FIELD_COLUMNS);
         clientIdField = new JTextField(UI_TEXT_FIELD_COLUMNS);
         clientSecretField = new JPasswordField(UI_TEXT_FIELD_COLUMNS);
+        userField = new JTextField(UI_TEXT_FIELD_COLUMNS);
 
         cancelButton = new JButton(LABEL_CANCEL);
         saveButton = new JButton(LABEL_SAVE);
@@ -65,7 +67,7 @@ public class AddNewTenantDialog extends JDialog {
         addComponents(gbc);
         setupListeners();
 
-        setSize(UI_DIALOG_WIDTH, UI_DIALOG_HEIGHT);
+        setSize(UI_DIALOG_WIDTH, UI_DIALOG_HEIGHT + 60);
         setLocationRelativeTo(mainFrame);
     }
 
@@ -119,9 +121,16 @@ public class AddNewTenantDialog extends JDialog {
         gbc.gridx = 1;
         add(clientSecretField, gbc);
 
+        // User
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        add(new JLabel(colon(LABEL_USER)), gbc);
+        gbc.gridx = 1;
+        add(userField, gbc);
+
         // Buttons
         gbc.gridx = 1;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         gbc.anchor = GridBagConstraints.CENTER;
         JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelButtons.add(cancelButton);
@@ -130,7 +139,7 @@ public class AddNewTenantDialog extends JDialog {
 
         // Upload Button
         gbc.gridx = 0;
-        gbc.gridy = 7;
+        gbc.gridy = 8;
         add(new JLabel(colon(LABEL_ALTERNATIVE)), gbc);
         gbc.gridx = 1;
         add(uploadButton, gbc);
@@ -152,7 +161,8 @@ public class AddNewTenantDialog extends JDialog {
             if (areFieldsValid()) {
                 String normalizedUrl = normalizeTenantUrl(urlField.getText());
                 urlField.setText(normalizedUrl);
-                TenantCredentials newTenant = new TenantCredentials(tenantNameField.getText().trim(), normalizedUrl, tokenUrlField.getText().trim(), clientIdField.getText().trim(), new String(clientSecretField.getPassword()).trim(), null, null, getSelectedHeaderColorHex());
+                String user = userField.getText().trim();
+                TenantCredentials newTenant = new TenantCredentials(tenantNameField.getText().trim(), normalizedUrl, tokenUrlField.getText().trim(), clientIdField.getText().trim(), new String(clientSecretField.getPassword()).trim(), user.isEmpty() ? null : user, null, null, getSelectedHeaderColorHex());
 
                 try {
                     if (dialogTitle.equals(LABEL_EDIT_SELECTED_TENANT)) { // edit tenant
@@ -209,22 +219,23 @@ public class AddNewTenantDialog extends JDialog {
     }
 
     public void setInputFieldValues(TenantCredentials tenant) {
-        setInputFieldValues(tenant.getName(), tenant.getHeaderColorHex(), tenant.getUrl(), tenant.getTokenurl(), tenant.getClientid(), tenant.getClientsecret());
+        setInputFieldValues(tenant.getName(), tenant.getHeaderColorHex(), tenant.getUrl(), tenant.getTokenurl(), tenant.getClientid(), tenant.getClientsecret(), tenant.getUser());
         tenantValues = tenant;
     }
 
     public void setEmptyValues() {
-        setInputFieldValues(null, DEFAULT_TENANT_HEADER_COLOR_HEX, null, null, null, null);
+        setInputFieldValues(null, DEFAULT_TENANT_HEADER_COLOR_HEX, null, null, null, null, null);
         tenantValues = null;
     }
 
-    public void setInputFieldValues(String name, String headerColorHex, String url, String tokenurl, String clientId, String clientSecret) {
+    public void setInputFieldValues(String name, String headerColorHex, String url, String tokenurl, String clientId, String clientSecret, String user) {
         tenantNameField.setText(name);
         setSelectedHeaderColor(headerColorHex);
         urlField.setText(url);
         tokenUrlField.setText(tokenurl);
         clientIdField.setText(clientId);
         clientSecretField.setText(clientSecret);
+        userField.setText(user);
     }
 
     private String getSelectedHeaderColorHex() {

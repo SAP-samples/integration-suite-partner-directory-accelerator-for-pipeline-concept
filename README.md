@@ -143,6 +143,7 @@ The "Add new tenant" button allows you to specify the URL to the Partner Directo
 * **`Token URL`**: This URL is called to get the token, it usually ends with `/oauth/token`, which should be included here as it is shown in the BTP.
 * **`Client ID`**: The client ID is required to get an OAuth token and can be seen in the service instance credentials in the BTP.
 * **`Client Secret`**: The client secret is required to get an OAuth token and can be seen in the service instance credentials in the BTP.
+* **`User`**: This field is optional. If you provide a value here, it is added as the `user` query parameter for POST and PUT requests, for example `.../api/v1/AlternativePartners?user=123`. In SAP Integration Suite, this value is shown as *Created By* / *Last Modified By* for the corresponding Partner Directory entry.
 
 **Select local JSON file** can be used as an alternative to manual input. Here, you can click the button to select a local JSON file. The service key can directly be downloaded from the BTP: from your subaccount, navigate to Services > Instances and Subscriptions > Instances. To download the credentials as JSON file, first click on the name of your service key and then choose the download button. You still need to add a tenant name.
 

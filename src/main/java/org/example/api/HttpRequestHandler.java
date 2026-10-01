@@ -12,6 +12,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -695,8 +696,9 @@ public class HttpRequestHandler {
 
     private String sendPostRequest(String endpoint, String jsonBody, boolean isResponseLogged) throws Exception {
         requestTokenIfExpired();
+        String requestUri = this.url + appendUserQueryParameter(endpoint);
         HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(this.url + endpoint))
+                .uri(URI.create(requestUri))
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                 .build();
         HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
@@ -720,8 +722,9 @@ public class HttpRequestHandler {
 
     private void sendPutRequest(String endpoint, String jsonBody, boolean isResponseLogged) throws Exception {
         requestTokenIfExpired();
+        String requestUri = this.url + appendUserQueryParameter(endpoint);
         HttpRequest httpRequest = requestBuilder
-                .uri(URI.create(this.url + endpoint))
+                .uri(URI.create(requestUri))
                 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
                 .build();
         HttpResponse<String> httpResponse = this.client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
@@ -788,5 +791,15 @@ public class HttpRequestHandler {
         setResponseAttributes(response, requestMethod);
         logLatestResponse();
         return this.latestResponseLabel;
+    }
+
+    private String appendUserQueryParameter(String endpoint) {
+        String user = tenantCredentials.getUser();
+        if (user == null || user.isBlank()) {
+            return endpoint;
+        }
+
+        String separator = endpoint.contains("?") ? "&" : "?";
+        return endpoint + separator + JSON_KEY_USER + "=" + URLEncoder.encode(user, StandardCharsets.UTF_8);
     }
 }

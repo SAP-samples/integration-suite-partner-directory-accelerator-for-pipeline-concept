@@ -172,6 +172,7 @@ public final class SharedData {
     public static final String LABEL_SUCCESS = "Success";
     public static final String LABEL_SURE_TO_DELETE = "Are you sure that you want to delete the selected tenant named \"";
     public static final String LABEL_TENANT_NAME = "Tenant Name";
+    public static final String LABEL_USER = "User (optional)";
     public static final String LABEL_TOKEN_URL = "Token URL";
     public static final String LABEL_TRANSPORT = "Replicate?";
     public static final String LABEL_TRANSPORT_1 = "Replicate ";
@@ -270,6 +271,7 @@ public final class SharedData {
     public static final String JSON_KEY_RESULTS = "results";
     public static final String JSON_KEY_SCHEME = "Scheme";
     public static final String JSON_KEY_TENANTS = "tenants";
+    public static final String JSON_KEY_USER = "user";
     public static final String JSON_KEY_TOKEN_EXPIRATION_DATE_TIME = "token_expiration_datetime";
     public static final String JSON_KEY_TOKEN_URL = "tokenurl";
     public static final String JSON_KEY_URL = "url";

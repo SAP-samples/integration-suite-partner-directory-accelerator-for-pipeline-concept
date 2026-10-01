@@ -6,6 +6,7 @@ applogs/
 backup/
 export/
 tenants.json
+src/test/
 
 ### IntelliJ IDEA ###
 .idea/

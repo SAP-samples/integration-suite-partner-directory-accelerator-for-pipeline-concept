@@ -60,7 +60,8 @@ public class JsonFileHandler {
                     shouldPersistUpdatedTenantFormat = true;
                 }
                 String headerColorHex = getHeaderColorHexWithLegacyFallback(tenantObject);
-                TenantCredentials credentials = new TenantCredentials(tenantObject.getString(JSON_KEY_NAME), tenantObject.getString(JSON_KEY_URL), tenantObject.getString(JSON_KEY_TOKEN_URL), tenantObject.getString(JSON_KEY_CLIENT_ID), tenantObject.getString(JSON_KEY_CLIENT_SECRET), headerColorHex);
+                String user = tenantObject.isNull(JSON_KEY_USER) ? null : tenantObject.optString(JSON_KEY_USER, null);
+                TenantCredentials credentials = new TenantCredentials(tenantObject.getString(JSON_KEY_NAME), tenantObject.getString(JSON_KEY_URL), tenantObject.getString(JSON_KEY_TOKEN_URL), tenantObject.getString(JSON_KEY_CLIENT_ID), tenantObject.getString(JSON_KEY_CLIENT_SECRET), user, null, null, headerColorHex);
                 if (tenantObject.has(JSON_KEY_ACCESS_TOKEN) && tenantObject.has(JSON_KEY_TOKEN_EXPIRATION_DATE_TIME)) {
                     credentials.setAccessToken(tenantObject.getString(JSON_KEY_ACCESS_TOKEN));
                     credentials.setTokenExpirationDateTime(tenantObject.getString(JSON_KEY_TOKEN_EXPIRATION_DATE_TIME));
@@ -90,6 +91,7 @@ public class JsonFileHandler {
                 tenantObject.put(JSON_KEY_NAME, tenant.getName());
                 tenantObject.put(JSON_KEY_CLIENT_ID, tenant.getClientid());
                 tenantObject.put(JSON_KEY_CLIENT_SECRET, tenant.getClientsecret());
+                tenantObject.put(JSON_KEY_USER, tenant.getUser());
                 tenantObject.put(JSON_KEY_TOKEN_URL, tenant.getTokenurl());
                 tenantObject.put(JSON_KEY_URL, tenant.getUrl());
                 tenantObject.put(JSON_KEY_HEADER_COLOR, tenant.getHeaderColorHex());
@@ -172,7 +174,8 @@ public class JsonFileHandler {
             for (int i = 0; i < tenantsArray.length(); i++) {
                 JSONObject tenantObject = tenantsArray.getJSONObject(i);
                 String headerColorHex = getHeaderColorHexWithLegacyFallback(tenantObject);
-                TenantCredentials tenant = new TenantCredentials(tenantObject.getString(JSON_KEY_NAME), tenantObject.getString(JSON_KEY_URL), tenantObject.getString(JSON_KEY_TOKEN_URL), tenantObject.getString(JSON_KEY_CLIENT_ID), tenantObject.getString(JSON_KEY_CLIENT_SECRET), headerColorHex);
+                String user = tenantObject.isNull(JSON_KEY_USER) ? null : tenantObject.optString(JSON_KEY_USER, null);
+                TenantCredentials tenant = new TenantCredentials(tenantObject.getString(JSON_KEY_NAME), tenantObject.getString(JSON_KEY_URL), tenantObject.getString(JSON_KEY_TOKEN_URL), tenantObject.getString(JSON_KEY_CLIENT_ID), tenantObject.getString(JSON_KEY_CLIENT_SECRET), user, null, null, headerColorHex);
                 if (tenantObject.has(JSON_KEY_ACCESS_TOKEN) && tenantObject.has(JSON_KEY_TOKEN_EXPIRATION_DATE_TIME)) {
                     tenant.setAccessToken(tenantObject.getString(JSON_KEY_ACCESS_TOKEN));
                     tenant.setTokenExpirationDateTime(tenantObject.getString(JSON_KEY_TOKEN_EXPIRATION_DATE_TIME));
