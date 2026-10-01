@@ -70,6 +70,7 @@ public final class SharedData {
     public static final String LABEL_ERROR = "Error";
     public static final String LABEL_ERROR_ADD_AT_LEAST_ONE_NEW_PARTNER_ID_TO_MIGRATE = "Add at least one new partner id to migrate.";
     public static final String LABEL_ERROR_EMPTY_INPUT = "Input field(s) may not be empty. Please provide all values and send again.";
+    public static final String LABEL_ERROR_EXPORT_TRY_AGAIN = "Error when exporting. Please try again.";
     public static final String LABEL_ERROR_MERGING_XSLT = "Error when merging XSLT";
     public static final String LABEL_ERROR_NEW_PID_ALREADY_EXISTS = "Error when trying to change the Pid: New Pid already exists.";
     public static final String LABEL_ERROR_READING_JSON_FILE = "Error when reading JSON file. Make sure the JSON file is in the right format.";
