@@ -1357,7 +1357,7 @@ public class ParametersPage extends JPanel {
                                     }
 
                                     fileWriter.write(xsltToBackup);
-                                    fileWriter.flush();                                    
+                                    fileWriter.flush();
                                     fileWriter.close();
                                 }
 
