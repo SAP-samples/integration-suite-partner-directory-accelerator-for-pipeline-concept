@@ -230,7 +230,19 @@ On the parameters page, you can create and update all binary parameters and stri
 
 On the upper part of the page, you can update the values for Sender System (named "agency" for alternative partner) and Sender Interface (named "id" for alternative partner). Once a value is changed, buttons to send and discard the changes on the alternative partner are shown. For the Pid, there is a dedicated button to change it. This is because the Pid is a key for both binary and string parameters, so "changing" it actually means to delete and newly create these all existing parameters of your scenario.
 
-Additionally, two delete actions are available next to the Sender System field: **"Delete this alternative partner only"** removes just the currently opened alternative partner, while **"Delete whole scenario of this Partner ID"** removes the complete scenario for the current Partner ID including related binary and string parameters.
+Additionally, four action buttons are available next to the Sender System field:
+
+1. **"Copy this scenario"** allows you to quickly create a new scenario by copying the current one. A dialog appears with all fields editable (Scheme, Sender Interface, Sender System, and Partner ID). You can modify any or all of these values to create a new scenario. The dialog also includes two checkboxes (both checked by default):
+   - **"Include Binary Parameters (XSLT mappings)"** - Copies all receiver and interface determination XSLTs from the current scenario
+   - **"Include String Parameters"** - Copies all string parameters (receiver queues, landscape mappings, etc.)
+   
+   This is particularly useful for creating multiple sender system scenarios or duplicating complex configurations. Simply modify the fields as needed and confirm to create the complete copy with all associated parameters. **If you keep the same Partner ID, the selected binary and string parameters are not copied again to avoid overwriting the original scenario's parameters.**
+
+2. **"Delete this alternative partner only"** removes just the currently opened alternative partner.
+
+3. **"Delete whole scenario of this Partner ID"** removes the complete scenario for the current Partner ID including all related alternative partners, binary parameters, and string parameters.
+
+4. **"Change Pid"** allows you to change the Partner ID of the current scenario. This operation will update the Partner ID for all associated binary and string parameters at once. Note that the new Partner ID must be unique and not already exist in the system.
 
 #### Option 1: Combined XSLT
 

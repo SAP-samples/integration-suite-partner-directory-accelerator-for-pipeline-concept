@@ -53,6 +53,11 @@ public final class SharedData {
     public static final String LABEL_CONFIRM_CHANGE_PID = "Confirm to change Pid of whole scenario";
     public static final String LABEL_CONFIRM_DELETE_ENTRY = "Confirm deletion of alternative partner";
     public static final String LABEL_CONFIRM_DELETE_PARTNER_ID = "Confirm deletion of Partner ID";
+     public static final String LABEL_COPY_SCENARIO = "Copy this scenario";
+     public static final String LABEL_COPY_SCENARIO_DIALOG_TITLE = "Copy Scenario";
+     public static final String LABEL_COPY_SCENARIO_SUCCESSFUL = "Successfully copied the scenario.";
+     public static final String LABEL_COPY_BINARY_PARAMETERS = "Include Binary Parameters (XSLT mappings)";
+     public static final String LABEL_COPY_STRING_PARAMETERS_COPY = "Include String Parameters";
     public static final String LABEL_CONFIRM_MIGRATION_1 = "Confirm migration of ";
     public static final String LABEL_CONFIRM_MIGRATION_2 = " scenario(s) using old partner ID with tilde to new partner ID.";
     public static final String LABEL_CONFIRMATION = "Confirmation";

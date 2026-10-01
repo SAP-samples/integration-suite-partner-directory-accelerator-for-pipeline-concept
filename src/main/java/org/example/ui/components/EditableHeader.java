@@ -206,6 +206,11 @@ public class EditableHeader extends JPanel {
             deleteButtonsGbc.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
 
             JPanel deleteButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, UI_PADDING, 0));
+            
+            JButton copyScenarioButton = new JButton(LABEL_COPY_SCENARIO);
+            copyScenarioButton.addActionListener(e -> copyCurrentScenario());
+            deleteButtonsPanel.add(copyScenarioButton);
+
             JButton deleteEntryButton = new JButton(LABEL_DELETE_ENTRY);
             deleteEntryButton.addActionListener(e -> deleteCurrentAlternativePartner());
             deleteButtonsPanel.add(deleteEntryButton);
@@ -369,33 +374,217 @@ public class EditableHeader extends JPanel {
         }
     }
 
-    private void deleteCurrentPartnerId() {
-        String pid = currentHeaderValues.get(LABEL_PID);
-        String confirmationText = LABEL_SURE_TO_DELETE_PARTNER_ID_1 + pid + LABEL_SURE_TO_DELETE_PARTNER_ID_2;
-        if (!showDeleteConfirmationDialog(confirmationText, LABEL_CONFIRM_DELETE_PARTNER_ID)) {
-            return;
-        }
+     private void deleteCurrentPartnerId() {
+         String pid = currentHeaderValues.get(LABEL_PID);
+         String confirmationText = LABEL_SURE_TO_DELETE_PARTNER_ID_1 + pid + LABEL_SURE_TO_DELETE_PARTNER_ID_2;
+         if (!showDeleteConfirmationDialog(confirmationText, LABEL_CONFIRM_DELETE_PARTNER_ID)) {
+             return;
+         }
 
-        List<String> deleteErrors = httpRequestHandler.deletePartnerId(pid);
-        boolean overviewReloaded = reloadAlternativePartnersOverview();
+         List<String> deleteErrors = httpRequestHandler.deletePartnerId(pid);
+         boolean overviewReloaded = reloadAlternativePartnersOverview();
 
-        if (deleteErrors.isEmpty()) {
-            if (!overviewReloaded) {
-                removeAlternativePartnersByPid(pid);
-            }
-            showAlternativePartnersOverview();
-            JOptionPane.showMessageDialog(mainFrame, LABEL_DELETE_PARTNER_ID_SUCCESSFUL, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
+         if (deleteErrors.isEmpty()) {
+             if (!overviewReloaded) {
+                 removeAlternativePartnersByPid(pid);
+             }
+             showAlternativePartnersOverview();
+             JOptionPane.showMessageDialog(mainFrame, LABEL_DELETE_PARTNER_ID_SUCCESSFUL, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
+             return;
+         }
 
-        String warningMessage = LABEL_DELETE_PARTNER_ID_FAILED_1 + deleteErrors.size() + LABEL_DELETE_PARTNER_ID_FAILED_2;
-        if (overviewReloaded) {
-            showAlternativePartnersOverview();
-            JOptionPane.showMessageDialog(mainFrame, warningMessage, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(mainFrame, warningMessage + "\n\n" + LABEL_DELETE_PARTNER_ID_RELOAD_REQUIRED, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
-        }
-    }
+         String warningMessage = LABEL_DELETE_PARTNER_ID_FAILED_1 + deleteErrors.size() + LABEL_DELETE_PARTNER_ID_FAILED_2;
+         if (overviewReloaded) {
+             showAlternativePartnersOverview();
+             JOptionPane.showMessageDialog(mainFrame, warningMessage, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
+         } else {
+             JOptionPane.showMessageDialog(mainFrame, warningMessage + "\n\n" + LABEL_DELETE_PARTNER_ID_RELOAD_REQUIRED, LABEL_WARNING, JOptionPane.WARNING_MESSAGE);
+         }
+     }
+
+     private void copyCurrentScenario() {
+         String currentAgency = currentHeaderValues.get(LABEL_AGENCY);
+         String currentScheme = currentHeaderValues.get(LABEL_SCHEME);
+         String currentId = currentHeaderValues.get(LABEL_ID_ALTERNATIVE_PARTNERS);
+         String currentPid = currentHeaderValues.get(LABEL_PID);
+ 
+         // Create a copy scenario dialog
+         JDialog copyDialog = new JDialog(mainFrame, LABEL_COPY_SCENARIO_DIALOG_TITLE, true);
+         copyDialog.setLayout(new BorderLayout());
+
+         // Create input panel with editable fields
+         JPanel inputPanel = new JPanel(new GridBagLayout());
+         GridBagConstraints gbc = new GridBagConstraints();
+         gbc.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
+         gbc.fill = GridBagConstraints.HORIZONTAL;
+         gbc.weightx = 1.0;
+
+         // Row 0: Sender System
+         gbc.gridx = 0;
+         gbc.gridy = 0;
+         JLabel agencyLabel = new JLabel(colonAsterisk(LABEL_AGENCY));
+         inputPanel.add(agencyLabel, gbc);
+
+         gbc.gridx = 1;
+         JTextField agencyTextField = new JTextField(currentAgency, UI_TEXT_FIELD_COLUMNS);
+         inputPanel.add(agencyTextField, gbc);
+
+         // Row 1: Scheme (now fully editable)
+         gbc.gridx = 0;
+         gbc.gridy = 1;
+         JLabel schemeLabel = new JLabel(colonAsterisk(LABEL_SCHEME));
+         inputPanel.add(schemeLabel, gbc);
+
+         gbc.gridx = 1;
+         JTextField schemeTextField = new JTextField(currentScheme, UI_TEXT_FIELD_COLUMNS);
+         inputPanel.add(schemeTextField, gbc);
+
+         // Row 2: Sender Interface
+         gbc.gridx = 0;
+         gbc.gridy = 2;
+         JLabel idLabel = new JLabel(colonAsterisk(LABEL_ID_ALTERNATIVE_PARTNERS));
+         inputPanel.add(idLabel, gbc);
+
+         gbc.gridx = 1;
+         JTextField idTextField = new JTextField(currentId, UI_TEXT_FIELD_COLUMNS);
+         inputPanel.add(idTextField, gbc);
+
+         // Row 3: Partner ID
+         gbc.gridx = 0;
+         gbc.gridy = 3;
+         JLabel pidLabel = new JLabel(colonAsterisk(LABEL_PID));
+         inputPanel.add(pidLabel, gbc);
+
+         gbc.gridx = 1;
+         JTextField pidTextField = new JTextField(currentPid, UI_TEXT_FIELD_COLUMNS);
+         inputPanel.add(pidTextField, gbc);
+
+         // Add parameter checkboxes with more spacing from input fields
+         JPanel checkboxPanel = new JPanel();
+         checkboxPanel.setBorder(BorderFactory.createEmptyBorder(UI_PADDING * 3, UI_PADDING, UI_PADDING, UI_PADDING));
+         checkboxPanel.setLayout(new BoxLayout(checkboxPanel, BoxLayout.Y_AXIS));
+
+         JCheckBox copyBinaryParametersCheckbox = new JCheckBox(LABEL_COPY_BINARY_PARAMETERS, true);
+         checkboxPanel.add(copyBinaryParametersCheckbox);
+
+         JCheckBox copyStringParametersCheckbox = new JCheckBox(LABEL_COPY_STRING_PARAMETERS_COPY, true);
+         checkboxPanel.add(copyStringParametersCheckbox);
+
+         // Center the content vertically
+         JPanel centerPanel = new JPanel(new GridBagLayout());
+         GridBagConstraints centerGbc = new GridBagConstraints();
+         centerGbc.gridx = 0;
+         centerGbc.gridy = 0;
+         centerGbc.weighty = 1.0;
+         centerGbc.anchor = GridBagConstraints.NORTH;
+         JPanel topSpacer = new JPanel();
+         centerPanel.add(topSpacer, centerGbc);
+
+         centerGbc.gridy = 1;
+         centerGbc.weighty = 0.0;
+         centerGbc.anchor = GridBagConstraints.CENTER;
+         JPanel contentWrapper = new JPanel(new BorderLayout());
+         contentWrapper.add(inputPanel, BorderLayout.NORTH);
+         contentWrapper.add(checkboxPanel, BorderLayout.CENTER);
+         centerPanel.add(contentWrapper, centerGbc);
+
+         centerGbc.gridy = 2;
+         centerGbc.weighty = 1.0;
+         centerGbc.anchor = GridBagConstraints.SOUTH;
+         JPanel bottomSpacer = new JPanel();
+         centerPanel.add(bottomSpacer, centerGbc);
+
+         copyDialog.add(centerPanel, BorderLayout.CENTER);
+
+         // Button panel
+         JPanel buttonPanel = new JPanel();
+
+         JButton cancelButton = new JButton(LABEL_CANCEL);
+         cancelButton.addActionListener(e -> copyDialog.dispose());
+         buttonPanel.add(cancelButton);
+
+         JButton confirmButton = new JButton(LABEL_SEND_NEW_TO_API);
+         confirmButton.addActionListener(e -> {
+             String newAgency = agencyTextField.getText().trim();
+             String newScheme = schemeTextField.getText().trim();
+             String newId = idTextField.getText().trim();
+             String newPid = pidTextField.getText().trim();
+
+             if (newAgency.isEmpty() || newScheme.isEmpty() || newId.isEmpty() || newPid.isEmpty()) {
+                 JOptionPane.showMessageDialog(copyDialog, LABEL_FILL_OUT_ALL_FIELDS, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+                 return;
+             }
+
+             // Check if the new alternative partner already exists
+             AlternativePartner newPartner = new AlternativePartner(newAgency, newScheme, newId, newPid);
+             if (AlternativePartner.isDuplicate(newPartner)) {
+                 JOptionPane.showMessageDialog(copyDialog, "This alternative partner already exists.", LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+                 return;
+             }
+
+             try {
+                 // Create the new alternative partner
+                 httpRequestHandler.sendPostRequestAlternativePartners(newAgency, newScheme, newId, newPid);
+
+                 boolean shouldCopyParameters = !currentPid.equals(newPid);
+
+                 // Copy binary parameters if checked and the PID changed
+                 if (shouldCopyParameters && copyBinaryParametersCheckbox.isSelected()) {
+                     try {
+                         List<String> oldPidList = new ArrayList<>();
+                         oldPidList.add(currentPid);
+                         JSONObject jsonBinaryParametersToTransport = httpRequestHandler.getBinaryParametersToTransport(oldPidList);
+                         if (jsonBinaryParametersToTransport != null) {
+                             HashMap<String, String> pidMapping = new HashMap<>();
+                             pidMapping.put(currentPid, newPid);
+                             List<String> copyErrors = new ArrayList<>();
+                             // Use false for changeMode to ensure we don't delete originals - just create copies
+                             httpRequestHandler.transportBinaryParameters(jsonBinaryParametersToTransport, false, copyErrors, false, pidMapping);
+                         }
+                     } catch (Exception ex) {
+                         LOGGER.warn("Error copying binary parameters: {}", ex.getMessage());
+                     }
+                 }
+
+                 // Copy string parameters if checked and the PID changed
+                 if (shouldCopyParameters && copyStringParametersCheckbox.isSelected()) {
+                     try {
+                         List<String> oldPidList = new ArrayList<>();
+                         oldPidList.add(currentPid);
+                         JSONObject jsonStringParametersToTransport = httpRequestHandler.getStringParametersToTransport(oldPidList);
+                         if (jsonStringParametersToTransport != null) {
+                             HashMap<String, String> pidMapping = new HashMap<>();
+                             pidMapping.put(currentPid, newPid);
+                             List<String> copyErrors = new ArrayList<>();
+                             // Use false for changeMode to ensure we don't delete originals - just create copies
+                             httpRequestHandler.transportStringParameters(jsonStringParametersToTransport, false, copyErrors, false, pidMapping);
+                         }
+                     } catch (Exception ex) {
+                         LOGGER.warn("Error copying string parameters: {}", ex.getMessage());
+                     }
+                 }
+                 
+                 // Add to the list
+                 addAlternativePartnerToList(newPartner);
+                 
+                 // Refresh the table
+                 alternativePartnersPage.refreshTableData(currentAlternativePartnersList);
+                 
+                 copyDialog.dispose();
+                 JOptionPane.showMessageDialog(mainFrame, LABEL_COPY_SCENARIO_SUCCESSFUL, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
+             } catch (Exception ex) {
+                 LOGGER.error(ex);
+                 JOptionPane.showMessageDialog(copyDialog, ex.getMessage(), LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+             }
+         });
+         buttonPanel.add(confirmButton);
+
+         copyDialog.add(buttonPanel, BorderLayout.SOUTH);
+
+         copyDialog.setSize(UI_DIALOG_WIDTH, UI_DIALOG_HEIGHT);
+         copyDialog.setLocationRelativeTo(mainFrame);
+         copyDialog.setVisible(true);
+     }
 
     private boolean showDeleteConfirmationDialog(String message, String title) {
         String[] options = {LABEL_DELETE, LABEL_CANCEL};
