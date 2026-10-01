@@ -54,7 +54,7 @@ public class TemplateInterfaceDetermination implements TemplateObjects {
     public void setParams() {
         params.clear();
 
-        Pattern pattern = Pattern.compile("\\$(\\w+)(?=\\s|=)");
+        Pattern pattern = Pattern.compile("\\$([A-Za-z_][A-Za-z0-9_.-]*(?::[A-Za-z_][A-Za-z0-9_.-]*)?)");
 
         for (String condition : hashMapConditionService.keySet()) {
             Matcher matcher = pattern.matcher(condition);

@@ -58,7 +58,7 @@ public class TemplateReceiverDetermination implements TemplateObjects {
     public void setParams() {
         params.clear();
 
-        Pattern pattern = Pattern.compile("\\$(\\w+)(?=\\s|=)"); // extract params from conditions
+        Pattern pattern = Pattern.compile("\\$([A-Za-z_][A-Za-z0-9_.-]*(?::[A-Za-z_][A-Za-z0-9_.-]*)?)");
 
         for (String condition : hashMapConditionReceiver.keySet()) {
             Matcher matcher = pattern.matcher(condition);
