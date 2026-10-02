@@ -605,9 +605,14 @@ public class ParametersPage extends JPanel {
             gbc.anchor = GridBagConstraints.LINE_START;
             panelStringParameters.add(textFieldStringParameter, gbc);
 
+            String tooltipText = getStringParameterTooltip(stringParameterId);
             if (stringParameterLabel.startsWith(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE)) {
+                tooltipText = LABEL_RECEIVER_QUEUE_TOOLTIP;
+            }
+
+            if (tooltipText != null) {
                 gbc.gridx = 2;
-                panelStringParameters.add(createReceiverQueueInfoLabel(LABEL_RECEIVER_QUEUE_TOOLTIP), gbc);
+                panelStringParameters.add(createReceiverQueueInfoLabel(tooltipText), gbc);
             }
 
             supportedStringParameterList.put(stringParameterId, textFieldStringParameter);
@@ -2092,6 +2097,10 @@ public class ParametersPage extends JPanel {
     }
 
     private JLabel createReceiverQueueInfoLabel(String text) {
+        return createInfoLabel(text);
+    }
+
+    private JLabel createInfoLabel(String text) {
         JLabel infoLabel = new JLabel("ⓘ") {
             @Override
             public JToolTip createToolTip() {
@@ -2107,6 +2116,27 @@ public class ParametersPage extends JPanel {
         toolTipManager.setInitialDelay(0);
         toolTipManager.setDismissDelay(Integer.MAX_VALUE);
         return infoLabel;
+    }
+
+    private String getStringParameterTooltip(String stringParameterId) {
+        return switch (stringParameterId) {
+            case STRING_PARAMETER_ID_INBOUND_CONVERSION_ENDPOINT -> LABEL_STRING_PARAMETER_INBOUND_CONVERSION_ENDPOINT_TOOLTIP;
+            case STRING_PARAMETER_ID_MAX_JMS_RETRIES -> LABEL_STRING_PARAMETER_MAX_JMS_RETRIES_TOOLTIP;
+            case STRING_PARAMETER_ID_REUSE_XRD_ENDPOINT -> LABEL_STRING_PARAMETER_REUSE_XRD_ENDPOINT_TOOLTIP;
+            case STRING_PARAMETER_ID_RECEIVER_NOT_DETERMINED_TYPE -> LABEL_STRING_PARAMETER_RECEIVER_NOT_DETERMINED_TYPE_TOOLTIP;
+            case STRING_PARAMETER_ID_RECEIVER_NOT_DETERMINED_DEFAULT -> LABEL_STRING_PARAMETER_RECEIVER_NOT_DETERMINED_DEFAULT_TOOLTIP;
+            case STRING_PARAMETER_ID_CUSTOM_XRD_ENDPOINT -> LABEL_STRING_PARAMETER_CUSTOM_XRD_ENDPOINT_TOOLTIP;
+            case STRING_PARAMETER_ID_CUSTOM_XID_ENDPOINT -> LABEL_STRING_PARAMETER_CUSTOM_XID_ENDPOINT_TOOLTIP;
+            case STRING_PARAMETER_ID_INBOUND_QUEUE -> LABEL_STRING_PARAMETER_INBOUND_QUEUE_TOOLTIP;
+            case STRING_PARAMETER_ID_KEEP_BULK -> LABEL_STRING_PARAMETER_KEEP_BULK_TOOLTIP;
+            case STRING_PARAMETER_ID_CUSTOM_X_PRE_ENABLED -> LABEL_STRING_PARAMETER_CUSTOM_X_PRE_ENABLED_TOOLTIP;
+            case STRING_PARAMETER_ID_CUSTOM_X_PRE_ENDPOINT -> LABEL_STRING_PARAMETER_CUSTOM_X_PRE_ENDPOINT_TOOLTIP;
+            case STRING_PARAMETER_ID_PASS_MESSAGE_ID_FROM_E2E -> LABEL_STRING_PARAMETER_PASS_MESSAGE_ID_FROM_E2E_TOOLTIP;
+            case STRING_PARAMETER_ID_RETRY_DATA_STORE -> LABEL_STRING_PARAMETER_RETRY_DATA_STORE_TOOLTIP;
+            case STRING_PARAMETER_ID_RESTART_MODE -> LABEL_STRING_PARAMETER_RESTART_MODE_TOOLTIP;
+            case STRING_PARAMETER_ID_MAX_DATA_STORE_RETRIES -> LABEL_STRING_PARAMETER_MAX_DATA_STORE_RETRIES_TOOLTIP;
+            default -> null;
+        };
     }
 
     private String wrapTooltipText(String text, int maxLineLength) {

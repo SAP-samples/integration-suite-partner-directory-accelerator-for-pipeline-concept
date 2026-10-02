@@ -253,6 +253,22 @@ public final class SharedData {
             STRING_PARAMETER_LABEL_DATA_STORE + STRING_PARAMETER_ID_MAX_DATA_STORE_RETRIES,
     };
 
+    public static final String LABEL_STRING_PARAMETER_INBOUND_CONVERSION_ENDPOINT_TOOLTIP = "ProcessDirect endpoint of inbound conversion integration flow, if required";
+    public static final String LABEL_STRING_PARAMETER_MAX_JMS_RETRIES_TOOLTIP = "Maximum number of retries";
+    public static final String LABEL_STRING_PARAMETER_REUSE_XRD_ENDPOINT_TOOLTIP = "ProcessDirect endpoint of extended receiver determination integration flow, if required";
+    public static final String LABEL_STRING_PARAMETER_RECEIVER_NOT_DETERMINED_TYPE_TOOLTIP = "Behavior if receiver can't be determined";
+    public static final String LABEL_STRING_PARAMETER_RECEIVER_NOT_DETERMINED_DEFAULT_TOOLTIP = "Default receiver system name";
+    public static final String LABEL_STRING_PARAMETER_CUSTOM_XRD_ENDPOINT_TOOLTIP = "ProcessDirect endpoint of custom receiver determination integration flow, if required";
+    public static final String LABEL_STRING_PARAMETER_CUSTOM_XID_ENDPOINT_TOOLTIP = "ProcessDirect endpoint of custom interface determination integration flow, if required";
+    public static final String LABEL_STRING_PARAMETER_INBOUND_QUEUE_TOOLTIP = "Overwriting the default inbound processing JM queue, if required";
+    public static final String LABEL_STRING_PARAMETER_KEEP_BULK_TOOLTIP = "Only relevant for IDoc bulk messages. Set to true if the IDoc bulk message should not be split into single IDoc messages.";
+    public static final String LABEL_STRING_PARAMETER_CUSTOM_X_PRE_ENABLED_TOOLTIP = "List of pipeline steps for which a custom exit integration flow for preprocessing should be called";
+    public static final String LABEL_STRING_PARAMETER_CUSTOM_X_PRE_ENDPOINT_TOOLTIP = "ProcessDirect endpoint of custom exit integration flow, if required";
+    public static final String LABEL_STRING_PARAMETER_PASS_MESSAGE_ID_FROM_E2E_TOOLTIP = "Only relevant for XI to XI scenarios. Set to true if the XI message ID from sender should be passed to the XI receiver.";
+    public static final String LABEL_STRING_PARAMETER_RETRY_DATA_STORE_TOOLTIP = "Defines the name of the Data Store where the erroneous message should be stored in case of exceeding maximum number of retry attempts at JMS layer.";
+    public static final String LABEL_STRING_PARAMETER_RESTART_MODE_TOOLTIP = "Can be set to either DS (Data Store) or JMS (JMS queue) to define how the messages should be restarted. Default option is DS if not set.";
+    public static final String LABEL_STRING_PARAMETER_MAX_DATA_STORE_RETRIES_TOOLTIP = "Defines the number of retries after a restart of a message. If the limit is reached, the messaged is moved into the \"_NoRetry\" Data Store. Default number is 5.";
+
     public static final String LINK_DOCUMENTATION_STRING_PARAMETERS = "https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#message-processing-behavior";
 
     public static final String[] LABELS_DETERMINATION_TYPES = {LABEL_COMBINED_XSLT, LABEL_MULTIPLE_XSLTS, LABEL_POINT_TO_POINT};
