@@ -53,11 +53,11 @@ public final class SharedData {
     public static final String LABEL_CONFIRM_CHANGE_PID = "Confirm to change Pid of whole scenario";
     public static final String LABEL_CONFIRM_DELETE_ENTRY = "Confirm deletion of alternative partner";
     public static final String LABEL_CONFIRM_DELETE_PARTNER_ID = "Confirm deletion of Partner ID";
-     public static final String LABEL_COPY_SCENARIO = "Copy this scenario";
-     public static final String LABEL_COPY_SCENARIO_DIALOG_TITLE = "Copy Scenario";
-     public static final String LABEL_COPY_SCENARIO_SUCCESSFUL = "Successfully copied the scenario.";
-     public static final String LABEL_COPY_BINARY_PARAMETERS = "Include Binary Parameters (XSLT mappings)";
-     public static final String LABEL_COPY_STRING_PARAMETERS_COPY = "Include String Parameters";
+    public static final String LABEL_COPY_SCENARIO = "Copy this scenario";
+    public static final String LABEL_COPY_SCENARIO_DIALOG_TITLE = "Copy Scenario";
+    public static final String LABEL_COPY_SCENARIO_SUCCESSFUL = "Successfully copied the scenario.";
+    public static final String LABEL_COPY_BINARY_PARAMETERS = "Include Binary Parameters (XSLT mappings)";
+    public static final String LABEL_COPY_STRING_PARAMETERS_COPY = "Include String Parameters";
     public static final String LABEL_CONFIRM_MIGRATION_1 = "Confirm migration of ";
     public static final String LABEL_CONFIRM_MIGRATION_2 = " scenario(s) using old partner ID with tilde to new partner ID.";
     public static final String LABEL_CONFIRMATION = "Confirmation";
@@ -229,6 +229,7 @@ public final class SharedData {
     public static final String STRING_PARAMETER_ID_KEEP_BULK = "KeepBulk";
     public static final String STRING_PARAMETER_ID_CUSTOM_X_PRE_ENABLED = "CustomXPreEnabled";
     public static final String STRING_PARAMETER_ID_CUSTOM_X_PRE_ENDPOINT = "CustomXPreEndpoint";
+    public static final String STRING_PARAMETER_ID_PASS_MESSAGE_ID_FROM_E2E = "PassMessageIdFromE2E";
     public static final String STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE = "ReceiverSpecificQueue";
     public static final String STRING_PARAMETER_LABEL_DATA_STORE = "Date Store Extension - ";
     public static final String STRING_PARAMETER_ID_RETRY_DATA_STORE = "RetryDataStore";
@@ -246,6 +247,7 @@ public final class SharedData {
             STRING_PARAMETER_ID_KEEP_BULK,
             STRING_PARAMETER_ID_CUSTOM_X_PRE_ENABLED,
             STRING_PARAMETER_ID_CUSTOM_X_PRE_ENDPOINT,
+            STRING_PARAMETER_ID_PASS_MESSAGE_ID_FROM_E2E,
             STRING_PARAMETER_LABEL_DATA_STORE + STRING_PARAMETER_ID_RETRY_DATA_STORE,
             STRING_PARAMETER_LABEL_DATA_STORE + STRING_PARAMETER_ID_RESTART_MODE,
             STRING_PARAMETER_LABEL_DATA_STORE + STRING_PARAMETER_ID_MAX_DATA_STORE_RETRIES,
