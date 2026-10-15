@@ -339,9 +339,9 @@ By clicking the "Send changes to API" button, existing string parameters startin
 In the "String Parameters" tab, string parameters can be added, updated, and deleted by entering the desired value in the input field of the corresponding ID.
 
 Some notes: 
-- The string parameters relevant to the Pipeline Concept are listed in the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#message-processing-behavior).
+- The string parameters relevant to the Pipeline Concept are listed in the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/message-processing-behavior).
 
-- Here you can, for example, configure a ***receiver-specific queue on a per-scenario basis***. See [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/message-processing-behavior?locale=en-US#receiver-specific-outbound-queue)
+- Here you can, for example, configure a ***receiver-specific queue on a per-scenario basis***. See [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/message-processing-behavior#receiver-specific-outbound-queue)
 
 - Additionally, the scenario-specific string parameters for the community extension [Process Integration Pipeline Extension - Restart via Data Store](https://community.sap.com/t5/integration-blog-posts/process-integration-pipeline-extension-restart-via-data-store/ba-p/14153116) are supported (namely RetryDataStore, restartMode, and MaxDataStoreRetries).
 
