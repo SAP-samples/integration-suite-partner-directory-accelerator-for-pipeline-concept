@@ -2,6 +2,7 @@ package org.example.ui.dialogs;
 
 import org.example.model.AlternativePartner;
 import org.example.ui.components.LoadingIcon;
+import org.example.ui.pages.AlternativePartnersPage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -73,6 +74,8 @@ public class ExportDialog extends JDialog {
 
             boolean includeBinary = !allSelected || includeBinaryCheckBox.isSelected();
             boolean includeString = !allSelected || includeStringCheckBox.isSelected();
+            final File[] outputDirectoryHolder = new File[1];
+            final Exception[] errorHolder = new Exception[1];
 
             SwingWorker<Void, Void> worker = new SwingWorker<>() {
                 @Override
@@ -85,6 +88,7 @@ public class ExportDialog extends JDialog {
                                 .toList();
 
                         File outputDirectory = createOutputDirectory();
+                        outputDirectoryHolder[0] = outputDirectory;
 
                         JSONObject alternativePartnersJson = httpRequestHandler.getAlternativePartnersToExport(uniquePids);
                         if (alternativePartnersJson != null) {
@@ -105,14 +109,27 @@ public class ExportDialog extends JDialog {
                                 writeJsonToFile(stringParametersJson, new File(outputDirectory, API_STRING_PARTNERS + ".response.json"));
                             }
                         }
-
-                        dispose();
-                        JOptionPane.showMessageDialog(mainFrame, LABEL_EXPORT_COMPLETED + outputDirectory.getAbsolutePath(), LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
                     } catch (Exception ex) {
+                        errorHolder[0] = ex;
                         LOGGER.error(ex);
-                        JOptionPane.showMessageDialog(mainFrame, LABEL_ERROR_EXPORT_TRY_AGAIN, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
                     }
                     return null;
+                }
+
+                @Override
+                protected void done() {
+                    if (errorHolder[0] != null || outputDirectoryHolder[0] == null) {
+                        JOptionPane.showMessageDialog(mainFrame, LABEL_ERROR_EXPORT_TRY_AGAIN, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    dispose();
+                    JOptionPane.showMessageDialog(mainFrame, LABEL_EXPORT_COMPLETED + outputDirectoryHolder[0].getAbsolutePath(), LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
+
+                    panelContainer.removeAll();
+                    panelContainer.add(new AlternativePartnersPage());
+                    panelContainer.revalidate();
+                    panelContainer.repaint();
                 }
             };
             worker.execute();
@@ -195,7 +212,9 @@ public class ExportDialog extends JDialog {
         File outputDirectory = new File(exportRootDirectory, safeTenantName + "_" + timestamp);
 
         if (!outputDirectory.exists()) {
-            outputDirectory.mkdirs();
+            if (!outputDirectory.mkdirs() && !outputDirectory.exists()) {
+                throw new IllegalStateException("Unable to create export directory: " + outputDirectory.getAbsolutePath());
+            }
         }
 
         return outputDirectory;
