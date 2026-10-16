@@ -173,6 +173,8 @@ public final class SharedData {
     public static final String LABEL_SEND_ANYWAY = "Send anyway";
     public static final String LABEL_SEND_ANYWAY_QUESTION = "Do you want to send the shown XSLT to the API anyway?";
     public static final String LABEL_SEND_CHANGES_TO_API = "Send changes to API";
+    public static final String LABEL_SEND_ALTERNATIVE_PARTNER_CHANGES = "Send changes of alternative partner";
+    public static final String LABEL_DISCARD_ALTERNATIVE_PARTNER_CHANGES = "Discard changes";
     public static final String LABEL_SEND_NEW_TO_API = "Send new entry to API";
     public static final String LABEL_SEND_XSLT_TO_API = "Send shown XSLT to API";
     public static final String LABEL_SENDER_DEFAULT = "Default";

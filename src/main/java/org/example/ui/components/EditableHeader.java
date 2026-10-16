@@ -24,16 +24,11 @@ public class EditableHeader extends JPanel {
     private final LinkedHashMap<String, String> originalHeaderValues;
     public LinkedHashMap<String, String> currentHeaderValues;
 
-    private final boolean addButtons;
-
-    private JButton sendButton;
-    private JButton cancelButton;
+    private JButton discardAlternativePartnerChangesButton;
 
     public EditableHeader(LinkedHashMap<String, String> hashMap, boolean isExistingEntry) {
         originalHeaderValues = new LinkedHashMap<>(hashMap);
         currentHeaderValues = new LinkedHashMap<>(hashMap);
-
-        this.addButtons = isExistingEntry;
 
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -143,12 +138,10 @@ public class EditableHeader extends JPanel {
         }
 
         if (isExistingEntry) {
-            sendButton = new JButton(LABEL_SEND_CHANGES_TO_API);
-            cancelButton = new JButton(LABEL_CANCEL);
+            JButton sendAlternativePartnerChangesButton = new JButton(LABEL_SEND_ALTERNATIVE_PARTNER_CHANGES);
+            JButton discardAlternativePartnerChangesButton = new JButton(LABEL_DISCARD_ALTERNATIVE_PARTNER_CHANGES);
 
-            sendButton.setVisible(false);
-            cancelButton.setVisible(false);
-            sendButton.addActionListener(e -> {
+            sendAlternativePartnerChangesButton.addActionListener(e -> {
                 List<String> differingKeys = new ArrayList<>();
 
                 for (String key : originalHeaderValues.keySet()) {
@@ -181,35 +174,61 @@ public class EditableHeader extends JPanel {
                 for (String key : currentHeaderValues.keySet()) {
                     originalHeaderValues.put(key, currentHeaderValues.get(key));
                 }
-
-                sendButton.setVisible(false);
-                cancelButton.setVisible(false);
             });
 
-            cancelButton.addActionListener(e -> {
+            discardAlternativePartnerChangesButton.addActionListener(e -> {
                 for (String key : originalHeaderValues.keySet()) {
                     currentHeaderValues.put(key, originalHeaderValues.get(key));
                 }
                 updateFieldValues();
-                sendButton.setVisible(false);
-                cancelButton.setVisible(false);
             });
 
-            add(sendButton);
-            add(cancelButton);
+            // Line 0: Send and Cancel buttons
+            GridBagConstraints sendCancelGbc = new GridBagConstraints();
+            sendCancelGbc.gridx = 2;
+            sendCancelGbc.gridy = 0;
+            sendCancelGbc.gridwidth = 3;
+            sendCancelGbc.anchor = GridBagConstraints.WEST;
+            sendCancelGbc.fill = GridBagConstraints.HORIZONTAL;
+            sendCancelGbc.weightx = 1.0;
+            sendCancelGbc.ipady = 5;
+            sendCancelGbc.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
 
+            JPanel sendCancelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, UI_PADDING, 0));
+            sendCancelPanel.add(sendAlternativePartnerChangesButton);
+            sendCancelPanel.add(discardAlternativePartnerChangesButton);
+            add(sendCancelPanel, sendCancelGbc);
+
+            // Line 1: Copy button
+            GridBagConstraints copyButtonGbc = new GridBagConstraints();
+            copyButtonGbc.gridx = 2;
+            copyButtonGbc.gridy = 1;
+            copyButtonGbc.gridwidth = 3;
+            copyButtonGbc.anchor = GridBagConstraints.WEST;
+            copyButtonGbc.fill = GridBagConstraints.HORIZONTAL;
+            copyButtonGbc.weightx = 1.0;
+            copyButtonGbc.ipady = 5;
+            copyButtonGbc.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
+
+            JPanel copyButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, UI_PADDING, 0));
+
+            JButton copyScenarioButton = new JButton(LABEL_COPY_SCENARIO);
+            copyScenarioButton.addActionListener(e -> copyCurrentScenario());
+            copyButtonPanel.add(copyScenarioButton);
+            add(copyButtonPanel, copyButtonGbc);
+
+            // Line 2: Delete buttons
             GridBagConstraints deleteButtonsGbc = new GridBagConstraints();
             deleteButtonsGbc.gridx = 2;
-            deleteButtonsGbc.gridy = 0;
+            deleteButtonsGbc.gridy = 2;
             deleteButtonsGbc.gridwidth = 3;
             deleteButtonsGbc.anchor = GridBagConstraints.WEST;
+            deleteButtonsGbc.fill = GridBagConstraints.HORIZONTAL;
+            deleteButtonsGbc.weightx = 1.0;
+            deleteButtonsGbc.ipady = 5;
             deleteButtonsGbc.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
 
             JPanel deleteButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, UI_PADDING, 0));
-            
-            JButton copyScenarioButton = new JButton(LABEL_COPY_SCENARIO);
-            copyScenarioButton.addActionListener(e -> copyCurrentScenario());
-            deleteButtonsPanel.add(copyScenarioButton);
 
             JButton deleteEntryButton = new JButton(LABEL_DELETE_ENTRY);
             deleteEntryButton.addActionListener(e -> deleteCurrentAlternativePartner());
@@ -220,8 +239,19 @@ public class EditableHeader extends JPanel {
             deleteButtonsPanel.add(deletePartnerIdButton);
             add(deleteButtonsPanel, deleteButtonsGbc);
 
-            gbc.gridx = 2;
-            gbc.gridy = 3;
+            // Line 3: Change PID button
+            GridBagConstraints changePidGbc = new GridBagConstraints();
+            changePidGbc.gridx = 2;
+            changePidGbc.gridy = 3;
+            changePidGbc.gridwidth = 3;
+            changePidGbc.anchor = GridBagConstraints.WEST;
+            changePidGbc.fill = GridBagConstraints.HORIZONTAL;
+            changePidGbc.weightx = 1.0;
+            changePidGbc.ipady = 5;
+            changePidGbc.insets = new Insets(UI_PADDING, UI_PADDING, UI_PADDING, UI_PADDING);
+
+            JPanel changePidPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, UI_PADDING, 0));
+
             JButton changePidButton = new JButton(LABEL_CHANGE_PID);
             changePidButton.addActionListener(e -> {
                 String oldPid = currentHeaderValues.get(LABEL_PID);
@@ -334,7 +364,8 @@ public class EditableHeader extends JPanel {
 
                 dialog.setVisible(true);
             });
-            add(changePidButton, gbc);
+            changePidPanel.add(changePidButton);
+            add(changePidPanel, changePidGbc);
         }
 
     }
@@ -622,11 +653,7 @@ public class EditableHeader extends JPanel {
     }
 
     private void checkForChanges() {
-        boolean changesDetected = !originalHeaderValues.equals(currentHeaderValues);
-        if (addButtons) {
-            sendButton.setVisible(changesDetected);
-            cancelButton.setVisible(changesDetected);
-        }
+        // Buttons are now always visible, so no need to toggle visibility
     }
 
     private void updateFieldValues() {
