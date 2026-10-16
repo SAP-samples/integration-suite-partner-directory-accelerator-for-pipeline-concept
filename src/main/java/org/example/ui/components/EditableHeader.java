@@ -5,12 +5,18 @@ import org.example.ui.pages.ParametersPage;
 import org.json.JSONObject;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.HierarchyEvent;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -21,6 +27,13 @@ import static org.example.ui.components.LabelTimer.showHttpResponseWithTimer;
 import static org.example.utils.SharedData.*;
 
 public class EditableHeader extends JPanel {
+    private static final Color SPACE_WARNING_BACKGROUND = new Color(255, 250, 205);
+    private static final Color SPACE_WARNING_BORDER = new Color(204, 153, 0);
+    private static final Color SPACE_WARNING_FIELD_BORDER = new Color(204, 102, 0);
+    private static final String CLIENT_PROPERTY_DEFAULT_BORDER = "spaceWarningDefaultBorder";
+    private static final String CLIENT_PROPERTY_WARNING_BORDER = "spaceWarningWarningBorder";
+    private static final String CLIENT_PROPERTY_WARNING_POPUP = "spaceWarningPopup";
+
     private final LinkedHashMap<String, String> originalHeaderValues;
     public LinkedHashMap<String, String> currentHeaderValues;
 
@@ -122,6 +135,8 @@ public class EditableHeader extends JPanel {
                     public void changedUpdate(DocumentEvent e) {
                     }
                 });
+
+                attachSpaceWarning(valueTextField);
 
                 valueComponent = valueTextField;
             }
@@ -267,6 +282,7 @@ public class EditableHeader extends JPanel {
                 JLabel newPidLabel = new JLabel(colon(LABEL_ENTER_NEW_PID));
                 enterNewPidPanel.add(newPidLabel, c);
                 JTextField newPidTextField = new JTextField(oldPid, UI_TEXT_FIELD_COLUMNS);
+                attachSpaceWarning(newPidTextField);
                 enterNewPidPanel.add(newPidTextField, c);
                 dialog.add(enterNewPidPanel, BorderLayout.CENTER);
 
@@ -458,6 +474,7 @@ public class EditableHeader extends JPanel {
 
          gbc.gridx = 1;
          JTextField agencyTextField = new JTextField(currentAgency, UI_TEXT_FIELD_COLUMNS);
+         attachSpaceWarning(agencyTextField);
          inputPanel.add(agencyTextField, gbc);
 
          // Row 1: Scheme (now fully editable)
@@ -468,6 +485,7 @@ public class EditableHeader extends JPanel {
 
          gbc.gridx = 1;
          JTextField schemeTextField = new JTextField(currentScheme, UI_TEXT_FIELD_COLUMNS);
+         attachSpaceWarning(schemeTextField);
          inputPanel.add(schemeTextField, gbc);
 
          // Row 2: Sender Interface
@@ -478,6 +496,7 @@ public class EditableHeader extends JPanel {
 
          gbc.gridx = 1;
          JTextField idTextField = new JTextField(currentId, UI_TEXT_FIELD_COLUMNS);
+         attachSpaceWarning(idTextField);
          inputPanel.add(idTextField, gbc);
 
          // Row 3: Partner ID
@@ -488,6 +507,7 @@ public class EditableHeader extends JPanel {
 
          gbc.gridx = 1;
          JTextField pidTextField = new JTextField(currentPid, UI_TEXT_FIELD_COLUMNS);
+         attachSpaceWarning(pidTextField);
          inputPanel.add(pidTextField, gbc);
 
          // Add parameter checkboxes with more spacing from input fields
@@ -654,6 +674,166 @@ public class EditableHeader extends JPanel {
 
     private void checkForChanges() {
         // Buttons are now always visible, so no need to toggle visibility
+    }
+
+    /**
+     * Registers a listener on the given text field which checks after every insert, change or removal of a character
+     * whether the value contains a space character. If so, a tooltip-like warning popup is shown below the field and
+     * the field is highlighted with a border which has exactly the same insets as the original one.
+     * The warning itself is rendered in a floating popup, therefore neither the size of the field nor the layout of
+     * the page (and with it the position of all buttons) ever changes.
+     */
+    public static void attachSpaceWarning(JTextField textField) {
+        if (textField == null) {
+            return;
+        }
+
+        Border defaultBorder = textField.getBorder();
+        textField.putClientProperty(CLIENT_PROPERTY_DEFAULT_BORDER, defaultBorder);
+        textField.putClientProperty(CLIENT_PROPERTY_WARNING_BORDER, createWarningBorder(textField, defaultBorder));
+
+        textField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                SwingUtilities.invokeLater(() -> updateSpaceWarning(textField));
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                SwingUtilities.invokeLater(() -> updateSpaceWarning(textField));
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                SwingUtilities.invokeLater(() -> updateSpaceWarning(textField));
+            }
+        });
+
+        textField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                updateSpaceWarning(textField);
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                hideSpaceWarningPopup(textField);
+            }
+        });
+
+        // Hide the floating popup as soon as the field is not visible anymore (e.g. page switch or closed dialog)
+        textField.addHierarchyListener(e -> {
+            if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && !textField.isShowing()) {
+                hideSpaceWarningPopup(textField);
+            }
+        });
+
+        // Hide the floating popup while the surrounding window is moved or the field is removed
+        textField.addAncestorListener(new AncestorListener() {
+            @Override
+            public void ancestorAdded(AncestorEvent event) {
+                // nothing to do
+            }
+
+            @Override
+            public void ancestorRemoved(AncestorEvent event) {
+                hideSpaceWarningPopup(textField);
+            }
+
+            @Override
+            public void ancestorMoved(AncestorEvent event) {
+                hideSpaceWarningPopup(textField);
+            }
+        });
+
+        updateSpaceWarning(textField);
+    }
+
+    /**
+     * Checks whether the given value contains a space character.
+     */
+    public static boolean containsSpace(String value) {
+        return value != null && value.contains(" ");
+    }
+
+    /**
+     * Creates the highlight border for a field containing a space character. The returned border has exactly the same
+     * insets as the original border of the field, so switching between both borders never changes the preferred size
+     * or the text position of the field.
+     */
+    private static Border createWarningBorder(JTextField textField, Border defaultBorder) {
+        if (defaultBorder == null) {
+            // Without a default border every added border would enlarge the field, therefore none is used
+            return null;
+        }
+
+        Insets insets = defaultBorder.getBorderInsets(textField);
+        if (insets == null) {
+            return null;
+        }
+
+        Border lineBorder = BorderFactory.createLineBorder(SPACE_WARNING_FIELD_BORDER, 1);
+        return BorderFactory.createCompoundBorder(lineBorder, BorderFactory.createEmptyBorder(
+                Math.max(0, insets.top - 1),
+                Math.max(0, insets.left - 1),
+                Math.max(0, insets.bottom - 1),
+                Math.max(0, insets.right - 1)));
+    }
+
+    private static void updateSpaceWarning(JTextField textField) {
+        if (containsSpace(textField.getText())) {
+            textField.setToolTipText(LABEL_WARNING_SPACE_IN_INPUT);
+            applyBorder(textField, textField.getClientProperty(CLIENT_PROPERTY_WARNING_BORDER));
+            showSpaceWarningPopup(textField);
+        } else {
+            textField.setToolTipText(null);
+            applyBorder(textField, textField.getClientProperty(CLIENT_PROPERTY_DEFAULT_BORDER));
+            hideSpaceWarningPopup(textField);
+        }
+    }
+
+    private static void applyBorder(JTextField textField, Object border) {
+        Border borderToApply = (border instanceof Border castBorder) ? castBorder : null;
+        if (borderToApply != null && borderToApply != textField.getBorder()) {
+            textField.setBorder(borderToApply);
+        }
+    }
+
+    private static void showSpaceWarningPopup(JTextField textField) {
+        // Tooltip-like behaviour: the popup is only shown for the field which is currently edited
+        if (!textField.isShowing() || !textField.isEnabled() || !textField.isFocusOwner()) {
+            hideSpaceWarningPopup(textField);
+            return;
+        }
+
+        // The field never changes its size or position, therefore an already visible popup can simply stay as it is
+        if (textField.getClientProperty(CLIENT_PROPERTY_WARNING_POPUP) instanceof Popup) {
+            return;
+        }
+
+        JLabel warningLabel = new JLabel(LABEL_WARNING_SPACE_IN_INPUT);
+        warningLabel.setOpaque(true);
+        warningLabel.setBackground(SPACE_WARNING_BACKGROUND);
+        warningLabel.setForeground(Color.BLACK);
+        warningLabel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(SPACE_WARNING_BORDER, 1),
+                BorderFactory.createEmptyBorder(UI_PADDING / 2, UI_PADDING, UI_PADDING / 2, UI_PADDING)));
+
+        Point locationOnScreen = textField.getLocationOnScreen();
+        int x = locationOnScreen.x;
+        int y = locationOnScreen.y + textField.getHeight() + (UI_PADDING / 2);
+
+        Popup popup = PopupFactory.getSharedInstance().getPopup(textField, warningLabel, x, y);
+        popup.show();
+        textField.putClientProperty(CLIENT_PROPERTY_WARNING_POPUP, popup);
+    }
+
+    private static void hideSpaceWarningPopup(JTextField textField) {
+        Object popup = textField.getClientProperty(CLIENT_PROPERTY_WARNING_POPUP);
+        textField.putClientProperty(CLIENT_PROPERTY_WARNING_POPUP, null);
+        if (popup instanceof Popup castPopup) {
+            castPopup.hide();
+        }
     }
 
     private void updateFieldValues() {

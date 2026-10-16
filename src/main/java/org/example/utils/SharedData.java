@@ -216,6 +216,7 @@ public final class SharedData {
     public static final String LABEL_VALUE = "Value";
     public static final String LABEL_WARNING = "Warning";
     public static final String LABEL_WARNING_DELETE_LAST_ROW = "Cannot delete the last row.";
+    public static final String LABEL_WARNING_SPACE_IN_INPUT = "This value contains a space character.";
     public static final String LABEL_XSLTS_MERGED_SUCCESSFULLY = "XSLTs were merged successfully.";
 
     public static final String LOGGER_INFO_ALTERNATIVE_PARTNERS_PAGE = "Alternative Partners Page selected";
