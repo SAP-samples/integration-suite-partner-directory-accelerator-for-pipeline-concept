@@ -10,7 +10,7 @@ This tool supports the [Pipeline for Cloud Integration (formerly Pipeline Concep
 
 The purpose of this tool is to simplify the interaction with the Partner Directory for the Pipeline Concept by providing a UI. To do so, access to a tenant's API needs to be configured, so you can read, create and update Partner Directory entries which are used for the Pipeline Concept (other Partner Directory entries are not shown here). Key features are the XSLT generation and maintenance from a tabular input format, as well as the replication of Partner Directory content in different tenants of a landscape.
 
-Before using this tool, please make yourself familiar with the Pipeline Concept. An introduction to the Pipeline Concept can be found in this [SAP Community blog](https://community.sap.com/t5/integration-blog-posts/how-to-get-started-with-pipeline-for-cloud-integration/ba-p/14325267). Being used for the Pipeline Concept, the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept) provides further information on the Partner Directory. The tool is written in Java 17 and uses the Partner Directory API to provide a Java Swing UI for simple user interaction with the Partner Directory content. More information about this API is available on the [Business Accelerator Hub](https://hub.sap.com/api/PartnerDirectory/overview).
+Before using this tool, please make yourself familiar with the Pipeline Concept. An introduction to the Pipeline Concept can be found in this [SAP Community blog](https://community.sap.com/t5/integration-blog-posts/how-to-get-started-with-pipeline-for-cloud-integration/ba-p/14325267). Being used for the Pipeline Concept, the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept) provides further information on the Partner Directory. The tool is written in Java 21 and uses the Partner Directory API to provide a Java Swing UI for simple user interaction with the Partner Directory content. More information about this API is available on the [Business Accelerator Hub](https://hub.sap.com/api/PartnerDirectory/overview).
 
 ## Table of Content
 
@@ -87,7 +87,7 @@ Session specifically about this accelerator tool by focusing on setup and usage 
 
 ## Requirements
 
-The tool is built using OpenJDK 17 by SapMachine, which is required and can be downloaded [here](https://sapmachine.io).
+The tool is built using OpenJDK 21 by SapMachine, which is required and can be downloaded [here](https://sapmachine.io).
 
 ## Download and Installation
 
