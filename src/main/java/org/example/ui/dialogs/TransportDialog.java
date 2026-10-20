@@ -2,14 +2,18 @@ package org.example.ui.dialogs;
 
 import org.example.api.HttpRequestHandler;
 import org.example.model.AlternativePartner;
+import org.example.model.BinaryParameter;
 import org.example.ui.components.LoadingIcon;
 import org.example.utils.TenantCredentials;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.swing.*;
 
 import java.awt.*;
+import java.util.Base64;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -103,6 +107,7 @@ public class TransportDialog extends JDialog {
                             .map(AlternativePartner::getPid)
                             .distinct()
                             .toList());
+                    List<String> scenarioPidsToTransport = new ArrayList<>(uniquePidsToTransport);
 
                     String selectedTenantName = (String) tenantDropdown.getSelectedItem();
 
@@ -140,6 +145,16 @@ public class TransportDialog extends JDialog {
                         JSONObject jsonStringParametersToTransport = httpRequestHandler.getStringParametersToTransport(uniquePidsToTransport);
                         if (jsonStringParametersToTransport != null) {
                             httpTransportHandler.transportStringParameters(jsonStringParametersToTransport, overwrite, transportErrors, false, null);
+                        }
+
+                        // Receiver-level default queues (tab: Sender / Receiver System Settings)
+                        Set<String> receiversToTransport = extractReceiversForScenarios(
+                                scenarioPidsToTransport,
+                                jsonBinaryParametersToTransport,
+                                jsonStringParametersToTransport);
+                        JSONObject jsonReceiverQueuesToTransport = httpRequestHandler.getReceiverSpecificDefaultQueuesToTransport(receiversToTransport);
+                        if (jsonReceiverQueuesToTransport != null) {
+                            httpTransportHandler.transportStringParameters(jsonReceiverQueuesToTransport, overwrite, transportErrors, false, null);
                         }
 
                         if (transportErrors.isEmpty()) {
@@ -189,5 +204,60 @@ public class TransportDialog extends JDialog {
         setSize(UI_DIALOG_WIDTH, UI_DIALOG_HEIGHT);
         setLocationRelativeTo(mainFrame);
         setVisible(true);
+    }
+
+    private Set<String> extractReceiversForScenarios(List<String> scenarioPids,
+                                                     JSONObject binaryParameters,
+                                                     JSONObject stringParameters) {
+        Set<String> receiverNames = new LinkedHashSet<>();
+        Set<String> scenarioPidSet = new HashSet<>(scenarioPids);
+
+        if (binaryParameters != null) {
+            JSONArray binaryResults = binaryParameters.getJSONObject(JSON_KEY_D).getJSONArray(JSON_KEY_RESULTS);
+            for (int i = 0; i < binaryResults.length(); i++) {
+                JSONObject result = binaryResults.getJSONObject(i);
+                String pid = result.optString(JSON_KEY_PID, "");
+                String id = result.optString(JSON_KEY_ID, "");
+
+                if (!scenarioPidSet.contains(pid) || !ID_RECEIVER_DETERMINATION.equals(id)) {
+                    continue;
+                }
+
+                String valueEncoded = result.optString(JSON_KEY_VALUE, "");
+                try {
+                    String xslt = new String(Base64.getDecoder().decode(valueEncoded));
+                    receiverNames.addAll(new BinaryParameter(pid, id, JSON_VALUE_XSL, xslt).getSetReceiverNames());
+                } catch (Exception e) {
+                    LOGGER.warn("Could not parse receiver determination XSLT for pid {}.", pid);
+                }
+            }
+        }
+
+        if (stringParameters != null) {
+            JSONArray stringResults = stringParameters.getJSONObject(JSON_KEY_D).getJSONArray(JSON_KEY_RESULTS);
+            for (int i = 0; i < stringResults.length(); i++) {
+                JSONObject result = stringResults.getJSONObject(i);
+                String pid = result.optString(JSON_KEY_PID, "");
+                String id = result.optString(JSON_KEY_ID, "");
+
+                if (!scenarioPidSet.contains(pid)) {
+                    continue;
+                }
+
+                if (ID_RECEIVER_DETERMINATION.equals(id)) {
+                    String receiver = result.optString(JSON_KEY_VALUE, "").trim();
+                    if (!receiver.isEmpty()) {
+                        receiverNames.add(receiver);
+                    }
+                } else if (id.startsWith(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + "_")) {
+                    String receiver = id.substring((STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + "_").length()).trim();
+                    if (!receiver.isEmpty()) {
+                        receiverNames.add(receiver);
+                    }
+                }
+            }
+        }
+
+        return receiverNames;
     }
 }

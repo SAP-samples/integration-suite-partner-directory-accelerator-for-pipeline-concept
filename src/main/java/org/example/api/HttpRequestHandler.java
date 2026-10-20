@@ -524,6 +524,23 @@ public class HttpRequestHandler {
         return null;
     }
 
+    public JSONObject getReceiverSpecificDefaultQueuesToTransport(Set<String> receiverNames) {
+        if (receiverNames == null || receiverNames.isEmpty()) {
+            return null;
+        }
+
+        String filter = buildReceiverSpecificQueueFilterStringParameters(receiverNames);
+
+        try {
+            String endpoint = API_STRING_PARTNERS + filter;
+            return sendGetRequestsAndHandlePagination(endpoint);
+        } catch (Exception e) {
+            LOGGER.error(e);
+        }
+
+        return null;
+    }
+
     public JSONObject getAlternativePartnersToExport(List<String> pidsToExport) {
         String filter = buildPidFilterAlternativePartners(pidsToExport);
 
@@ -756,6 +773,23 @@ public class HttpRequestHandler {
             filterBuilder.append(JSON_KEY_PID).append("%20eq%20'").append(pid).append("'");
             prefix = "%20or%20";
         }
+
+        return filterBuilder.toString();
+    }
+
+    private String buildReceiverSpecificQueueFilterStringParameters(Set<String> receiverNames) {
+        StringBuilder filterBuilder = new StringBuilder();
+        filterBuilder.append("?$filter=(");
+        String prefix = "";
+
+        for (String receiverName : receiverNames) {
+            filterBuilder.append(prefix);
+            filterBuilder.append(JSON_KEY_PID).append("%20eq%20'").append(receiverName).append("'");
+            prefix = "%20or%20";
+        }
+
+        filterBuilder.append(")%20and%20").append(JSON_KEY_ID)
+                .append("%20eq%20'").append(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE).append("'");
 
         return filterBuilder.toString();
     }

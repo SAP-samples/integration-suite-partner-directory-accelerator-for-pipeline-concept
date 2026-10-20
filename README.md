@@ -370,7 +370,7 @@ You can maintain new actual system names, and edit or existing ones. By clicking
 
 ### Replication Page
 
-The idea of the replication page is to allow selecting multiple entries of the Partner Directory and create / update these entries in another tenant. In the replication page, multiple alternative partners can be selected. **For replicating, the selected alternative partners as well as the binary parameters and string parameters with the same Partner ID are replicated to another tenant.** A possible use case is to move the Partner Directory entries e.g. from a Dev tenant to QA to Prod. Please make sure that you have already added the target tenant which you want to replicate to.
+The idea of the replication page is to allow selecting multiple entries of the Partner Directory and create / update these entries in another tenant. In the replication page, multiple alternative partners can be selected. **For replicating, the selected alternative partners as well as the binary parameters and string parameters with the same Partner ID are replicated to another tenant. In addition, receiver-specific default queue entries (String Parameter `ReceiverSpecificQueue` with receiver name as Pid) are replicated for all receivers that are part of the selected scenarios.** A possible use case is to move the Partner Directory entries e.g. from a Dev tenant to QA to Prod. Please make sure that you have already added the target tenant which you want to replicate to.
 
 #### Replication Table
 
@@ -378,7 +378,7 @@ The idea of the replication page is to allow selecting multiple entries of the P
 
 The replication table shows alternative partners and is extended by a checkbox column. By clicking a checkbox in a row, the alternative partner is selected for replication. In this table, the alternative partners of the [alternative partners table](#alternative-partners-table) are shown as well as the alternative partners for [landscape stages](#landscape-stages).
 
-Selecting an alternative partner means that during replication, all binary parameters and string parameters with the same Pid are replicated as well.
+Selecting an alternative partner means that during replication, all binary parameters and string parameters with the same Pid are replicated as well. Additionally, receiver-specific default queue entries are included for receivers derived from the selected scenarios.
 
 #### (De)Select all shown entries
 
@@ -498,7 +498,6 @@ Please note that the merge XSLT feature only works under the following prerequis
 Currently, there are some limits which the tool is not capable of:
 
 * Individual binary parameters still cannot be deleted directly from the UI. However, alternative partners can now be deleted from the Parameters Page, and a complete scenario of one Partner ID can also be deleted there including its related binary and string parameters.
-* The string parameter "ReceiverSpecificQueue" can currently not be [replicated](#replication-page).
 * The [special case "Bypass Receiver Determination"](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/special-cases#pipeline-bypass-options) (which uses a string parameter for receiver determination and an XSLT for interface determination) is not supported.
 * For the community extension [Process Integration Pipeline Extension - Restart via Data Store](https://community.sap.com/t5/integration-blog-posts/process-integration-pipeline-extension-restart-via-data-store/ba-p/14153116), the restart job profiles are currently not supported. In contrast, the scenario-specific restart configuration settings (string parameters RetryDataStore, restartMode, and MaxDataStoreRetries) are supported.
 
