@@ -347,10 +347,10 @@ Some notes:
 
 By clicking the "Send changes to API" button, all values in the input fields are read and sent to the API to create or update the relevant string parameter. If an input field is empty, the relevant string parameter will be deleted if it exists.
 
-#### Snd/Rcv System Settings (Prev. Landscape Stages)
+#### Sender / Receiver System Settings (Prev. Landscape Stages)
 
 ***Changes in version 1.1.0:***
-The tab got renamed to "Snd/Rcv System Settings" as it now supports configuring the receiver-specific default queue for all receivers of a scenario.
+The tab got renamed to "Sender / Receiver System Settings" as it now supports configuring the receiver-specific default queue for all receivers of a scenario.
 
 Here you can: 
 1. Configure a receiver-specific default queue name (optional, otherwise the default outbound queue PIPQ04 is used by the Pipeline Iflows)

@@ -653,10 +653,13 @@ public class ParametersPage extends JPanel {
         dropdownPanel.add(systemRoleLabel);
 
         JTextField queueField = new JTextField(20);
+        JLabel queueHttpResponseLabel = new JLabel();
+        queueHttpResponseLabel.setVisible(false);
         JPanel queuePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         queuePanel.add(new JLabel(LABEL_RCV_SPEC_QUEUE));
         queuePanel.add(queueField);
         queuePanel.add(createReceiverQueueInfoLabel(LABEL_RECEIVER_DEFAULT_QUEUE_TOOLTIP));
+        queuePanel.add(queueHttpResponseLabel);
 
         JPanel queueSection = new JPanel();
         queueSection.setLayout(new BoxLayout(queueSection, BoxLayout.Y_AXIS));
@@ -702,7 +705,7 @@ public class ParametersPage extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.add(getSendButtonLandscape(contentPanel, queueField, dropdown, buttonGroup, receiverNames));
+        buttonPanel.add(getSendButtonLandscape(contentPanel, queueField, queueHttpResponseLabel, dropdown, buttonGroup, receiverNames));
         landscapePanel.add(buttonPanel, BorderLayout.SOUTH);
 
         try {
@@ -800,7 +803,8 @@ public class ParametersPage extends JPanel {
         panel.repaint();
     }
 
-    private JButton getSendButtonLandscape(KeyPanel keyPanel, JTextField queueField, JComboBox<String> dropdown,
+    private JButton getSendButtonLandscape(KeyPanel keyPanel, JTextField queueField, JLabel queueHttpResponseLabel,
+                                           JComboBox<String> dropdown,
                                            ButtonGroup buttonGroup, Set<String> receiverNames) {
         JButton sendButton = new JButton(LABEL_SEND_CHANGES_TO_API);
         sendButton.addActionListener(e -> {
@@ -815,14 +819,17 @@ public class ParametersPage extends JPanel {
                 String oldQueueName = existingQueue == null ? "" : existingQueue.getValue();
                 try {
                     if (!oldQueueName.isEmpty() && queueField.getText().isEmpty()) {
-                        httpRequestHandler.sendDeleteRequestStringParameters(selectedSystemNameAlias, STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE);
+                        String httpResponse = httpRequestHandler.sendDeleteRequestStringParameters(selectedSystemNameAlias, STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE);
+                        showHttpResponseWithTimer(queueHttpResponseLabel, httpResponse);
                         currentStringParametersList.remove(queueMapKey);
                     } else if (!oldQueueName.isEmpty() && !enteredQueueName.equals(oldQueueName)) {
-                        httpRequestHandler.sendPutRequestStringParameters(selectedSystemNameAlias, STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE, queueField.getText());
+                        String httpResponse = httpRequestHandler.sendPutRequestStringParameters(selectedSystemNameAlias, STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE, queueField.getText());
+                        showHttpResponseWithTimer(queueHttpResponseLabel, httpResponse);
                         currentStringParametersList.put(queueMapKey,
                                 new StringParameter(selectedSystemNameAlias, STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE, enteredQueueName));
                     } else if (oldQueueName.isEmpty() && !enteredQueueName.isEmpty()) {
-                        httpRequestHandler.sendPostRequestStringParameters(selectedSystemNameAlias, STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE, queueField.getText());
+                        String httpResponse = httpRequestHandler.sendPostRequestStringParameters(selectedSystemNameAlias, STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE, queueField.getText());
+                        showHttpResponseWithTimer(queueHttpResponseLabel, httpResponse);
                         currentStringParametersList.put(queueMapKey,
                                 new StringParameter(selectedSystemNameAlias, STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE, enteredQueueName));
                     }
