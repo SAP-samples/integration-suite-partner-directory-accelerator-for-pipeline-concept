@@ -6,11 +6,11 @@
 
 ## Description
 
-This tool supports the [Pipeline for Cloud Integration (formerly Pipeline Concept)](https://community.sap.com/t5/technology-blogs-by-sap/introducing-the-new-pipeline-concept-in-cloud-integration/ba-p/13639651), which helps customers to migrate from their on-premise Process Integration / Process Orchestration systems to the cloud-based SAP Integration Suite. The Pipeline Concept relies on the [Partner Directory](https://help.sap.com/docs/cloud-integration/sap-cloud-integration/partner-directory-api), which contains configuration on message processing behavior, and dynamically reads the Partner Directory content at runtime.
+This tool supports the [Pipeline for Cloud Integration (formerly Pipeline Concept)](https://community.sap.com/t5/technology-blogs-by-sap/introducing-the-new-pipeline-concept-in-cloud-integration/ba-p/13639651), which helps customers to migrate from their on-premise Process Integration / Process Orchestration systems to the cloud-based SAP Integration Suite. The Pipeline relies on the [Partner Directory](https://help.sap.com/docs/cloud-integration/sap-cloud-integration/partner-directory-api), which contains configuration on message processing behavior, and dynamically reads the Partner Directory content at runtime.
 
-The purpose of this tool is to simplify the interaction with the Partner Directory for the Pipeline Concept by providing a UI. To do so, access to a tenant's API needs to be configured, so you can read, create and update Partner Directory entries which are used for the Pipeline Concept (other Partner Directory entries are not shown here). Key features are the XSLT generation and maintenance from a tabular input format, as well as the replication of Partner Directory content in different tenants of a landscape.
+The purpose of this tool is to simplify the interaction with the Partner Directory for the Pipeline by providing a UI. To do so, access to a tenant's API needs to be configured, so you can read, create and update Partner Directory entries which are used for the Pipeline (other Partner Directory entries are not shown here). Key features are the XSLT generation and maintenance from a tabular input format, as well as the replication of Partner Directory content in different tenants of a landscape.
 
-Before using this tool, please make yourself familiar with the Pipeline Concept. An introduction to the Pipeline Concept can be found in this [SAP Community blog](https://community.sap.com/t5/integration-blog-posts/how-to-get-started-with-pipeline-for-cloud-integration/ba-p/14325267). Being used for the Pipeline Concept, the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept) provides further information on the Partner Directory. The tool is written in Java 21 and uses the Partner Directory API to provide a Java Swing UI for simple user interaction with the Partner Directory content. More information about this API is available on the [Business Accelerator Hub](https://hub.sap.com/api/PartnerDirectory/overview).
+Before using this tool, please make yourself familiar with the Pipeline. An introduction to the Pipeline can be found in this [SAP Community blog](https://community.sap.com/t5/integration-blog-posts/how-to-get-started-with-pipeline-for-cloud-integration/ba-p/14325267). Being used for the Pipeline, the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept) provides further information on the Partner Directory. The tool is written in Java 21 and uses the Partner Directory API to provide a Java Swing UI for simple user interaction with the Partner Directory content. More information about this API is available on the [Business Accelerator Hub](https://hub.sap.com/api/PartnerDirectory/overview).
 
 ## Table of Content
 
@@ -78,7 +78,7 @@ As part of Devtoberfest 2025, two sessions took place which are related to this 
 
 [🔴 Accelerate your move to the cloud via Pipeline for Cloud Integration](https://www.youtube.com/watch?v=LFfW8rnm4fU) \
 By Alexander Bundschuh \
-Session generally about the Pipeline Concept
+Session generally about the Pipeline for Cloud Integration
 
 [🔴 Partner Directory Accelerator Tool for Pipeline Concept - an SAP Open-Source Project](https://www.youtube.com/watch?v=m51z53fc1c4) \
 By Lorena Hanser \
@@ -179,7 +179,7 @@ Next to the buttons "Search" and "Reset", there is a label showing the number of
 
 #### Alternative Partners Table
 
-Since the tool is developed to support the Pipeline Concept, in the table, only these alternative partners are shown which are related to the Pipeline, by using filter criteria: all alternative partners are shown where the scheme equals "SenderInterface". Additionally, to support [XI inbound scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#partner-id), alternative partners are displayed for which a receiver determination is maintained as a binary parameter or string parameter.
+Since the tool is developed to support the Pipeline for Cloud Integration, in the table, only these alternative partners are shown which are related to the Pipeline, by using filter criteria: all alternative partners are shown where the scheme equals "SenderInterface". Additionally, to support [XI inbound scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#partner-id), alternative partners are displayed for which a receiver determination is maintained as a binary parameter or string parameter.
 
 You can sort the entries of the table by clicking on the name of the column you want to sort by. By default, the table is sort by Partner ID.
 
@@ -200,9 +200,9 @@ For demonstration purposes, in the screenshot, a trial tenant is shown as sample
 At the bottom of the page, the "Add new Alternative Partner" button allows you to create a new alternative partner. Insert the required values: **Sender System** (named "Agency" for alternative partner), **Sender Interface** (named "Id" for alternative partner), and **Partner ID** (also known as Pid). The only function of the **Sender Type (Default/XI)** option buttons is to adjust this form to the style of Alternative Partner entry. The value for "**Scheme**" is fixed to "SenderInterface" for default scenarios (non-SAP senders and IDoc). For [XI inbound scenarios](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#partner-id), the Scheme field changes to **Interface Name**, while the Interface Name field changes to **Namespace**, as described in the linked documentation.  
 
 Additionally, decide for a type of receiver / interface determination:
-* **[Option 1: Combined XSLT](#option-1-combined-xslt)** is the default and allows you to have receiver and interface determinations combined in one single XSLT mapping, as released in version 1.0.8 of the Pipeline Concept.
+* **[Option 1: Combined XSLT](#option-1-combined-xslt)** is the default and allows you to have receiver and interface determinations combined in one single XSLT mapping, as released in version 1.0.8 of the Pipeline.
 * **[Option 2: Multiple XSLTs](#option-2-multiple-xslts)** results in one XSLT as receiver determination and additionally one XSLT as interface determination per receiver.
-* **[Option 3: Point to Point](#option-3-point-to-point)** uses string parameters to define exactly one receiver and one interface, which came with version 1.0.6 of the Pipeline Concept.
+* **[Option 3: Point to Point](#option-3-point-to-point)** uses string parameters to define exactly one receiver and one interface, which came with version 1.0.6 of the Pipeline.
 
 By sending the data to the API, a new alternative partner is created and its [Parameters Page](#parameters-page) is shown, so you can add binary parameters, string parameters, and alternative partners for landscape stages.
 
@@ -339,7 +339,7 @@ By clicking the "Send changes to API" button, existing string parameters startin
 In the "String Parameters" tab, string parameters can be added, updated, and deleted by entering the desired value in the input field of the corresponding ID.
 
 Some notes: 
-- The string parameters relevant to the Pipeline Concept are listed in the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/message-processing-behavior).
+- The string parameters relevant to the Pipeline are listed in the [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/message-processing-behavior).
 
 - Here you can, for example, configure a ***receiver-specific queue on a per-scenario basis***. See [documentation](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/message-processing-behavior#receiver-specific-outbound-queue)
 
@@ -358,7 +358,7 @@ Here you can:
 
 ![Landscape Stages Image](images/ParametersPageLandscapeStages.png)
 
-The support of [landscape stages](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/landscape-stages) was introduced with version 1.0.9 of the Pipeline Concept.
+The support of [landscape stages](https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/landscape-stages) was introduced with version 1.0.9 of the Pipeline.
 
 Make sure to [maintain the string parameter SAP_Integration_Suite_Landscape](#maintain-sap_integration_suite_landscape) before using the tab for landscape stages.
 
