@@ -139,6 +139,7 @@ The "Add new tenant" button allows you to specify the URL to the Partner Directo
 **Manual input** allows you to fill out the input fields:
 * **`Tenant Name`**: Here you can add any name for the tenant you are adding. Please make sure that the tenant name is unique for all the tenants you added.
 * **`Critical`**: With this checkbox, you can e.g. mark productive tenants. For critical tenants, the header bar of the UI is colored in red.
+* **`Header Color`**: Optionally choose a header color per tenant to visually distinguish DEV / QA / PROD systems.
 * **`URL`**: The URL to access the Partner Directory API, usually ending with `.hana.ondemand.com`. The string `/api/v1/` will automatically be added here if you don't enter it. Please make sure that the URL is unique for all the tenants you added.
 * **`Token URL`**: This URL is called to get the token, it usually ends with `/oauth/token`, which should be included here as it is shown in the BTP.
 * **`Client ID`**: The client ID is required to get an OAuth token and can be seen in the service instance credentials in the BTP.
@@ -204,6 +205,8 @@ Additionally, decide for a type of receiver / interface determination:
 * **[Option 2: Multiple XSLTs](#option-2-multiple-xslts)** results in one XSLT as receiver determination and additionally one XSLT as interface determination per receiver.
 * **[Option 3: Point to Point](#option-3-point-to-point)** uses string parameters to define exactly one receiver and one interface, which came with version 1.0.6 of the Pipeline.
 
+While entering values, the UI shows a warning if sender system, sender interface, scheme/namespace, or partner ID contains spaces.
+
 By sending the data to the API, a new alternative partner is created and its [Parameters Page](#parameters-page) is shown, so you can add binary parameters, string parameters, and alternative partners for landscape stages.
 
 #### Replication to another Tenant
@@ -244,6 +247,8 @@ Additionally, four action buttons are available next to the Sender System field:
 
 4. **"Change Pid"** allows you to change the Partner ID of the current scenario. This operation will update the Partner ID for all associated binary and string parameters at once. Note that the new Partner ID must be unique and not already exist in the system.
 
+In all relevant input fields of this area (for example sender system, sender interface, and partner ID), the UI shows a warning if a value contains spaces.
+
 #### Option 1: Combined XSLT
 
 ![Combined XSLT Image](images/ParametersPageCombined.png)
@@ -253,6 +258,8 @@ In the "Receiver and Interface Determination" tab, a combined XSLT mapping for b
 For the receiver determination, it consists of two parts: the processing if no receiver is found (represented by radio buttons) and conditions with resulting receivers (represented by a table). If no receiver is found, the options "Error", "Ignore", and "Default" are available. In case the "Default" option is selected, a default receiver system needs to be specified. In the table, conditions and resulting receiver systems can be specified. It is possible to add new rows, move a selected row up or down, and delete a selected row.
 
 For each receiver specified in the receiver determination, an interface determination should be present. First, select the receiver for which you want to see the interface determination. The dropdown menu contain all receiver systems present in the receiver determination. In the table, conditions and resulting receiver interfaces can be specified. It is possible to add new rows, move a selected row up or down, and delete a selected row.
+
+For XI inbound scenarios, the interface determination table also includes `Receiver Interface Name`, and this value is considered when generating and parsing XSLTs.
 
 ##### Maintain Namespaces
 
@@ -309,6 +316,8 @@ In the "Interface Determination" tab, XSLT mappings to determine the interface f
 First, select the receiver for which you want to see the interface determination. The dropdown menu contain all receiver systems present in the receiver determination.
 
 In the table, conditions and resulting receiver interfaces can be specified. It is possible to add new rows, move a selected row up or down, and delete a selected row.
+
+For XI inbound scenarios, an additional `Receiver Interface Name` column is available and included when generating and parsing XSLTs.
 
 ###### Maintain Namespaces
 

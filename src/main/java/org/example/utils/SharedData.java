@@ -185,6 +185,12 @@ public final class SharedData {
     public static final String LABEL_SELECT_LOCAL_JSON_FILE = "Select local JSON file";
     public static final String LABEL_SHOWN_XSLT_INVALID_SYNTAX = "The shown XSLT might contain invalid syntax";
     public static final String LABEL_STRING_PARAMETERS = "String Parameters";
+    public static final String LABEL_STRING_PARAMETERS_SECTION_GENERAL = "General parameters";
+    public static final String LABEL_STRING_PARAMETERS_SECTION_XI_SPECIFIC = "XI-specific parameters";
+    public static final String LABEL_STRING_PARAMETERS_SECTION_IDOC_SPECIFIC = "IDoc-specific parameters";
+    public static final String LABEL_STRING_PARAMETERS_SECTION_DATA_STORE_EXTENSION = "Data Store Extension";
+    public static final String LABEL_STRING_PARAMETERS_SECTION_IN_ORDER_HANDLING = "In Order Handling";
+    public static final String LABEL_STRING_PARAMETERS_SECTION_RECEIVER_SPECIFIC_QUEUES = "Receiver-specific queues";
     public static final String LABEL_SUCCESS = "Success";
     public static final String LABEL_SURE_TO_DELETE = "Are you sure that you want to delete the selected tenant named \"";
     public static final String LABEL_SURE_TO_DELETE_ENTRY = "Are you sure that you want to delete this alternative partner?";
@@ -232,12 +238,14 @@ public final class SharedData {
     public static final String STRING_PARAMETER_ID_KEEP_BULK = "KeepBulk";
     public static final String STRING_PARAMETER_ID_CUSTOM_X_PRE_ENABLED = "CustomXPreEnabled";
     public static final String STRING_PARAMETER_ID_CUSTOM_X_PRE_ENDPOINT = "CustomXPreEndpoint";
+    public static final String STRING_PARAMETER_ID_CUSTOM_X_POST_ENABLED = "CustomXPostEnabled";
+    public static final String STRING_PARAMETER_ID_CUSTOM_X_POST_ENDPOINT = "CustomXPostEndpoint";
     public static final String STRING_PARAMETER_ID_PASS_MESSAGE_ID_FROM_E2E = "PassMessageIdFromE2E";
     public static final String STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE = "ReceiverSpecificQueue";
-    public static final String STRING_PARAMETER_LABEL_DATA_STORE = "Date Store Extension - ";
     public static final String STRING_PARAMETER_ID_RETRY_DATA_STORE = "RetryDataStore";
     public static final String STRING_PARAMETER_ID_RESTART_MODE = "restartMode";
     public static final String STRING_PARAMETER_ID_MAX_DATA_STORE_RETRIES = "MaxDataStoreRetries";
+    public static final String STRING_PARAMETER_ID_IN_ORDER_ROUTE_OPTION = "InOrderRouteOption";
     public static final String[] STRING_PARAMETER_IDS_ARRAY = {
             STRING_PARAMETER_ID_INBOUND_CONVERSION_ENDPOINT,
             STRING_PARAMETER_ID_MAX_JMS_RETRIES,
@@ -250,10 +258,13 @@ public final class SharedData {
             STRING_PARAMETER_ID_KEEP_BULK,
             STRING_PARAMETER_ID_CUSTOM_X_PRE_ENABLED,
             STRING_PARAMETER_ID_CUSTOM_X_PRE_ENDPOINT,
+            STRING_PARAMETER_ID_CUSTOM_X_POST_ENABLED,
+            STRING_PARAMETER_ID_CUSTOM_X_POST_ENDPOINT,
             STRING_PARAMETER_ID_PASS_MESSAGE_ID_FROM_E2E,
-            STRING_PARAMETER_LABEL_DATA_STORE + STRING_PARAMETER_ID_RETRY_DATA_STORE,
-            STRING_PARAMETER_LABEL_DATA_STORE + STRING_PARAMETER_ID_RESTART_MODE,
-            STRING_PARAMETER_LABEL_DATA_STORE + STRING_PARAMETER_ID_MAX_DATA_STORE_RETRIES,
+            STRING_PARAMETER_ID_RETRY_DATA_STORE,
+            STRING_PARAMETER_ID_RESTART_MODE,
+            STRING_PARAMETER_ID_MAX_DATA_STORE_RETRIES,
+            STRING_PARAMETER_ID_IN_ORDER_ROUTE_OPTION,
     };
 
     public static final String LABEL_STRING_PARAMETER_INBOUND_CONVERSION_ENDPOINT_TOOLTIP = "ProcessDirect endpoint of inbound conversion integration flow, if required";
@@ -267,12 +278,21 @@ public final class SharedData {
     public static final String LABEL_STRING_PARAMETER_KEEP_BULK_TOOLTIP = "Only relevant for IDoc bulk messages. Set to true if the IDoc bulk message should not be split into single IDoc messages.";
     public static final String LABEL_STRING_PARAMETER_CUSTOM_X_PRE_ENABLED_TOOLTIP = "List of pipeline steps for which a custom exit integration flow for preprocessing should be called";
     public static final String LABEL_STRING_PARAMETER_CUSTOM_X_PRE_ENDPOINT_TOOLTIP = "ProcessDirect endpoint of custom exit integration flow, if required";
+    public static final String LABEL_STRING_PARAMETER_CUSTOM_X_POST_ENABLED_TOOLTIP = "List of pipeline steps for which a custom exit integration flow for postprocessing should be called";
+    public static final String LABEL_STRING_PARAMETER_CUSTOM_X_POST_ENDPOINT_TOOLTIP = "ProcessDirect endpoint of custom postprocessing exit integration flow, if required";
     public static final String LABEL_STRING_PARAMETER_PASS_MESSAGE_ID_FROM_E2E_TOOLTIP = "Only relevant for XI to XI scenarios. Set to true if the XI message ID from sender should be passed to the XI receiver.";
     public static final String LABEL_STRING_PARAMETER_RETRY_DATA_STORE_TOOLTIP = "Defines the name of the Data Store where the erroneous message should be stored in case of exceeding maximum number of retry attempts at JMS layer.";
     public static final String LABEL_STRING_PARAMETER_RESTART_MODE_TOOLTIP = "Can be set to either DS (Data Store) or JMS (JMS queue) to define how the messages should be restarted. Default option is DS if not set.";
     public static final String LABEL_STRING_PARAMETER_MAX_DATA_STORE_RETRIES_TOOLTIP = "Defines the number of retries after a restart of a message. If the limit is reached, the messaged is moved into the \"_NoRetry\" Data Store. Default number is 5.";
+    public static final String LABEL_STRING_PARAMETER_IN_ORDER_ROUTE_OPTION_TOOLTIP = "Possible values: ExclusiveQueue|ProcessDirect:UseSenderContextAsQueue|<exclusive queue name>|<ProcessDirect end point>";
 
-    public static final String LINK_DOCUMENTATION_STRING_PARAMETERS = "https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/using-partner-directory-in-pipeline-concept#message-processing-behavior";
+    public static final String LINK_DOCUMENTATION_STRING_PARAMETERS = "https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/message-processing-behavior";
+    public static final String LINK_DOCUMENTATION_SECTION_GENERAL_PARAMETERS = "https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/message-processing-behavior";
+    public static final String LINK_DOCUMENTATION_SECTION_XI_SPECIFIC_PARAMETERS = "https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/message-processing-behavior#pass-message-id-from-end-to-end";
+    public static final String LINK_DOCUMENTATION_SECTION_IDOC_SPECIFIC_PARAMETERS = "https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/message-processing-behavior#keep-idoc-bulk";
+    public static final String LINK_DOCUMENTATION_SECTION_IN_ORDER_HANDLING = "https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/generic-inbound-and-outbound#in-order-handling";
+    public static final String LINK_DOCUMENTATION_SECTION_RECEIVER_SPECIFIC_QUEUES = "https://help.sap.com/docs/migration-guide-po/migration-guide-for-sap-process-orchestration/message-processing-behavior#receiver-specific-outbound-queue";
+    public static final String LINK_DOCUMENTATION_SECTION_DATA_STORE_EXTENSION = "https://community.sap.com/t5/integration-blog-posts/process-integration-pipeline-extension-restart-via-data-store/ba-p/14153116";
 
     public static final String[] LABELS_DETERMINATION_TYPES = {LABEL_COMBINED_XSLT, LABEL_MULTIPLE_XSLTS, LABEL_POINT_TO_POINT};
     public static final String[] LABELS_SENDER_TYPES = {LABEL_SENDER_DEFAULT, LABEL_SENDER_XI};

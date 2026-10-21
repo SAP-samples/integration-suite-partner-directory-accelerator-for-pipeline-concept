@@ -533,16 +533,7 @@ public class ParametersPage extends JPanel {
         JPanel browserButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton openBrowserButton = new JButton("Open documentation in browser");
 
-        openBrowserButton.addActionListener(e -> {
-            try {
-                Desktop.getDesktop().browse(new URI(LINK_DOCUMENTATION_STRING_PARAMETERS));
-            } catch (IOException | URISyntaxException ex) {
-                String errorMessage = LABEL_ERROR_WHEN_OPENING_BROWSER + LINK_DOCUMENTATION_STRING_PARAMETERS;
-                LOGGER.error(errorMessage);
-                showErrorDialog(LABEL_ERROR, errorMessage);
-            }
-
-        });
+        openBrowserButton.addActionListener(e -> openDocumentationLink(LINK_DOCUMENTATION_STRING_PARAMETERS));
         browserButtonPanel.add(openBrowserButton);
         jPanel.add(browserButtonPanel, BorderLayout.NORTH);
 
@@ -567,55 +558,62 @@ public class ParametersPage extends JPanel {
             }
         }
 
-        List<String> stringParameterLabelList = new ArrayList<>();
+        Set<String> dataStoreParameters = Set.of(
+                STRING_PARAMETER_ID_RETRY_DATA_STORE,
+                STRING_PARAMETER_ID_RESTART_MODE,
+                STRING_PARAMETER_ID_MAX_DATA_STORE_RETRIES
+        );
+        Set<String> xiSpecificParameters = Set.of(STRING_PARAMETER_ID_PASS_MESSAGE_ID_FROM_E2E);
+        Set<String> idocSpecificParameters = Set.of(STRING_PARAMETER_ID_KEEP_BULK);
+        Set<String> inOrderHandlingParameters = Set.of(STRING_PARAMETER_ID_IN_ORDER_ROUTE_OPTION);
 
-        Collections.addAll(stringParameterLabelList, STRING_PARAMETER_IDS_ARRAY);
-
-        for (String receiverName : listReceiverNames) {
-            stringParameterLabelList.add(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + " for Receiver \"" + receiverName + "\"");
+        List<String> generalParameters = new ArrayList<>();
+        List<String> dataStoreExtensionParameters = new ArrayList<>();
+        for (String parameterLabel : STRING_PARAMETER_IDS_ARRAY) {
+            if (dataStoreParameters.contains(parameterLabel)) {
+                dataStoreExtensionParameters.add(parameterLabel);
+                continue;
+            }
+            if (xiSpecificParameters.contains(parameterLabel)
+                    || idocSpecificParameters.contains(parameterLabel)
+                    || inOrderHandlingParameters.contains(parameterLabel)) {
+                continue;
+            }
+            generalParameters.add(parameterLabel);
         }
 
-        for (int i = 0; i < stringParameterLabelList.size(); i++) {
-            String stringParameterLabel = stringParameterLabelList.get(i);
-            String stringParameterId;
-            if (stringParameterLabel.startsWith(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE)) {
-                stringParameterId = STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + "_" + stringParameterLabel.replaceAll(".*\"(.*?)\".*", "$1"); // extract receiver for id
-            } else if (stringParameterLabel.startsWith(STRING_PARAMETER_LABEL_DATA_STORE)) {
-                stringParameterId = stringParameterLabel.replace(STRING_PARAMETER_LABEL_DATA_STORE, "");
-            } else {
-                stringParameterId = stringParameterLabel;
+        int rowIndex = 0;
+        rowIndex = addStringParameterSectionHeading(panelStringParameters, gbc, rowIndex, LABEL_STRING_PARAMETERS_SECTION_GENERAL, LINK_DOCUMENTATION_SECTION_GENERAL_PARAMETERS);
+        for (String parameterLabel : generalParameters) {
+            rowIndex = addStringParameterInputRow(panelStringParameters, supportedStringParameterList, gbc, rowIndex, parameterLabel);
+        }
+
+        rowIndex = addStringParameterSectionHeading(panelStringParameters, gbc, rowIndex, LABEL_STRING_PARAMETERS_SECTION_XI_SPECIFIC, LINK_DOCUMENTATION_SECTION_XI_SPECIFIC_PARAMETERS);
+        for (String parameterLabel : xiSpecificParameters) {
+            rowIndex = addStringParameterInputRow(panelStringParameters, supportedStringParameterList, gbc, rowIndex, parameterLabel);
+        }
+
+        rowIndex = addStringParameterSectionHeading(panelStringParameters, gbc, rowIndex, LABEL_STRING_PARAMETERS_SECTION_IDOC_SPECIFIC, LINK_DOCUMENTATION_SECTION_IDOC_SPECIFIC_PARAMETERS);
+        for (String parameterLabel : idocSpecificParameters) {
+            rowIndex = addStringParameterInputRow(panelStringParameters, supportedStringParameterList, gbc, rowIndex, parameterLabel);
+        }
+
+        rowIndex = addStringParameterSectionHeading(panelStringParameters, gbc, rowIndex, LABEL_STRING_PARAMETERS_SECTION_IN_ORDER_HANDLING, LINK_DOCUMENTATION_SECTION_IN_ORDER_HANDLING);
+        for (String parameterLabel : inOrderHandlingParameters) {
+            rowIndex = addStringParameterInputRow(panelStringParameters, supportedStringParameterList, gbc, rowIndex, parameterLabel);
+        }
+
+        if (!listReceiverNames.isEmpty()) {
+            rowIndex = addStringParameterSectionHeading(panelStringParameters, gbc, rowIndex, LABEL_STRING_PARAMETERS_SECTION_RECEIVER_SPECIFIC_QUEUES, LINK_DOCUMENTATION_SECTION_RECEIVER_SPECIFIC_QUEUES);
+            for (String receiverName : listReceiverNames) {
+                String receiverSpecificLabel = STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + " for Receiver \"" + receiverName + "\"";
+                rowIndex = addStringParameterInputRow(panelStringParameters, supportedStringParameterList, gbc, rowIndex, receiverSpecificLabel);
             }
+        }
 
-            String stringParameterValue;
-            try {
-                stringParameterValue = currentStringParametersList.get(stringParameterId).getValue();
-            } catch (Exception e) {
-                stringParameterValue = "";
-            }
-
-            JPanel panelLabelStringParameter = createFixedSizePanel(new JLabel(colon(stringParameterLabel)), 400);
-            JTextField textFieldStringParameter = new JTextField(stringParameterValue, DEFAULT_COLUMNS_TEXT_FIELD);
-
-            gbc.gridx = 0;
-            gbc.gridy = i;
-            gbc.anchor = GridBagConstraints.LINE_END;
-            panelStringParameters.add(panelLabelStringParameter, gbc);
-
-            gbc.gridx = 1;
-            gbc.anchor = GridBagConstraints.LINE_START;
-            panelStringParameters.add(textFieldStringParameter, gbc);
-
-            String tooltipText = getStringParameterTooltip(stringParameterId);
-            if (stringParameterLabel.startsWith(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE)) {
-                tooltipText = LABEL_RECEIVER_QUEUE_TOOLTIP;
-            }
-
-            if (tooltipText != null) {
-                gbc.gridx = 2;
-                panelStringParameters.add(createReceiverQueueInfoLabel(tooltipText), gbc);
-            }
-
-            supportedStringParameterList.put(stringParameterId, textFieldStringParameter);
+        rowIndex = addStringParameterSectionHeading(panelStringParameters, gbc, rowIndex, LABEL_STRING_PARAMETERS_SECTION_DATA_STORE_EXTENSION, LINK_DOCUMENTATION_SECTION_DATA_STORE_EXTENSION);
+        for (String parameterLabel : dataStoreExtensionParameters) {
+            rowIndex = addStringParameterInputRow(panelStringParameters, supportedStringParameterList, gbc, rowIndex, parameterLabel);
         }
 
         JScrollPane scrollPaneStringParameters = new JScrollPane(panelStringParameters);
@@ -2095,6 +2093,89 @@ public class ParametersPage extends JPanel {
         return layout;
     }
 
+    private int addStringParameterSectionHeading(JPanel panel, GridBagConstraints gbc, int rowIndex, String heading, String documentationLink) {
+        if (rowIndex > 0) {
+            gbc.gridx = 0;
+            gbc.gridy = rowIndex;
+            gbc.gridwidth = 3;
+            panel.add(Box.createVerticalStrut(10), gbc);
+            gbc.gridwidth = 1;
+            rowIndex++;
+        }
+
+        JLabel headingLabel = new JLabel(heading);
+        headingLabel.setFont(headingLabel.getFont().deriveFont(Font.BOLD));
+
+        gbc.gridx = 0;
+        gbc.gridy = rowIndex;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        panel.add(headingLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        panel.add(createOpenDocumentationButton(heading, documentationLink), gbc);
+
+        return rowIndex + 1;
+    }
+
+    private JButton createOpenDocumentationButton(String sectionName, String link) {
+        JButton button = new JButton("Open documentation about " + sectionName);
+        button.addActionListener(e -> openDocumentationLink(link));
+        return button;
+    }
+
+    private void openDocumentationLink(String link) {
+        try {
+            Desktop.getDesktop().browse(new URI(link));
+        } catch (IOException | URISyntaxException ex) {
+            String errorMessage = LABEL_ERROR_WHEN_OPENING_BROWSER + link;
+            LOGGER.error(errorMessage);
+            showErrorDialog(LABEL_ERROR, errorMessage);
+        }
+    }
+
+    private int addStringParameterInputRow(JPanel panel, Map<String, JTextField> supportedStringParameterList, GridBagConstraints gbc, int rowIndex, String stringParameterLabel) {
+        String stringParameterId;
+        if (stringParameterLabel.startsWith(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE)) {
+            stringParameterId = STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE + "_" + stringParameterLabel.replaceAll(".*\"(.*?)\".*", "$1"); // extract receiver for id
+        } else {
+            stringParameterId = stringParameterLabel;
+        }
+
+        String stringParameterValue;
+        try {
+            stringParameterValue = currentStringParametersList.get(stringParameterId).getValue();
+        } catch (Exception e) {
+            stringParameterValue = "";
+        }
+
+        JPanel panelLabelStringParameter = createFixedSizePanel(new JLabel(colon(stringParameterLabel)), 400);
+        JTextField textFieldStringParameter = new JTextField(stringParameterValue, DEFAULT_COLUMNS_TEXT_FIELD);
+
+        gbc.gridx = 0;
+        gbc.gridy = rowIndex;
+        gbc.anchor = GridBagConstraints.LINE_END;
+        panel.add(panelLabelStringParameter, gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        panel.add(textFieldStringParameter, gbc);
+
+        String tooltipText = getStringParameterTooltip(stringParameterId);
+        if (stringParameterLabel.startsWith(STRING_PARAMETER_ID_RECEIVER_SPECIFIC_QUEUE)) {
+            tooltipText = LABEL_RECEIVER_QUEUE_TOOLTIP;
+        }
+
+        if (tooltipText != null) {
+            gbc.gridx = 2;
+            panel.add(createReceiverQueueInfoLabel(tooltipText), gbc);
+        }
+
+        supportedStringParameterList.put(stringParameterId, textFieldStringParameter);
+        return rowIndex + 1;
+    }
+
     private JPanel createFixedSizePanel(JLabel label, int width) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setPreferredSize(new Dimension(width, 20));
@@ -2138,10 +2219,13 @@ public class ParametersPage extends JPanel {
             case STRING_PARAMETER_ID_KEEP_BULK -> LABEL_STRING_PARAMETER_KEEP_BULK_TOOLTIP;
             case STRING_PARAMETER_ID_CUSTOM_X_PRE_ENABLED -> LABEL_STRING_PARAMETER_CUSTOM_X_PRE_ENABLED_TOOLTIP;
             case STRING_PARAMETER_ID_CUSTOM_X_PRE_ENDPOINT -> LABEL_STRING_PARAMETER_CUSTOM_X_PRE_ENDPOINT_TOOLTIP;
+            case STRING_PARAMETER_ID_CUSTOM_X_POST_ENABLED -> LABEL_STRING_PARAMETER_CUSTOM_X_POST_ENABLED_TOOLTIP;
+            case STRING_PARAMETER_ID_CUSTOM_X_POST_ENDPOINT -> LABEL_STRING_PARAMETER_CUSTOM_X_POST_ENDPOINT_TOOLTIP;
             case STRING_PARAMETER_ID_PASS_MESSAGE_ID_FROM_E2E -> LABEL_STRING_PARAMETER_PASS_MESSAGE_ID_FROM_E2E_TOOLTIP;
             case STRING_PARAMETER_ID_RETRY_DATA_STORE -> LABEL_STRING_PARAMETER_RETRY_DATA_STORE_TOOLTIP;
             case STRING_PARAMETER_ID_RESTART_MODE -> LABEL_STRING_PARAMETER_RESTART_MODE_TOOLTIP;
             case STRING_PARAMETER_ID_MAX_DATA_STORE_RETRIES -> LABEL_STRING_PARAMETER_MAX_DATA_STORE_RETRIES_TOOLTIP;
+            case STRING_PARAMETER_ID_IN_ORDER_ROUTE_OPTION -> LABEL_STRING_PARAMETER_IN_ORDER_ROUTE_OPTION_TOOLTIP;
             default -> null;
         };
     }
