@@ -20,7 +20,7 @@ import java.util.Map;
 public final class SharedData {
     public static AlternativePartnersPage alternativePartnersPage;
 
-    public static final String UI_TITLE = "Partner Directory Accelerator UI (version 1.1.0 dev)"; // todo: change version before release
+    public static final String UI_TITLE = "Partner Directory Accelerator UI (version 1.1.0)"; // todo: change version before release
     public static final int UI_PADDING = 5;
     public static final int UI_TEXT_FIELD_COLUMNS = 30;
     public static final int UI_SEARCH_FIELD_WIDTH = 15;
@@ -66,7 +66,8 @@ public final class SharedData {
     public static final String LABEL_DEFAULT = "Default";
     public static final String LABEL_DEFAULT_COMBINED_DETERMINATION = "Use default (combined determination)";
     public static final String LABEL_DELETE = "Delete";
-    public static final String LABEL_DELETE_ENTRY = "Delete this alternative partner only";
+    public static final String LABEL_DELETE_ALTERNATIVE_PARTNER = "Delete this alternative partner only";
+    public static final String LABEL_DELETE_ENTRY = "Delete this entry";
     public static final String LABEL_DELETE_ENTRY_SUCCESSFUL = "Successfully deleted the alternative partner.";
     public static final String LABEL_DELETE_OLD_ENTRIES = "Delete entries with old Pid";
     public static final String LABEL_DELETE_PARTNER_ID = "Delete whole scenario of this Partner ID";

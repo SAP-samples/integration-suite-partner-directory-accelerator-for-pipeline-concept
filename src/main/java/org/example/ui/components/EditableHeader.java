@@ -245,7 +245,7 @@ public class EditableHeader extends JPanel {
 
             JPanel deleteButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, UI_PADDING, 0));
 
-            JButton deleteEntryButton = new JButton(LABEL_DELETE_ENTRY);
+            JButton deleteEntryButton = new JButton(LABEL_DELETE_ALTERNATIVE_PARTNER);
             deleteEntryButton.addActionListener(e -> deleteCurrentAlternativePartner());
             deleteButtonsPanel.add(deleteEntryButton);
 
