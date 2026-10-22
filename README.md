@@ -93,7 +93,7 @@ The tool is built using OpenJDK 21 by SapMachine, which is required and can be d
 
 Please download the latest version of the tool from the [releases section](../../releases/latest).
 
-The runnable file is called [`PartnerDirectoryAcceleratorUI-1.0-SNAPSHOT-jar-with-dependencies.jar`](PartnerDirectoryAcceleratorUI-1.0-SNAPSHOT-jar-with-dependencies.jar). Additionally, there is a start script called [`start.bat`](start.bat) / [`start.sh`](start.sh). Download these files to your local device, locate them in the same folder and open this folder in the terminal.
+The runnable file is called [`PartnerDirectoryAcceleratorUI-1.1-jar-with-dependencies.jar`](PartnerDirectoryAcceleratorUI-1.1-jar-with-dependencies.jar). Additionally, there is a start script called [`start.bat`](start.bat) / [`start.sh`](start.sh). Download these files to your local device, locate them in the same folder and open this folder in the terminal.
 
 Depending on your operating system, run one of the following commands from the terminal or command prompt:
 
@@ -530,10 +530,10 @@ The other way around, for existing XSLTs, the data is extracted to a table by us
 
 ### JAR Generation
 
-If you make changes to the code, you can generate a new `.jar` file by running the following terminal command in the root directory of the project. Two `.jar` files will be generated. Note that only the file `PartnerDirectoryAcceleratorTool-1.0-SNAPSHOT-jar-with-dependencies.jar` contains all the necessary dependencies to run as a standalone application.
+If you make changes to the code, you can generate a new `.jar` file by running the following terminal command in the root directory of the project. Two `.jar` files will be generated. Note that only the file `PartnerDirectoryAcceleratorTool-1.1-jar-with-dependencies.jar` contains all the necessary dependencies to run as a standalone application.
 
 ```
-mvn clean package && cp target/PartnerDirectoryAcceleratorUI-1.0-SNAPSHOT-jar-with-dependencies.jar . && cp target/PartnerDirectoryAcceleratorUI-1.0-SNAPSHOT.jar .
+mvn clean package && cp target/PartnerDirectoryAcceleratorUI-1.1-jar-with-dependencies.jar . && cp target/PartnerDirectoryAcceleratorUI-1.1.jar .
 ```
 
 In case you do not have the Maven command line installed, please follow [this guide](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html#installation).
