@@ -223,7 +223,7 @@ By clicking the "Export selected entries" button, the view is switched to the [E
 
 #### Import from local files
 
-By clicking the "Import from local files" button, a file chooser dialog opens. You can select one or multiple JSON files to import. The file chooser opens in the `export` folder next to the `tenants.json` file by default (if it exists), so you can quickly navigate to a previously created export. Once you confirm the selection, the [Import dialog](#import) is shown.
+By clicking the "Import from local files" button, a file chooser dialog opens. You can select one or multiple JSON files to import. The file chooser opens in the `export` folder next to the `tenants.json` file by default (if it exists), so you can quickly navigate to a previously created export. Once you confirm the selection, the [Import dialog](#dialog-for-import) is shown.
 
 ### Parameters Page
 
@@ -431,6 +431,8 @@ From the table, you can click on a row to end up on its [Parameters Page](#param
 
 ### Export Page
 
+![Export Page Image](images/ExportPage.png)
+
 The export page allows you to save Partner Directory entries as local JSON files, for example to create a backup or to transfer entries between tenants without a direct API connection. The exported files are stored in the `export` folder next to the `tenants.json` file, in a subfolder named after the current tenant and the export timestamp (e.g. `export/MyTenant_20260729_143022/`). This makes it easy to identify and manage multiple exports over time.
 
 #### Export Table
@@ -440,6 +442,8 @@ The export table shows the same alternative partners as the [Alternative Partner
 The buttons "Deselect all shown entries" and "Select all shown entries" on the bottom allow to (de)select multiple alternative partners at once. This can be used in combination with the [search option](#search-option) to filter for specific entries and select all of them at once.
 
 #### Dialog for Export
+
+![Export Dialog](images/ExportDialog.png)
 
 Once you have selected the entries to export, click "Export selected entries". A dialog appears confirming the number of entries to be exported.
 
@@ -453,6 +457,8 @@ Clicking "Export selected entries" in the dialog starts the export. The followin
 Once finished, a success message shows the full path to the output folder.
 
 ### Dialog for Import
+
+![Import Dialog](images/ImportDialog.png)
 
 The import dialog allows you to load previously exported Partner Directory entries from local JSON files back into your tenant. This can be used to restore entries from a backup or to import entries from another tenant without a direct API connection.
 
