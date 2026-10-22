@@ -44,7 +44,7 @@ Before using this tool, please make yourself familiar with the Pipeline. An intr
         - [Option 2: Multiple XSLTs](#option-2-multiple-xslts)
         - [Option 3: Point to Point](#option-3-point-to-point)
         - [String Parameters](#string-parameters)
-        - [Landscape Stages](#landscape-stages)
+        - [Sender / Receiver System Settings (Prev. Landscape Stages)](#sender--receiver-system-settings-prev-landscape-stages)
     + [Replication Page](#replication-page)
         - [Replication Table](#replication-table)
         - [(De)Select all shown entries](#deselect-all-shown-entries)
