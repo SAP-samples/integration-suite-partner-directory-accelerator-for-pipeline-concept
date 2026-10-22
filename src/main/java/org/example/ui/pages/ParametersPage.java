@@ -1414,134 +1414,136 @@ public class ParametersPage extends JPanel {
     private JButton getMergeXsltButton() {
         JButton mergeButton = new JButton(LABEL_MERGE_XSLTS);
 
-        mergeButton.addActionListener(e -> {
-            try {
-                JDialog dialog = new JDialog(mainFrame, LABEL_PREVIEW_MERGED_XSLT, true);
-                dialog.setLayout(new BorderLayout());
-                dialog.setLocationRelativeTo(mainFrame);
+        mergeButton.addActionListener(e -> showMergeXsltDialog());
+        return mergeButton;
+    }
 
-                httpRequestHandler.sendGetRequestBinaryParameters(pid);
-                objectCombinedDetermination.xsltsToObjectCombinedDetermination(currentReceiverDetermination.getValueNotEmpty());
-                String mergedXslt = xsltHandler.handleXslt(ID_COMBINED_DETERMINATION, objectCombinedDetermination);
+    public void showMergeXsltDialog() {
+        try {
+            JDialog dialog = new JDialog(mainFrame, LABEL_PREVIEW_MERGED_XSLT, true);
+            dialog.setLayout(new BorderLayout());
+            dialog.setLocationRelativeTo(mainFrame);
 
-                String resultXsltValidation = validateXsltSyntax(mergedXslt);
-                showDialogInvalidXslt(resultXsltValidation);
+            httpRequestHandler.sendGetRequestBinaryParameters(pid);
+            objectCombinedDetermination.xsltsToObjectCombinedDetermination(currentReceiverDetermination.getValueNotEmpty());
+            String mergedXslt = xsltHandler.handleXslt(ID_COMBINED_DETERMINATION, objectCombinedDetermination);
 
-                RTextScrollPane rTextScrollPaneMergedXslt = initializeRSyntaxTextArea();
-                rTextScrollPaneMergedXslt.getTextArea().setText(mergedXslt);
-                dialog.add(rTextScrollPaneMergedXslt, BorderLayout.CENTER);
+            String resultXsltValidation = validateXsltSyntax(mergedXslt);
+            showDialogInvalidXslt(resultXsltValidation);
 
-                JPanel buttonPanel = new JPanel(new FlowLayout());
+            RTextScrollPane rTextScrollPaneMergedXslt = initializeRSyntaxTextArea();
+            rTextScrollPaneMergedXslt.getTextArea().setText(mergedXslt);
+            dialog.add(rTextScrollPaneMergedXslt, BorderLayout.CENTER);
 
-                JButton cancelButton = new JButton(LABEL_CANCEL);
-                cancelButton.addActionListener(e1 -> dialog.dispose());
-                buttonPanel.add(cancelButton);
+            JPanel buttonPanel = new JPanel(new FlowLayout());
 
-                buttonPanel.add(Box.createHorizontalStrut(100));
+            JButton cancelButton = new JButton(LABEL_CANCEL);
+            cancelButton.addActionListener(e1 -> dialog.dispose());
+            buttonPanel.add(cancelButton);
 
-                JLabel backupLabel = new JLabel(LABEL_BACKUP_QUESTION);
-                buttonPanel.add(backupLabel);
-                JCheckBox backupCheckBox = new JCheckBox();
-                buttonPanel.add(backupCheckBox);
+            buttonPanel.add(Box.createHorizontalStrut(100));
 
-                JButton sendButton = new JButton(LABEL_SEND_XSLT_TO_API);
-                sendButton.addActionListener(e1 -> {
-                    try {
-                        boolean sendToApi = true;
-                        if (!resultXsltValidation.isEmpty()) { // if xslt contains errors -> show warning
-                            String[] options = {LABEL_SEND_ANYWAY, LABEL_CANCEL};
+            JLabel backupLabel = new JLabel(LABEL_BACKUP_QUESTION);
+            buttonPanel.add(backupLabel);
+            JCheckBox backupCheckBox = new JCheckBox();
+            buttonPanel.add(backupCheckBox);
 
-                            int option = JOptionPane.showOptionDialog(
-                                    mainFrame,
-                                    colon(LABEL_SHOWN_XSLT_INVALID_SYNTAX) + "\n" + resultXsltValidation + "\n" + LABEL_SEND_ANYWAY_QUESTION,
-                                    LABEL_CONFIRMATION,
-                                    JOptionPane.DEFAULT_OPTION,
-                                    JOptionPane.QUESTION_MESSAGE,
-                                    null,
-                                    options,
-                                    options[1]
-                            );
+            JButton sendButton = new JButton(LABEL_SEND_XSLT_TO_API);
+            sendButton.addActionListener(e1 -> {
+                try {
+                    boolean sendToApi = true;
+                    if (!resultXsltValidation.isEmpty()) { // if xslt contains errors -> show warning
+                        String[] options = {LABEL_SEND_ANYWAY, LABEL_CANCEL};
 
-                            sendToApi = option == 0; // option 0 = send; option 1 = cancel
-                        }
+                        int option = JOptionPane.showOptionDialog(
+                                mainFrame,
+                                colon(LABEL_SHOWN_XSLT_INVALID_SYNTAX) + "\n" + resultXsltValidation + "\n" + LABEL_SEND_ANYWAY_QUESTION,
+                                LABEL_CONFIRMATION,
+                                JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                options,
+                                options[1]
+                        );
 
-                        if (sendToApi) {
-                            // delete old binary parameters
-                            Set<String> setOfIds = httpRequestHandler.sendGetRequestIdsBinaryParameters(pid);
-                            for (String id : setOfIds) {
-                                // create backup
-                                if (backupCheckBox.isSelected()) {
-                                    String subdirectoryPath = BACKUP_DIRECTORY_NAME;
-                                    File subdirectory = new File(subdirectoryPath);
+                        sendToApi = option == 0; // option 0 = send; option 1 = cancel
+                    }
 
-                                    if (!subdirectory.exists()) {
-                                        subdirectory.mkdirs();
-                                    }
+                    if (sendToApi) {
+                        // delete old binary parameters
+                        Set<String> setOfIds = httpRequestHandler.sendGetRequestIdsBinaryParameters(pid);
+                        for (String id : setOfIds) {
+                            // create backup
+                            if (backupCheckBox.isSelected()) {
+                                String subdirectoryPath = BACKUP_DIRECTORY_NAME;
+                                File subdirectory = new File(subdirectoryPath);
 
-                                    FileWriter fileWriter = new FileWriter(subdirectoryPath + File.separator + pid + "_" + id + "." + JSON_VALUE_XSL);
-
-                                    String xsltToBackup = "";
-                                    if (id.equals(ID_RECEIVER_DETERMINATION)) {
-                                        xsltToBackup = currentReceiverDetermination.getValue();
-                                    } else if (id.startsWith(ID_INTERFACE_DETERMINATION_)) {
-                                        xsltToBackup = currentInterfaceDeterminationsList.get(id.substring(ID_INTERFACE_DETERMINATION_.length())).getValue();
-                                    }
-
-                                    fileWriter.write(xsltToBackup);
-                                    fileWriter.flush();
-                                    fileWriter.close();
+                                if (!subdirectory.exists()) {
+                                    subdirectory.mkdirs();
                                 }
 
-                                httpRequestHandler.sendDeleteRequestBinaryParameters(pid, id);
+                                FileWriter fileWriter = new FileWriter(subdirectoryPath + File.separator + pid + "_" + id + "." + JSON_VALUE_XSL);
+
+                                String xsltToBackup = "";
+                                if (id.equals(ID_RECEIVER_DETERMINATION)) {
+                                    xsltToBackup = currentReceiverDetermination.getValue();
+                                } else if (id.startsWith(ID_INTERFACE_DETERMINATION_)) {
+                                    xsltToBackup = currentInterfaceDeterminationsList.get(id.substring(ID_INTERFACE_DETERMINATION_.length())).getValue();
+                                }
+
+                                fileWriter.write(xsltToBackup);
+                                fileWriter.flush();
+                                fileWriter.close();
                             }
 
-                            httpRequestHandler.sendPostRequestBinaryParameters(pid, ID_RECEIVER_DETERMINATION, mergedXslt);
-
-                            LinkedHashMap<String, String> alternativePartnerValues = editableHeader.currentHeaderValues;
-                            String agency = alternativePartnerValues.get(LABEL_AGENCY);
-                            String scheme = alternativePartnerValues.get(LABEL_SCHEME);
-                            String id = alternativePartnerValues.get(LABEL_ID_ALTERNATIVE_PARTNERS);
-                            AlternativePartner alternativePartner = new AlternativePartner(agency, scheme, id, pid);
-
-                            ParametersPage binaryParameterDetailPage = new ParametersPage(alternativePartner);
-                            panelContainer.add(binaryParameterDetailPage, pid);
-                            cardLayout.show(panelContainer, pid);
-                            dialog.dispose();
-                            String successMessage = "";
-                            if (backupCheckBox.isSelected()) {
-                                successMessage = LABEL_BACKUP_CREATED;
-                            }
-                            JOptionPane.showMessageDialog(mainFrame, successMessage + LABEL_XSLTS_MERGED_SUCCESSFULLY, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
+                            httpRequestHandler.sendDeleteRequestBinaryParameters(pid, id);
                         }
 
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(mainFrame, colonSpace(LABEL_ERROR_MERGING_XSLT) + ex.getMessage(), LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
-                        LOGGER.error(ex);
-                    }
-                });
-                buttonPanel.add(sendButton);
+                        httpRequestHandler.sendPostRequestBinaryParameters(pid, ID_RECEIVER_DETERMINATION, mergedXslt);
 
-                dialog.add(buttonPanel, BorderLayout.SOUTH);
+                        LinkedHashMap<String, String> alternativePartnerValues = editableHeader.currentHeaderValues;
+                        String agency = alternativePartnerValues.get(LABEL_AGENCY);
+                        String scheme = alternativePartnerValues.get(LABEL_SCHEME);
+                        String id = alternativePartnerValues.get(LABEL_ID_ALTERNATIVE_PARTNERS);
+                        AlternativePartner alternativePartner = new AlternativePartner(agency, scheme, id, pid);
 
-                dialog.setSize(UI_DIALOG_WIDTH, UI_DIALOG_HEIGHT);
-                dialog.setLocationRelativeTo(mainFrame);
-                dialog.setVisible(true);
-            } catch (Exception ex) {
-                String errorMessage = "";
-                if (ex instanceof XsltNotExistsException) {
-                    errorMessage = LABEL_INTERFACE_DETERMINATION + " for " + ((XsltNotExistsException) ex).getReceiverName() + LABEL_DOES_NOT_EXIST;
-                } else if (ex instanceof XsltSyntaxException) {
-                    if (((XsltSyntaxException) ex).isInterfaceDetermination()) {
-                        errorMessage = LABEL_INTERFACE_DETERMINATION + " for " + ((XsltSyntaxException) ex).getReceiverName() + LABEL_CONTAINS_SYNTAX_ERRORS;
-                    } else {
-                        errorMessage = LABEL_RECEIVER_DETERMINATION + LABEL_CONTAINS_SYNTAX_ERRORS;
+                        ParametersPage binaryParameterDetailPage = new ParametersPage(alternativePartner);
+                        panelContainer.add(binaryParameterDetailPage, pid);
+                        cardLayout.show(panelContainer, pid);
+                        dialog.dispose();
+                        String successMessage = "";
+                        if (backupCheckBox.isSelected()) {
+                            successMessage = LABEL_BACKUP_CREATED;
+                        }
+                        JOptionPane.showMessageDialog(mainFrame, successMessage + LABEL_XSLTS_MERGED_SUCCESSFULLY, LABEL_SUCCESS, JOptionPane.INFORMATION_MESSAGE);
                     }
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(mainFrame, colonSpace(LABEL_ERROR_MERGING_XSLT) + ex.getMessage(), LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+                    LOGGER.error(ex);
                 }
-                JOptionPane.showMessageDialog(this, colonSpace(LABEL_ERROR_MERGING_XSLT) + errorMessage, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
-                LOGGER.error(ex);
+            });
+            buttonPanel.add(sendButton);
+
+            dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+            dialog.setSize(UI_DIALOG_WIDTH, UI_DIALOG_HEIGHT);
+            dialog.setLocationRelativeTo(mainFrame);
+            dialog.setVisible(true);
+        } catch (Exception ex) {
+            String errorMessage = "";
+            if (ex instanceof XsltNotExistsException) {
+                errorMessage = LABEL_INTERFACE_DETERMINATION + " for " + ((XsltNotExistsException) ex).getReceiverName() + LABEL_DOES_NOT_EXIST;
+            } else if (ex instanceof XsltSyntaxException) {
+                if (((XsltSyntaxException) ex).isInterfaceDetermination()) {
+                    errorMessage = LABEL_INTERFACE_DETERMINATION + " for " + ((XsltSyntaxException) ex).getReceiverName() + LABEL_CONTAINS_SYNTAX_ERRORS;
+                } else {
+                    errorMessage = LABEL_RECEIVER_DETERMINATION + LABEL_CONTAINS_SYNTAX_ERRORS;
+                }
             }
-        });
-        return mergeButton;
+            JOptionPane.showMessageDialog(this, colonSpace(LABEL_ERROR_MERGING_XSLT) + errorMessage, LABEL_ERROR, JOptionPane.ERROR_MESSAGE);
+            LOGGER.error(ex);
+        }
     }
 
     private JPanel getGenerateAndSendButtonPanelBinaryParameters(BinaryParameter binaryParameter, JButton namespacesButton, JButton generateButton) {

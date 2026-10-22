@@ -39,12 +39,13 @@ public class MergeXsltsPage extends JPanel {
 
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                int row = table.rowAtPoint(evt.getPoint());
-                if (row >= 0) {
-                    String agency = (String) table.getValueAt(row, 0);
-                    String scheme = (String) table.getValueAt(row, 1);
-                    String id = (String) table.getValueAt(row, 2);
-                    String pid = (String) table.getValueAt(row, 3);
+                int viewRow = table.rowAtPoint(evt.getPoint());
+                if (viewRow >= 0) {
+                    int modelRow = table.convertRowIndexToModel(viewRow);
+                    String agency = (String) tableModel.getValueAt(modelRow, 0);
+                    String scheme = (String) tableModel.getValueAt(modelRow, 1);
+                    String id = (String) tableModel.getValueAt(modelRow, 2);
+                    String pid = (String) tableModel.getValueAt(modelRow, 3);
 
                     AlternativePartner alternativePartner = alternativePartnersMultipleXslts.stream()
                             .filter(obj -> obj.getAgency().equals(agency)
@@ -54,8 +55,7 @@ public class MergeXsltsPage extends JPanel {
                             .findFirst()
                             .orElse(new AlternativePartner(agency, scheme, id, pid));
                     ParametersPage binaryParameterDetailPage = new ParametersPage(alternativePartner);
-                    panelContainer.add(binaryParameterDetailPage, pid);
-                    cardLayout.show(panelContainer, pid);
+                    binaryParameterDetailPage.showMergeXsltDialog();
                 }
             }
         });
